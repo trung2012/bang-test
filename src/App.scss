@@ -1,0 +1,10 @@
+.change-name-link {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+
+  &:visited {
+    text-decoration: none;
+    color: #fff;
+  }
+}

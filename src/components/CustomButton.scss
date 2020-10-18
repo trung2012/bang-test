@@ -1,0 +1,29 @@
+.custom-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #db6145;
+  margin-right: 1.5rem;
+  padding: 1rem 3rem;
+  opacity: 0.8;
+  box-shadow: 2px 2px 6px #b4541c;
+
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

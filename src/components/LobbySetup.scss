@@ -1,0 +1,47 @@
+.lobby {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &-link-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+
+  &-player {
+    position: relative;
+    border-bottom: 4px solid rgb(136, 136, 136);
+
+    &::after {
+      content: '';
+      position: absolute;
+      height: 5px;
+      width: 10px;
+      left: 0;
+      background-color: #fff;
+      opacity: 0.3;
+      animation: dashToRight 1s linear infinite;
+    }
+
+    &-active {
+      border-bottom: 5px solid green;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+@keyframes dashToRight {
+  to {
+    left: 100%;
+  }
+}
+@-webkit-keyframes dashToRight {
+  to {
+    left: 100%;
+  }
+}

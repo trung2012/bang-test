@@ -1,0 +1,7 @@
+.create-game {
+  text-align: center;
+  &-buttons {
+    display: flex;
+    justify-content: center;
+  }
+}

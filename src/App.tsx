@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import './App.scss';
+import { Switch, Route } from 'react-router-dom';
+import { ChangeNickName, CreateGame, GameHeader, Lobby } from './components';
+import PrivateRoute from './components/PrivateRoute';
+import { ChangeNickNameLink } from './components/ChangeNickNameLink';
 
 function App() {
+  useEffect(() => {
+    localStorage.removeItem('bang-playerCredentials');
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <GameHeader />
+      <ChangeNickNameLink />
+      <Switch>
+        <Route exact path='/' component={ChangeNickName} />
+        <Route exact path='/create'>
+          <CreateGame />
+        </Route>
+        <PrivateRoute exact path='/rooms/:roomId'>
+          <Lobby />
+        </PrivateRoute>
+      </Switch>
     </div>
   );
 }

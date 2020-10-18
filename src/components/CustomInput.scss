@@ -1,0 +1,21 @@
+.custom-input {
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background-color: #e7e7e7;
+  min-width: 25rem;
+  outline: none;
+  transition: border 0.2s;
+  margin-right: 1rem;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  text-align: center;
+  cursor: text;
+
+  &:focus {
+    border: 2px solid #ccc;
+  }
+}
