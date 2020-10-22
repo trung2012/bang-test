@@ -2,8 +2,8 @@ import { ICard } from '../game/types';
 
 export const cardsOriginal: ICard[] = [
   {
-    id: 'aesPWxku2',
-    value: 'queen',
+    id: 't_gx5odxV',
+    value: 12,
     name: 'barrel',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/barile_z8ibbs.png',
@@ -11,8 +11,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'GhNwUK5ZSd',
-    value: 'king',
+    id: 'EORMvNGBsO',
+    value: 13,
     name: 'barrel',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/barile_z8ibbs.png',
@@ -20,17 +20,17 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: '1lsTijeZEG',
-    value: 'two',
+    id: 'deFt_zH_IG',
+    value: 2,
     name: 'dynamite',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/dynamite_gq525m.png',
-    suit: 'spades',
+    suit: 'hearts',
     type: 'equipment',
   },
   {
-    id: 'hkiUkVzPXe',
-    value: 'four',
+    id: 'rl16zkMvRG',
+    value: 4,
     name: 'jail',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/prigione_k3bbei.png',
@@ -38,8 +38,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'TL3J04ftqB',
-    value: 'ten',
+    id: 'Hvnlnp61Gs',
+    value: 10,
     name: 'jail',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/prigione_k3bbei.png',
@@ -47,8 +47,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: '8zhzWO1-Wv',
-    value: 'jack',
+    id: 'u5P3O1_kNm',
+    value: 11,
     name: 'jail',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/prigione_k3bbei.png',
@@ -56,8 +56,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'TIxu9FU9ah',
-    value: 'eight',
+    id: 'pm9l9WTp2H',
+    value: 8,
     name: 'mustang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mustang_pht7ms.png',
@@ -65,8 +65,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'kfUulT5kM1',
-    value: 'nine',
+    id: 'b1xOxqH4fK',
+    value: 9,
     name: 'mustang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mustang_pht7ms.png',
@@ -74,8 +74,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'aq1svNeSzq',
-    value: 'king',
+    id: '-chxsEuLxd',
+    value: 13,
     name: 'remington',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/remington_dtsgzi.png',
@@ -83,8 +83,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'K88lU2ko3o',
-    value: 'ace',
+    id: '6Af9OtE5JJ',
+    value: 14,
     name: 'rev carabine',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/carabine_czyogt.png',
@@ -92,8 +92,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'BSAPtnnS-q',
-    value: 'jack',
+    id: 'ZtdG7asQMX',
+    value: 11,
     name: 'schofield',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888951/bang/original/schofield_clag8z.png',
@@ -101,8 +101,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'GcKTaMNLmz',
-    value: 'queen',
+    id: 'RYUzdVrCnj',
+    value: 12,
     name: 'schofield',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888951/bang/original/schofield_clag8z.png',
@@ -110,8 +110,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: '3obSYmiQJr',
-    value: 'king',
+    id: '8srBQVBuHd',
+    value: 13,
     name: 'schofield',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888951/bang/original/schofield_clag8z.png',
@@ -119,8 +119,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'TlLz4CprI5',
-    value: 'ace',
+    id: 'qu7Y4GaiqC',
+    value: 14,
     name: 'scope',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mirino_gbne0b.png',
@@ -128,8 +128,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'rwaZWM6kNg',
-    value: 'ten',
+    id: '7MgRNBtOrV',
+    value: 10,
     name: 'volcanic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/volcanic_dwrloi.png',
@@ -137,8 +137,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'v_wX14tOJO',
-    value: 'ten',
+    id: 'k-yXoqFHy-',
+    value: 10,
     name: 'volcanic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/volcanic_dwrloi.png',
@@ -146,8 +146,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'F3DMrT9_GZ6',
-    value: 'eight',
+    id: 'JHXEzwDMf7e',
+    value: 8,
     name: 'winchester',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/winchester_sy1r19.png',
@@ -155,8 +155,8 @@ export const cardsOriginal: ICard[] = [
     type: 'equipment',
   },
   {
-    id: 'vgYp7WNVCmJ',
-    value: 'ace',
+    id: 'Y-ybDSgGGEj',
+    value: 14,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -164,8 +164,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'fHXjCImz0Az',
-    value: 'two',
+    id: 'njs0iLHgpWk',
+    value: 2,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -173,8 +173,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '3Nr7HJtslTc',
-    value: 'three',
+    id: 'sVfSp53IbEa',
+    value: 3,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -182,8 +182,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '4uiszRmPBt5',
-    value: 'four',
+    id: 'qc6HQ49nGw6',
+    value: 4,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -191,8 +191,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'h2Q8YMn5wO7',
-    value: 'five',
+    id: 'zKcUmUfO2Lo',
+    value: 5,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -200,8 +200,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '8vXwaVR-6e0',
-    value: 'six',
+    id: 'k-SrTKhXLwm',
+    value: 6,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -209,8 +209,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'zg73Otgw8-1',
-    value: 'seven',
+    id: 'nOVPUujGs4o',
+    value: 7,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -218,8 +218,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '4fZ8lzCtMwc',
-    value: 'eight',
+    id: 'hm9sr1FEeXp',
+    value: 8,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -227,8 +227,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'IOkbcoaH4nb',
-    value: 'nine',
+    id: 'GnMzWI4L5QY',
+    value: 9,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -236,8 +236,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'nr7GLTxd1Wh',
-    value: 'ten',
+    id: 'vmrHcnWZSKP',
+    value: 10,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -245,8 +245,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'g6litB_2SUu',
-    value: 'jack',
+    id: 'HikKqyMJA2P',
+    value: 11,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -254,8 +254,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'qxBk6aqnGi1',
-    value: 'queen',
+    id: 'm5s6gLAuxP-',
+    value: 12,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -263,8 +263,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'ozqSXk0nnue',
-    value: 'king',
+    id: 'emQYmiqsnvU',
+    value: 13,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -272,8 +272,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '8cXUVwgslD2',
-    value: 'ace',
+    id: 'SDkffcRCc-6',
+    value: 14,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -281,8 +281,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '-Uh1qF1tnFn',
-    value: 'queen',
+    id: 'L5cSObWjYjf',
+    value: 12,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -290,8 +290,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'KYCwpuR7Pks',
-    value: 'king',
+    id: 'z_W1ESnwAez',
+    value: 13,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -299,8 +299,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'MaTC-aJ33qr',
-    value: 'ace',
+    id: 'xiZpiPRoIHu',
+    value: 14,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -308,8 +308,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'ZE7m_-MovML',
-    value: 'two',
+    id: '3VRXMp4xdE7',
+    value: 2,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -317,8 +317,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '_IOsMqeHfFL',
-    value: 'three',
+    id: '7xF86b3wcW-',
+    value: 3,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -326,8 +326,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '2m3j1-m1310',
-    value: 'four',
+    id: 'fnt01KT1T5c',
+    value: 4,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -335,8 +335,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'PCe5ixGGxDm',
-    value: 'five',
+    id: '6Y4hu2eJxuy',
+    value: 5,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -344,8 +344,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'fp_TmYhfZkF',
-    value: 'six',
+    id: '5fZmCPi04do',
+    value: 6,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -353,8 +353,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '9IKV4N7gYD3',
-    value: 'seven',
+    id: 'nCByI1YC7T_',
+    value: 7,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -362,8 +362,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'psFDXRu-i8F',
-    value: 'eight',
+    id: 'GZlN36tqICt',
+    value: 8,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -371,8 +371,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '9PZpiAU-NmO',
-    value: 'nine',
+    id: '1hZsWhBTPaL',
+    value: 9,
     name: 'bang',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
@@ -380,8 +380,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'LjfJet6CQSE',
-    value: 'six',
+    id: 'Py0-rHnb-n2',
+    value: 6,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -389,8 +389,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'ilyhW1YkvD6',
-    value: 'seven',
+    id: 'mBdo4EFDem3',
+    value: 7,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -398,8 +398,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'icR7W_3vHRB',
-    value: 'eight',
+    id: 'xH_02EV-dTz',
+    value: 8,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -407,8 +407,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'mp7osWAl8Q7',
-    value: 'nine',
+    id: '727gKyjFj2r',
+    value: 9,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -416,8 +416,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'kthu__H6ssd',
-    value: 'ten',
+    id: '08I4Ko-s6uW',
+    value: 10,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -425,8 +425,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'MbApiyTkoob',
-    value: 'jack',
+    id: 'KQ3eZiHXam4',
+    value: 11,
     name: 'beer',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
@@ -434,8 +434,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'z15sWpoq5Zf',
-    value: 'king',
+    id: 'Akr09VlNBh6',
+    value: 13,
     name: 'cat balou',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/catbalou_fihyoi.png',
@@ -443,8 +443,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'rKiSWKq1rYV',
-    value: 'nine',
+    id: 'QjbsBspSrL0',
+    value: 9,
     name: 'cat balou',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/catbalou_fihyoi.png',
@@ -452,8 +452,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '4aDgg_pvnMw',
-    value: 'ten',
+    id: 'r6n2NA5fq6b',
+    value: 10,
     name: 'cat balou',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/catbalou_fihyoi.png',
@@ -461,8 +461,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '0fcKM0-6l3H',
-    value: 'jack',
+    id: 'ZtiVXK0NymQ',
+    value: 11,
     name: 'cat balou',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/catbalou_fihyoi.png',
@@ -470,8 +470,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'KwJeE-HGuuL',
-    value: 'eight',
+    id: 'vTlshEW49s-',
+    value: 8,
     name: 'duel',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/duello_ipnsk5.png',
@@ -479,8 +479,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '3prZwhGzQt8',
-    value: 'queen',
+    id: 'gVQbhPsLJKm',
+    value: 12,
     name: 'duel',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/duello_ipnsk5.png',
@@ -488,8 +488,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'UNzvIfauzP1',
-    value: 'jack',
+    id: 'tjQ77tiQO1x',
+    value: 11,
     name: 'duel',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/duello_ipnsk5.png',
@@ -497,8 +497,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'lOubvEc1gD2',
-    value: 'ten',
+    id: '_3n1OAeOcGM',
+    value: 10,
     name: 'gatling',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/gatling_vxac7t.png',
@@ -506,8 +506,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'pGKU1O6Njha',
-    value: 'king',
+    id: 'wGoo2vnBhDp',
+    value: 9,
     name: 'general store',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
@@ -515,8 +515,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'NUo5RsxR76W',
-    value: 'nine',
+    id: 'ADDlSyBjQzB',
+    value: 12,
     name: 'general store',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
@@ -524,26 +524,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'taGTbSafAxS',
-    value: 'ten',
-    name: 'general store',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
-    suit: 'spades',
-    type: 'action',
-  },
-  {
-    id: 'S-7ut4jB3qq',
-    value: 'jack',
-    name: 'general store',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
-    suit: 'spades',
-    type: 'action',
-  },
-  {
-    id: 'YsTc2Ui5M1H',
-    value: 'king',
+    id: 'Tx_5duQXns8',
+    value: 13,
     name: 'indians',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/indiani_mlfftz.png',
@@ -551,8 +533,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'JdDIggitkHb',
-    value: 'ace',
+    id: 'YCVqIFjzi6L',
+    value: 14,
     name: 'indians',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/indiani_mlfftz.png',
@@ -560,8 +542,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'Pr_kJZ39o75',
-    value: 'ten',
+    id: '1my1MYG9Bwe',
+    value: 10,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -569,8 +551,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'nrByJhemQ_0',
-    value: 'jack',
+    id: 'PnrgiH_gLlH',
+    value: 11,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -578,8 +560,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'JURQVArkNjD',
-    value: 'queen',
+    id: 'noPuP5F1_83',
+    value: 12,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -587,8 +569,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'LsOJLQUbCNR',
-    value: 'king',
+    id: '2Tzid8Y0JaJ',
+    value: 13,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -596,8 +578,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '__uiMSkamXF',
-    value: 'ace',
+    id: 'FCHXiuGThxN',
+    value: 14,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -605,8 +587,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'tTz_dPXgBVr',
-    value: 'two',
+    id: 'LpjwnHZPbCe',
+    value: 2,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -614,8 +596,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'KZ9pLkgyGcN',
-    value: 'three',
+    id: 'pHHUyf6Wf-J',
+    value: 3,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -623,8 +605,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'TK2B4KOzV1X',
-    value: 'four',
+    id: 'cFwRZSmLerl',
+    value: 4,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -632,8 +614,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '1IdBten7DXS',
-    value: 'five',
+    id: 'yax7PJ23gwk',
+    value: 5,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -641,8 +623,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '7nIQ4-lnwCE',
-    value: 'six',
+    id: 'LKUTF0HeJBp',
+    value: 6,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -650,8 +632,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '785UoDbyRZ_',
-    value: 'seven',
+    id: 'ro7XtQ7wq4S',
+    value: 7,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -659,8 +641,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'Shf5YzubJhS',
-    value: 'eight',
+    id: 'b4w9x6c7NKo',
+    value: 8,
     name: 'missed',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
@@ -668,8 +650,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'iTz7ZuyVR3L',
-    value: 'jack',
+    id: 'a8HsZtKD8gl',
+    value: 11,
     name: 'panic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/panico_fdczgp.png',
@@ -677,8 +659,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '_Bwbe0NRE1M',
-    value: 'queen',
+    id: 'WeM06swDt1k',
+    value: 12,
     name: 'panic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/panico_fdczgp.png',
@@ -686,8 +668,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'kOf8nVBxlG2',
-    value: 'king',
+    id: 'iLYxun5mIIz',
+    value: 13,
     name: 'panic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/panico_fdczgp.png',
@@ -695,8 +677,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'hKnCU9F8xcu',
-    value: 'eight',
+    id: 'O_rQhar5xuK',
+    value: 8,
     name: 'panic',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/panico_fdczgp.png',
@@ -704,8 +686,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'Zw4nl-CW92s',
-    value: 'five',
+    id: 'NjdtitsTeU3',
+    value: 5,
     name: 'saloon',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888951/bang/original/saloon_oubya5.png',
@@ -713,8 +695,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'k6byyi-IbG2',
-    value: 'eight',
+    id: 'JIk5nTS25HV',
+    value: 8,
     name: 'stagecoach',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/diligenza_wpu1kg.png',
@@ -722,8 +704,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: '7qLxmIkYcZh',
-    value: 'nine',
+    id: '1tWyeLnTx_W',
+    value: 9,
     name: 'stagecoach',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/diligenza_wpu1kg.png',
@@ -731,8 +713,8 @@ export const cardsOriginal: ICard[] = [
     type: 'action',
   },
   {
-    id: 'CMWSbe1qGcy',
-    value: 'three',
+    id: 'iPV-Gt7KJT0',
+    value: 3,
     name: 'wells fargo',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/wellsfargo_zfpfjj.png',

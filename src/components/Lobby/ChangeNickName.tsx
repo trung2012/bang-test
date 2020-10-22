@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPlayerName, setPlayerCredentials, setPlayerName } from '../store/lobbyStore';
-import { CustomButton } from './CustomButton';
-import { CustomInput } from './CustomInput';
+import { selectPlayerName, setPlayerCredentials, setPlayerName } from '../../store/lobbyStore';
 import './ChangeNickName.scss';
-import { History } from 'history';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { CustomInput, CustomButton } from '../shared';
 
-interface ILocationState {
+export interface ILocationState {
   from: {
     pathname: string;
   };
 }
 
-export const ChangeNickName: React.FC<{ history: History }> = ({ history }) => {
+export const ChangeNickName = () => {
   let location = useLocation<ILocationState>();
+  const history = useHistory();
 
   let { from } = location.state || { from: { pathname: '/' } };
 

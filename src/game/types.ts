@@ -1,13 +1,33 @@
 export interface IGameState {
-  players: IGamePlayer[];
+  deck: ICard[];
+  discarded: ICard[];
+  generalStore: ICard[];
+  players: IGamePlayerMap;
+  playersOrder: string[];
+  characters: ICharacter[];
+  roles: Role[];
 }
 
-export interface IGamePlayer {}
+export interface IGamePlayerMap {
+  [id: string]: IGamePlayer;
+}
+export interface IGamePlayer {
+  id: string;
+  hp: number;
+  playerName?: string;
+  hand: ICard[];
+  equipments: ICard[];
+  character: ICharacter;
+  role: Role;
+  isDead: boolean;
+  activeCard?: ICard;
+  targetedCard?: ICard;
+}
 
 export interface ICard {
   id: string;
   name: CardName;
-  value: string;
+  value: number;
   suit: CardSuit;
   type: CardType;
   description?: string;
@@ -15,7 +35,7 @@ export interface ICard {
 }
 
 export type CardSuit = 'hearts' | 'spades' | 'diamond' | 'clubs';
-export type CardType = 'action' | 'equipment';
+export type CardType = 'action' | 'equipment' | 'targeted_equipment';
 export interface ICharacter {
   name: CharacterName;
   hp: number;
@@ -77,4 +97,8 @@ export interface ICardGenerationInfo {
   values: {
     [suit: string]: number[];
   };
+}
+
+export interface ILookup {
+  [key: number]: any;
 }

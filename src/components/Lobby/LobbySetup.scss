@@ -18,11 +18,11 @@
       content: '';
       position: absolute;
       height: 5px;
-      width: 10px;
+      width: 15px;
       left: 0;
       background-color: #fff;
       opacity: 0.3;
-      animation: dashToRight 1s linear infinite;
+      animation: dashToRight 0.8s linear infinite;
     }
 
     &-active {

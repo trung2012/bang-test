@@ -32,7 +32,7 @@ const cardsToGenerateOriginal = {
       imageUrl:
         'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/dynamite_gq525m.png',
       values: {
-        spades: [2],
+        hearts: [2],
       },
     },
     {
@@ -155,8 +155,8 @@ const cardsToGenerateOriginal = {
       imageUrl:
         'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
       values: {
-        clubs: [13],
-        spades: [9, 11],
+        clubs: [9],
+        spades: [12],
       },
     },
     {
@@ -224,7 +224,7 @@ const generateCards = cardsToGenerate => {
         if (range.length <= 1) {
           const cardsToPush = range.map(value => ({
             id: shortid.generate(),
-            value: cardVal[value],
+            value,
             name: card.name,
             imageUrl: card.imageUrl,
             suit,
@@ -237,7 +237,7 @@ const generateCards = cardsToGenerate => {
           for (let v = min; v <= max; v++) {
             const newCard = {
               id: shortid.generate(),
-              value: cardVal[v],
+              value: v,
               name: card.name,
               imageUrl: card.imageUrl,
               suit,

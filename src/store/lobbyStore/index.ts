@@ -8,7 +8,7 @@ import { ILobbyReducerState } from './lobbyStore.types';
 const initialState: ILobbyReducerState = {
   playerId: null,
   playerName: localStorage.getItem('bang-playerName') ?? '',
-  playerCredentials: localStorage.getItem('bang-playerCredentials') ?? '',
+  playerCredentials: '',
   roomId: null,
   roomData: null,
 };
@@ -17,7 +17,7 @@ export const lobbySlice = createSlice({
   name: 'lobby',
   initialState,
   reducers: {
-    setPlayerId: (state, action: PayloadAction<string>) => {
+    setPlayerId: (state, action: PayloadAction<string | null>) => {
       state.playerId = action.payload;
     },
     setPlayerName: (state, action: PayloadAction<string>) => {
@@ -29,7 +29,7 @@ export const lobbySlice = createSlice({
     setRoomId: (state, action: PayloadAction<string>) => {
       state.roomId = action.payload;
     },
-    setRoomData: (state, action: PayloadAction<IRoomData>) => {
+    setRoomData: (state, action: PayloadAction<IRoomData | null>) => {
       state.roomData = action.payload;
     },
   },
@@ -58,7 +58,6 @@ export const joinRoom = (roomId: string, playerData: IPlayerJoinData) => async (
 ) => {
   try {
     const playerCredentials = await lobbyService.joinGame(roomId, playerData);
-    localStorage.setItem('bang-playerCredentials', playerCredentials);
     dispatch(setPlayerCredentials(playerCredentials));
   } catch (err) {
     console.log(err);

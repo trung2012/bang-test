@@ -8,6 +8,7 @@ export const CreateGame = () => {
       <h2>Create Game</h2>
       <h3>How many players?</h3>
       <div className='create-game-buttons'>
+        <CreateGameButton numPlayers={2} />
         <CreateGameButton numPlayers={4} />
         <CreateGameButton numPlayers={5} />
         <CreateGameButton numPlayers={6} />
