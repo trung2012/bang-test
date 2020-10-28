@@ -2,6 +2,7 @@ import { BoardProps } from 'boardgame.io/dist/types/packages/react';
 import React from 'react';
 import { GameContext } from '../../context';
 import { IGameState } from '../../game/types';
+import { GameTable } from './GameTable.tsx';
 
 const GameBoard: React.FC<BoardProps<IGameState>> = ({
   G,
@@ -10,7 +11,7 @@ const GameBoard: React.FC<BoardProps<IGameState>> = ({
   events,
   playerID,
   isActive,
-  matchData,
+  matchData: playersInfo,
 }) => {
   return (
     <GameContext.Provider
@@ -21,10 +22,10 @@ const GameBoard: React.FC<BoardProps<IGameState>> = ({
         events,
         playerID,
         isActive,
-        matchData,
+        playersInfo,
       }}
     >
-      <div>Game Board</div>
+      <GameTable />
     </GameContext.Provider>
   );
 };

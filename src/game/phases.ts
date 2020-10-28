@@ -9,7 +9,6 @@ const phases: IGamePhases = {
   main: {
     endIf: (G: IGameState) => {},
   },
-  suddenDeath: {},
 };
 
 export default phases;

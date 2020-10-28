@@ -1,3 +1,7 @@
+html {
+  font-size: 62.5%;
+}
+
 body {
   margin: 0;
   font-family: 'Arvo', serif;
@@ -6,6 +10,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   color: #3f3f3f;
+  font-size: 1.6rem;
 }
 
 code {

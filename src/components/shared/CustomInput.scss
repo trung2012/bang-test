@@ -1,21 +1,15 @@
 .custom-input {
   border: none;
-  border-bottom: 2px solid transparent;
   font-family: inherit;
-  font-size: inherit;
+  font-size: 2rem;
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 2rem 4rem;
   background-color: #e7e7e7;
-  min-width: 25rem;
+  min-width: 45rem;
   outline: none;
-  transition: border 0.2s;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
   border-radius: 5px;
-  border: 2px solid transparent;
+  box-shadow: 2px 2px 5px #ccc;
   text-align: center;
   cursor: text;
-
-  &:focus {
-    border: 2px solid #ccc;
-  }
 }

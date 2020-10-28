@@ -212,6 +212,9 @@ const cardsToGenerateOriginal = {
   ],
 };
 
+const cardNamesWithReaction = ['bang', 'duel', 'gatling', 'general store', 'indians'];
+const targetedCardNames = ['bang', 'duel', 'panic', 'cat balou', 'jail', 'missed'];
+
 const generateCards = cardsToGenerate => {
   const cards = [];
   for (const type in cardsToGenerate) {
@@ -229,6 +232,8 @@ const generateCards = cardsToGenerate => {
             imageUrl: card.imageUrl,
             suit,
             type,
+            needsReaction: cardNamesWithReaction.includes(card.name),
+            isTargeted: targetedCardNames.includes(card.name),
           }));
           cards.push(...cardsToPush);
         } else {
@@ -242,6 +247,8 @@ const generateCards = cardsToGenerate => {
               imageUrl: card.imageUrl,
               suit,
               type,
+              needsReaction: cardNamesWithReaction.includes(card.name),
+              isTargeted: targetedCardNames.includes(card.name),
             };
             cards.push(newCard);
           }

@@ -4,19 +4,19 @@
   align-items: center;
   flex-direction: column;
   text-decoration: none;
-  border-radius: 5px;
   border: none;
   text-align: center;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #fff;
-  cursor: pointer;
   background: #db6145;
+  border-radius: 5px;
   margin-right: 1.5rem;
-  padding: 1rem 3rem;
-  opacity: 0.8;
-  box-shadow: 2px 2px 6px #b4541c;
+  padding: 2rem 5rem;
+  opacity: 0.9;
+  box-shadow: 2px 2px 8px #b4541c;
+  cursor: pointer;
 
   &:active {
     transform: translate(1px, 1px);

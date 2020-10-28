@@ -162,3 +162,13 @@ export const roleLookup: ILookup = {
 };
 
 export const GAME_NAME = 'bang';
+
+export const stageNames = {
+  drawToReact: 'drawToReact',
+  pickFromGeneralStore: 'pickFromGeneralStore',
+  duel: 'duel',
+  reactToGattling: 'reactToGattling',
+  reactToIndians: 'reactToIndians',
+};
+
+export const delayBetweenActions = 1500;

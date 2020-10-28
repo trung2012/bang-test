@@ -1,11 +1,12 @@
 export interface IGameState {
   deck: ICard[];
+  cardsInPlay: ICard[][];
   discarded: ICard[];
   generalStore: ICard[];
   players: IGamePlayerMap;
-  playersOrder: string[];
   characters: ICharacter[];
-  roles: Role[];
+  isSuddenDeathOn: boolean;
+  currentReactionCardNeeded: CardName | null;
 }
 
 export interface IGamePlayerMap {
@@ -14,12 +15,14 @@ export interface IGamePlayerMap {
 export interface IGamePlayer {
   id: string;
   hp: number;
+  maxHp: number;
   playerName?: string;
   hand: ICard[];
   equipments: ICard[];
   character: ICharacter;
   role: Role;
   isDead: boolean;
+  numBangsLeft: number;
   activeCard?: ICard;
   targetedCard?: ICard;
 }
@@ -30,8 +33,10 @@ export interface ICard {
   value: number;
   suit: CardSuit;
   type: CardType;
-  description?: string;
   imageUrl: string;
+  description?: string;
+  needsReaction?: boolean;
+  isTargeted?: boolean;
 }
 
 export type CardSuit = 'hearts' | 'spades' | 'diamond' | 'clubs';

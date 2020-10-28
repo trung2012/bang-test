@@ -1825,6 +1825,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-dragtastic@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@types/react-dragtastic/-/react-dragtastic-2.4.1.tgz#6a48f48345487b470c1df3db66f8fe171bdb3164"
+  integrity sha512-3E8MpI9i6g3aNK5AchQEfNk1UpnE3KEtmLoUQZYqbtb8VPclBTfLU81d1nKr6r2wBSWcDUF/FPZrG+eGeT4u1g==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.9":
   version "7.1.9"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.9.tgz#280c13565c9f13ceb727ec21e767abe0e9b4aec3"
@@ -9581,7 +9588,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9814,6 +9821,13 @@ react-dom@^16.14.0:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.19.1"
+
+react-dragtastic@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/react-dragtastic/-/react-dragtastic-2.4.3.tgz#9cf5531c45cc52020b30f454f9b219852307f6ef"
+  integrity sha512-AQwmi3Ri9/Fpf8FKabxnsxSh6gRYZHIQqRBubu3NSBvWQ7bOOpqGxlTtxZVkj3QiSg3h2S3xYZoxB27A6dV0xg==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-error-overlay@^6.0.7:
   version "6.0.7"

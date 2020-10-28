@@ -1,7 +1,7 @@
 import React from 'react';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
-import Bang from '../../game';
+import { Bang } from '../../game';
 import GameBoard from '../GameBoard';
 import { SERVER_URL } from '../../config';
 
