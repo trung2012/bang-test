@@ -31,8 +31,10 @@ const setup = (ctx: Ctx) => {
       equipments,
       character: playerCharacter,
       role: playerRole,
-      isDead: false,
-      numBangsLeft: 1,
+      gunRange: 1,
+      actionRange: 1,
+      cardsInPlay: [],
+      numBangsLeft: playerCharacter.name === 'willy the kid' ? 100 : 1,
     };
 
     for (let hp = 1; hp <= player.hp; hp++) {

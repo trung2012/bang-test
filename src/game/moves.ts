@@ -3,10 +3,16 @@ import { Ctx, MoveMap } from 'boardgame.io/dist/types/src/types';
 import { delayBetweenActions, stageNames } from './constants';
 import { ICard, IGameState } from './types';
 
-export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
+export const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const currentPlayer = G.players[targetPlayerId];
+  currentPlayer.hp -= 1;
+};
+
+export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlayerId: string) => {
+  const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
   const cardToPlay = currentPlayer.hand.splice(cardIndex, 1)[0];
-  G.cardsInPlay[Number(ctx.currentPlayer)].push(cardToPlay);
+  targetPlayer.cardsInPlay.push(cardToPlay);
 };
 
 export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
@@ -19,8 +25,9 @@ export const delayedDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   }, delayBetweenActions);
 };
 
-export const equip = (G: IGameState, ctx: Ctx, equipmentCard: ICard) => {
+export const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
+  const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
   if (equipmentCard.type !== 'equipment') return INVALID_MOVE;
   currentPlayer.equipments.push(equipmentCard);
 };
@@ -34,19 +41,17 @@ export const jail = (G: IGameState, ctx: Ctx, jailCard: ICard, targetPlayerId: s
 
 export const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
-  const newCard = G.deck[0];
-  G.deck.shift();
-  currentPlayer.hand.push(newCard);
+  const newCard = G.deck.pop();
+  if (newCard) {
+    currentPlayer.hand.push(newCard);
+  }
 };
 
 export const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
-  const newCards = G.deck.slice(0, 2);
-  G.deck.shift();
-  G.deck.shift();
-  if (newCards?.length) {
-    currentPlayer.hand.push(...newCards);
-  }
+  const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+  G.deck = G.deck.slice(0, G.deck.length - 2);
+  currentPlayer.hand.push(...newCards);
 };
 
 export const drawOneFromDiscardPile = (G: IGameState, ctx: Ctx) => {
@@ -61,43 +66,49 @@ export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const currentPlayerCardsInPlay = G.cardsInPlay[Number(ctx.currentPlayer)];
 
-  let firstCard = G.deck[0];
-  G.deck.shift();
-  currentPlayer.hand.push(firstCard);
+  let firstCard = G.deck.pop();
+  if (firstCard) {
+    currentPlayer.hand.push(firstCard);
+  }
 
-  let secondCard = G.deck[0];
-  G.deck.shift();
-  currentPlayerCardsInPlay.push(secondCard);
+  let secondCard = G.deck.pop();
+  if (secondCard) {
+    currentPlayerCardsInPlay.push(secondCard);
+  }
   currentPlayer.hand.push(...G.cardsInPlay[Number(ctx.currentPlayer)]);
 
   setTimeout(() => {
     let thirdCard: ICard;
 
-    if (secondCard.suit === 'hearts' || secondCard.suit === 'diamond') {
-      thirdCard = G.deck[0];
-      G.deck.shift();
-      currentPlayer.hand.push(thirdCard);
+    if (secondCard && (secondCard.suit === 'hearts' || secondCard.suit === 'diamond')) {
+      thirdCard = G.deck.pop() as ICard;
+      if (thirdCard) {
+        currentPlayer.hand.push(thirdCard);
+      }
     }
   }, delayBetweenActions);
 };
 
-export const drawToReact = (G: IGameState, ctx: Ctx, isDynamite: boolean, isJail: boolean) => {
+export const drawToReact = (
+  G: IGameState,
+  ctx: Ctx,
+  isDynamite: boolean = false,
+  isJail: boolean = false
+) => {
   let cards: ICard[] = [];
   const currentPlayer = G.players[ctx.currentPlayer];
   const currentPlayerCardsInPlay = G.cardsInPlay[Number(ctx.currentPlayer)];
-  let drawnCard = G.deck[0];
-  G.deck.shift();
+  let drawnCard = G.deck.pop();
 
   if (drawnCard) {
     cards.push(drawnCard);
   }
 
   if (currentPlayer.character.name === 'lucky duke') {
-    drawnCard = G.deck[0];
-    G.deck.shift();
+    const extraCard = G.deck.pop();
 
-    if (drawnCard) {
-      cards.push(drawnCard);
+    if (extraCard) {
+      cards.push(extraCard);
     }
   }
 
@@ -121,7 +132,7 @@ export const drawToReact = (G: IGameState, ctx: Ctx, isDynamite: boolean, isJail
     // Barrel
     const isFailure = cards.every(card => card.suit !== 'hearts');
     if (isFailure) {
-      currentPlayer.hp = currentPlayer.hp - 1;
+      currentPlayer.hp -= 1;
     }
   }
 };
@@ -136,6 +147,7 @@ export const discardFromHand = (
 ) => {
   const targetPlayer = G.players[targetPlayerId];
   const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+  if (!discardedCard) return INVALID_MOVE;
   G.discarded.push(discardedCard);
 };
 
@@ -238,7 +250,7 @@ export const generalStore = (G: IGameState, ctx: Ctx) => {
   const numPlayers = ctx.playOrder.reduce((count, id) => {
     const player = G.players[id];
 
-    if (!player.isDead) {
+    if (player.hp > 0) {
       return count + 1;
     }
 
@@ -276,7 +288,6 @@ export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
       value: {
-        [ctx.currentPlayer]: stageNames.duel,
         [targetPlayerId]: stageNames.duel,
       },
     });
@@ -290,6 +301,7 @@ export const endTurn = (G: IGameState, ctx: Ctx) => {
 };
 
 const moves: MoveMap<IGameState> = {
+  takeDamage,
   drawOneFromDeck,
   drawTwoFromDeck,
   drawToReact,

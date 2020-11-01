@@ -1,4 +1,5 @@
 import { StageMap } from 'boardgame.io/dist/types/src/types';
+import moves from './moves';
 import { IGameState } from './types';
 
 const stages: StageMap<IGameState> = {
@@ -9,7 +10,10 @@ const stages: StageMap<IGameState> = {
     moves: {},
   },
   duel: {
-    moves: {},
+    moves: {
+      duel: moves.duel,
+      takeDamage: moves.takeDamage,
+    },
   },
   reactToGattling: {},
   reactToIndians: {},

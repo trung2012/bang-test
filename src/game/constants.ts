@@ -161,7 +161,9 @@ export const roleLookup: ILookup = {
   3: 'deputy',
 };
 
-export const GAME_NAME = 'bang';
+export const gameNames = {
+  bang: 'bang',
+};
 
 export const stageNames = {
   drawToReact: 'drawToReact',

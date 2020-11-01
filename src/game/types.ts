@@ -7,6 +7,7 @@ export interface IGameState {
   characters: ICharacter[];
   isSuddenDeathOn: boolean;
   currentReactionCardNeeded: CardName | null;
+  activeStage: string;
 }
 
 export interface IGamePlayerMap {
@@ -16,14 +17,15 @@ export interface IGamePlayer {
   id: string;
   hp: number;
   maxHp: number;
-  playerName?: string;
+  name?: string;
   hand: ICard[];
   equipments: ICard[];
   character: ICharacter;
+  gunRange: number;
+  actionRange: number;
   role: Role;
-  isDead: boolean;
   numBangsLeft: number;
-  activeCard?: ICard;
+  cardsInPlay: ICard[];
   targetedCard?: ICard;
 }
 

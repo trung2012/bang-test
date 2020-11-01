@@ -1,0 +1,200 @@
+@mixin gameTableLayout($numPlayers) {
+  position: relative;
+  display: grid;
+  height: 100vh;
+  grid-template-columns: repeat(8, 12.5%);
+  grid-template-rows: repeat(8, 12.5%);
+}
+
+@mixin player0 {
+  .player0 {
+    grid-column: 3 / span 4;
+    grid-row: 8;
+    align-self: center;
+    flex-direction: row;
+    justify-self: flex-start;
+
+    .player-info-container {
+      align-self: center;
+    }
+
+    .player-equipments {
+      left: 0;
+      top: -100%;
+    }
+  }
+}
+
+@mixin player1($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}
+
+@mixin player2($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}
+
+@mixin player3($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}
+
+@mixin player4($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}
+
+@mixin player5($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}
+
+@mixin player6($numPlayers) {
+  @if $numPlayers == 2 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 6 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+
+  @if $numPlayers == 7 {
+    .player1 {
+      grid-column: 4 / span 2;
+      grid-row: 1;
+      align-self: flex-start;
+      justify-self: center;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@import '../../../sass/_main';
+
+.discarded {
+  width: 10rem;
+  height: 15rem;
+  border: dashed 4px $color-gray-light;
+  cursor: pointer;
+}

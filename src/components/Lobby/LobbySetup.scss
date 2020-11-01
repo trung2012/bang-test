@@ -1,3 +1,5 @@
+@import '../../sass/_main';
+
 .lobby {
   display: flex;
   flex-direction: column;
@@ -18,8 +20,8 @@
     &::after {
       content: '';
       position: absolute;
-      height: 5px;
-      width: 15px;
+      height: 0.5rem;
+      width: 1.5rem;
       left: 0;
       background-color: #fff;
       opacity: 0.3;
@@ -33,16 +35,5 @@
         display: none;
       }
     }
-  }
-}
-
-@keyframes dashToRight {
-  to {
-    left: 100%;
-  }
-}
-@-webkit-keyframes dashToRight {
-  to {
-    left: 100%;
   }
 }

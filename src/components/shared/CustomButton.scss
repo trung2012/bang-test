@@ -1,3 +1,5 @@
+@import '../../sass/_main';
+
 .custom-button {
   display: flex;
   justify-content: center;
@@ -10,16 +12,16 @@
   font-size: 2rem;
   font-weight: 600;
   color: #fff;
-  background: #db6145;
+  background: $color-tertiary;
   border-radius: 5px;
   margin-right: 1.5rem;
   padding: 2rem 5rem;
   opacity: 0.9;
-  box-shadow: 2px 2px 8px #b4541c;
+  box-shadow: $box-shadow-primary;
   cursor: pointer;
 
   &:active {
-    transform: translate(1px, 1px);
+    transform: translate(0.1rem, 0.1rem);
     box-shadow: none;
   }
 
