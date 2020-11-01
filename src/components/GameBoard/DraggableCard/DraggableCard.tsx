@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Draggable, DragComponent } from 'react-dragtastic';
+import { useGameContext } from '../../../context';
 import { ICard } from '../../../game/types';
+import { MoreOptions } from '../../shared';
 import { Card } from '../Card';
 import './DraggableCard.scss';
 
@@ -13,6 +15,9 @@ interface IDraggableCardProps {
 
 export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
   ({ card, index, isFacedUp, playerId }) => {
+    const { moves } = useGameContext();
+    const [showCardOptions, setShowCardOptions] = useState(false);
+
     return (
       <Fragment>
         <Draggable id={`${card.id}`} type='card' data={{ cardID: card.id }}>
@@ -29,7 +34,27 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
                 left: `${50 + index * 70}px`,
               }}
             >
-              <Card card={card} isFacedUp={isFacedUp} />
+              <Card
+                card={card}
+                isFacedUp={isFacedUp}
+                onContextMenu={(event: React.MouseEvent<HTMLDivElement>) => {
+                  event.preventDefault();
+                  setShowCardOptions(true);
+                }}
+              />
+              {showCardOptions && (
+                <MoreOptions dismiss={() => setShowCardOptions(false)}>
+                  <div
+                    className='more-options-item'
+                    onClick={event => {
+                      event.stopPropagation();
+                      moves.discardFromHand(playerId, index);
+                    }}
+                  >
+                    Discard
+                  </div>
+                </MoreOptions>
+              )}
             </div>
           )}
         </Draggable>

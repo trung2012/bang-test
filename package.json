@@ -31,7 +31,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "ts-node-dev --ignore-watch node_modules ./server.ts",
+    "server": "ts-node-dev --ignore-watch src/ ./server.ts",
     "client": "react-scripts start",
     "start": "concurrently \"yarn run client\" \"yarn run server\" "
   },

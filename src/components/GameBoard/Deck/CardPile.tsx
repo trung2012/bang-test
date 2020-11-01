@@ -5,14 +5,9 @@ import { Card } from '../Card';
 import { ICard } from '../../../game/types';
 import './CardPile.scss';
 
-const randomRotationValue = () => {
-  const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-  return plusOrMinus * Math.round(Math.random() * 4);
-};
-
-const CardContainer = styled(Card)<{ index: number }>`
+const CardContainer = styled(Card)<{ index: number; cardRotationValue: number }>`
   position: absolute;
-  transform: ${props => `rotate(${randomRotationValue()}deg)`};
+  transform: ${props => `rotate(${props.cardRotationValue}deg)`};
   transform-origin: center;
 `;
 
@@ -23,10 +18,19 @@ interface ICardPileProps {
 }
 
 export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className }) => {
+  console.log(cards.map(card => card.rotationValue));
   return (
     <div className={`${className ?? ''} card-pile`}>
       {cards.map((card, index) => {
-        return <CardContainer key={card.id} index={index} card={card} isFacedUp={isFacedUp} />;
+        return (
+          <CardContainer
+            key={card.id}
+            index={index}
+            card={card}
+            isFacedUp={isFacedUp}
+            cardRotationValue={card.rotationValue ?? 0}
+          />
+        );
       })}
     </div>
   );

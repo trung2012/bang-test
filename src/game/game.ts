@@ -1,4 +1,4 @@
-import { Ctx } from 'boardgame.io';
+import { Ctx, Game } from 'boardgame.io';
 import { gameNames } from './constants';
 import moves from './moves';
 import phases from './phases';
@@ -6,7 +6,7 @@ import setup from './setup';
 import stages from './stages';
 import { ICard, IGameState } from './types';
 
-const game = {
+const game: Game<IGameState> = {
   name: gameNames.bang,
   setup,
   moves,

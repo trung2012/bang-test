@@ -1,4 +1,5 @@
 import { Ctx } from 'boardgame.io/dist/types/src/types';
+import { randomRotationValue } from '../utils';
 import { generateRoles } from '../utils/generateRoles';
 import { cards } from './cards';
 import { characters, gameRolesByNumPlayers } from './constants';
@@ -6,11 +7,15 @@ import { ICard, ICharacter, IGamePlayer, IGamePlayerMap, IGameState, Role } from
 
 const setup = (ctx: Ctx) => {
   const roles = generateRoles(gameRolesByNumPlayers[ctx.numPlayers]);
-  const deck = ctx.random!.Shuffle(cards);
+  const cardsShuffled = ctx.random!.Shuffle(cards);
+  const deck: ICard[] = cardsShuffled.map(card => ({
+    ...card,
+    rotationValue: randomRotationValue(),
+  }));
+
   const rolesShuffled = ctx.random!.Shuffle(roles);
   const charactersShuffled = ctx.random!.Shuffle(characters);
   const discarded: ICard[] = [];
-  const cardsInPlay: ICard[][] = Array(ctx.numPlayers).fill([]);
   const generalStore: ICard[] = [];
   const players: IGamePlayerMap = {};
   const playersOrder: string[] = [];
@@ -31,8 +36,8 @@ const setup = (ctx: Ctx) => {
       equipments,
       character: playerCharacter,
       role: playerRole,
-      gunRange: 1,
-      actionRange: 1,
+      gunRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
+      actionRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
       cardsInPlay: [],
       numBangsLeft: playerCharacter.name === 'willy the kid' ? 100 : 1,
     };
@@ -50,7 +55,6 @@ const setup = (ctx: Ctx) => {
     discarded,
     players,
     generalStore,
-    cardsInPlay,
     isSuddenDeathOn: false,
     currentReactionCardNeeded,
   } as IGameState;

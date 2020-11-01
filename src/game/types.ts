@@ -1,6 +1,5 @@
 export interface IGameState {
   deck: ICard[];
-  cardsInPlay: ICard[][];
   discarded: ICard[];
   generalStore: ICard[];
   players: IGamePlayerMap;
@@ -39,6 +38,7 @@ export interface ICard {
   description?: string;
   needsReaction?: boolean;
   isTargeted?: boolean;
+  rotationValue?: number;
 }
 
 export type CardSuit = 'hearts' | 'spades' | 'diamond' | 'clubs';

@@ -15,8 +15,22 @@ export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlaye
   targetPlayer.cardsInPlay.push(cardToPlay);
 };
 
+export const playCardToReact = (G: IGameState, ctx: Ctx) => {};
+
 export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   G.discarded.push(card);
+};
+
+export const discardFromHand = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number
+) => {
+  const targetPlayer = G.players[targetPlayerId];
+  const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+  if (!discardedCard) return INVALID_MOVE;
+  moveToDiscard(G, ctx, discardedCard);
 };
 
 export const delayedDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
@@ -64,7 +78,6 @@ export const drawOneFromDiscardPile = (G: IGameState, ctx: Ctx) => {
 
 export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
-  const currentPlayerCardsInPlay = G.cardsInPlay[Number(ctx.currentPlayer)];
 
   let firstCard = G.deck.pop();
   if (firstCard) {
@@ -73,9 +86,9 @@ export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
 
   let secondCard = G.deck.pop();
   if (secondCard) {
-    currentPlayerCardsInPlay.push(secondCard);
+    currentPlayer.cardsInPlay.push(secondCard);
   }
-  currentPlayer.hand.push(...G.cardsInPlay[Number(ctx.currentPlayer)]);
+  currentPlayer.hand.push(...currentPlayer.cardsInPlay);
 
   setTimeout(() => {
     let thirdCard: ICard;
@@ -97,7 +110,6 @@ export const drawToReact = (
 ) => {
   let cards: ICard[] = [];
   const currentPlayer = G.players[ctx.currentPlayer];
-  const currentPlayerCardsInPlay = G.cardsInPlay[Number(ctx.currentPlayer)];
   let drawnCard = G.deck.pop();
 
   if (drawnCard) {
@@ -112,7 +124,7 @@ export const drawToReact = (
     }
   }
 
-  currentPlayerCardsInPlay.push(...cards);
+  currentPlayer.cardsInPlay.push(...cards);
 
   if (isDynamite || isJail) {
     const isFailure = cards.every(
@@ -135,20 +147,6 @@ export const drawToReact = (
       currentPlayer.hp -= 1;
     }
   }
-};
-
-export const playCardToReact = (G: IGameState, ctx: Ctx) => {};
-
-export const discardFromHand = (
-  G: IGameState,
-  ctx: Ctx,
-  targetPlayerId: string,
-  targetCardIndex: number
-) => {
-  const targetPlayer = G.players[targetPlayerId];
-  const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-  if (!discardedCard) return INVALID_MOVE;
-  G.discarded.push(discardedCard);
 };
 
 export const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -290,6 +288,7 @@ export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       value: {
         [targetPlayerId]: stageNames.duel,
       },
+      moveLimit: 1,
     });
   }
 };
@@ -297,6 +296,13 @@ export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 export const endTurn = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.endTurn) {
     ctx.events?.endTurn();
+  }
+};
+
+export const endDuelStage = (G: IGameState, ctx: Ctx) => {
+  if (G.activeStage !== 'duel') return INVALID_MOVE;
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
   }
 };
 
