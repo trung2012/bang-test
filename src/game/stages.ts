@@ -15,7 +15,7 @@ const stages: StageMap<IGameState> = {
       takeDamage: moves.takeDamage,
     },
   },
-  reactToGattling: {},
+  reactToGatling: {},
   reactToIndians: {},
 };
 

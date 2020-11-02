@@ -15,10 +15,23 @@ export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlaye
   targetPlayer.cardsInPlay.push(cardToPlay);
 };
 
+export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const targetPlayer = G.players[targetPlayerId];
+  const length = targetPlayer.cardsInPlay.length;
+
+  for (let i = length - 1; i >= 0; i--) {
+    const discardedCard = targetPlayer.cardsInPlay.pop();
+    if (discardedCard) {
+      G.discarded.push(discardedCard);
+    }
+  }
+};
+
 export const playCardToReact = (G: IGameState, ctx: Ctx) => {};
 
 export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   G.discarded.push(card);
+  return G;
 };
 
 export const discardFromHand = (
@@ -181,11 +194,11 @@ export const catbalou = (
   G.discarded.push(cardToDiscard);
 };
 
-export const gattling = (G: IGameState, ctx: Ctx) => {
+export const gatling = (G: IGameState, ctx: Ctx) => {
   G.currentReactionCardNeeded = 'missed';
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
-      others: stageNames.reactToGattling,
+      others: stageNames.reactToGatling,
       moveLimit: 1,
     });
   }
@@ -243,7 +256,7 @@ export const wellsfargo = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const generalStore = (G: IGameState, ctx: Ctx) => {
+export const generalstore = (G: IGameState, ctx: Ctx) => {
   // Take cards equal to the number of players alive
   const numPlayers = ctx.playOrder.reduce((count, id) => {
     const player = G.players[id];
@@ -313,6 +326,7 @@ const moves: MoveMap<IGameState> = {
   drawToReact,
   delayedDiscard,
   discardFromHand,
+  clearCardsInPlay,
   playCard,
   playCardToReact,
   equip,
@@ -320,14 +334,14 @@ const moves: MoveMap<IGameState> = {
   bang,
   beer,
   catbalou,
-  gattling,
+  gatling,
   indians,
   panic,
   saloon,
   stagecoach,
   wellsfargo,
   duel,
-  generalStore,
+  generalstore,
   pickCardFromGeneralStore,
 };
 

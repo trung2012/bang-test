@@ -169,7 +169,7 @@ export const stageNames = {
   drawToReact: 'drawToReact',
   pickFromGeneralStore: 'pickFromGeneralStore',
   duel: 'duel',
-  reactToGattling: 'reactToGattling',
+  reactToGatling: 'reactToGatling',
   reactToIndians: 'reactToIndians',
 };
 

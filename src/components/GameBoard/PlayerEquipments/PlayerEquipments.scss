@@ -2,4 +2,11 @@
   position: absolute;
   right: -20%;
   top: 0;
+  z-index: 5;
+
+  .droppable-card {
+    &:hover {
+      transform: translateX(-50%);
+    }
+  }
 }

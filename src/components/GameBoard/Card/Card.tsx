@@ -10,11 +10,11 @@ interface ICardProps {
   style?: React.CSSProperties | undefined;
   className?: string;
   onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  onBlur?: () => void;
+  onClick?: () => void;
 }
 
 export const Card: React.FC<ICardProps> = React.memo(
-  ({ card, style, isFacedUp, className, onContextMenu, onBlur }) => {
+  ({ card, style, isFacedUp, className, onContextMenu, onClick }) => {
     const cardValue = cardDisplayValue[card.value];
 
     if (isFacedUp) {
@@ -24,6 +24,7 @@ export const Card: React.FC<ICardProps> = React.memo(
           style={style}
           title={card.description ?? ''}
           onContextMenu={onContextMenu}
+          onClick={onClick}
         >
           <img className='card-image' src={card.imageUrl} alt='card' />
           <div className='card-value-container'>

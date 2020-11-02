@@ -18,7 +18,6 @@ interface ICardPileProps {
 }
 
 export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className }) => {
-  console.log(cards.map(card => card.rotationValue));
   return (
     <div className={`${className ?? ''} card-pile`}>
       {cards.map((card, index) => {

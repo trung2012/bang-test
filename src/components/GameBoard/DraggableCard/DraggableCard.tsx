@@ -15,8 +15,32 @@ interface IDraggableCardProps {
 
 export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
   ({ card, index, isFacedUp, playerId }) => {
-    const { moves } = useGameContext();
+    const { moves, playerID, isActive } = useGameContext();
     const [showCardOptions, setShowCardOptions] = useState(false);
+
+    const onCardClick = () => {
+      if (!isActive) return;
+      if (card.name === 'jail' || card.isTargeted) return;
+
+      if (card.type === 'equipment') {
+        moves.equip(index);
+        return;
+      }
+
+      moves.playCard(index, playerID);
+
+      setTimeout(() => {
+        const moveName = card.name.replace(' ', '').toLowerCase();
+        if (moves[moveName]) {
+          moves[moveName]();
+        }
+
+        if (!card.needsReaction) {
+          moves.clearCardsInPlay(playerID);
+          return;
+        }
+      }, 1000);
+    };
 
     return (
       <Fragment>
@@ -41,6 +65,7 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
                   event.preventDefault();
                   setShowCardOptions(true);
                 }}
+                onClick={onCardClick}
               />
               {showCardOptions && (
                 <MoreOptions dismiss={() => setShowCardOptions(false)}>

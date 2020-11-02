@@ -1,4 +1,4 @@
-import { PhaseConfig } from 'boardgame.io/src/types';
+import { PhaseConfig } from 'boardgame.io';
 import { IGameState } from './types';
 
 interface IGamePhases {
