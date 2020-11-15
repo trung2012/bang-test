@@ -20,6 +20,7 @@ const setup = (ctx: Ctx) => {
   const players: IGamePlayerMap = {};
   const playersOrder: string[] = [];
   const currentReactionCardNeeded = null;
+  const activeStage = null;
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -57,6 +58,7 @@ const setup = (ctx: Ctx) => {
     generalStore,
     isSuddenDeathOn: false,
     currentReactionCardNeeded,
+    activeStage,
   } as IGameState;
 };
 

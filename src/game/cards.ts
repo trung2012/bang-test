@@ -2,7 +2,7 @@ import { ICard } from '../game/types';
 
 const cardsOriginal: ICard[] = [
   {
-    id: 'NW_LoCMtQ',
+    id: 'rhSMooJXreHwPvs8U9b_U',
     value: 12,
     name: 'barrel',
     imageUrl:
@@ -13,7 +13,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'z52aLWZYPH',
+    id: 'Zt7UMNPofdRQx91nTBjZ9',
     value: 13,
     name: 'barrel',
     imageUrl:
@@ -24,7 +24,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: '8hmUTKeP-G',
+    id: 'VilYqLA9AsQaym-Hj2SW4',
     value: 2,
     name: 'dynamite',
     imageUrl:
@@ -35,7 +35,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: '9iIFRA1oCB',
+    id: '5hvBU6xsqn0nyPJ89azdU',
     value: 4,
     name: 'jail',
     imageUrl:
@@ -46,7 +46,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'kFLRzk0u2A',
+    id: '31HqKJYeqWkf8DPzo0BmM',
     value: 10,
     name: 'jail',
     imageUrl:
@@ -57,7 +57,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '0lcnjkGNdQ',
+    id: '-ol5SGNDrqDVzHhaglr_J',
     value: 11,
     name: 'jail',
     imageUrl:
@@ -68,7 +68,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '5mN0myOMr8',
+    id: 'o-xocVC9VTlqhBG4MHbB-',
     value: 8,
     name: 'mustang',
     imageUrl:
@@ -79,7 +79,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'mI2rVgVpht',
+    id: 'FVxPmCPfo4fKYOJ_Hd0Fn',
     value: 9,
     name: 'mustang',
     imageUrl:
@@ -90,7 +90,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'sXUx7yXM3m',
+    id: 'RipwgLqZPd7wPaAHgSmpN',
     value: 13,
     name: 'remington',
     imageUrl:
@@ -101,7 +101,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'd4dt2cUeF0',
+    id: 'gT16xB_lzBUxUBl5F7GWB',
     value: 14,
     name: 'rev carabine',
     imageUrl:
@@ -112,7 +112,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'Sbve6-omUt',
+    id: 'drpZ99muNlcKuKLU0WUg_',
     value: 11,
     name: 'schofield',
     imageUrl:
@@ -123,7 +123,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'yDL_FPV1g5',
+    id: '5vav0WFjWY8MF4x0cvSKM',
     value: 12,
     name: 'schofield',
     imageUrl:
@@ -134,7 +134,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'n34Tl-5oDr',
+    id: 'stm7jk3gxPM8OkLW-j7H_',
     value: 13,
     name: 'schofield',
     imageUrl:
@@ -145,7 +145,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'TSilVLZ-UV',
+    id: 'wiKIVcHiUVPsDyB_Ux2fu',
     value: 14,
     name: 'scope',
     imageUrl:
@@ -156,7 +156,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'Fxx7eqqFCm',
+    id: 'W4JzkaQFJcPfN2zeelgaw',
     value: 10,
     name: 'volcanic',
     imageUrl:
@@ -167,7 +167,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: '2xikjsyVZs',
+    id: 'EDDb4QeyOZKDFUhc_g8SX',
     value: 10,
     name: 'volcanic',
     imageUrl:
@@ -178,7 +178,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'VLB7Ii087-_',
+    id: '_-aAC77duLeAYx-go__IQ',
     value: 8,
     name: 'winchester',
     imageUrl:
@@ -189,7 +189,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'P2a7-3m63NW',
+    id: 'yatRYVXm7KAlOTIz377E1',
     value: 14,
     name: 'bang',
     imageUrl:
@@ -200,7 +200,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'UCISqzrlh7m',
+    id: 'RdJnA0SIOTvSxTOCOXGnv',
     value: 2,
     name: 'bang',
     imageUrl:
@@ -211,7 +211,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'J3KjwH_vFvT',
+    id: 'U0VIULrFuE67EN-UoxAGE',
     value: 3,
     name: 'bang',
     imageUrl:
@@ -222,7 +222,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'wPeT0piteaz',
+    id: 'QZZ8vsZEiqKDX_0QUlKwG',
     value: 4,
     name: 'bang',
     imageUrl:
@@ -233,7 +233,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'dxuH5AzsYw-',
+    id: '-tvISdw4NhvU3FOpdL0Vz',
     value: 5,
     name: 'bang',
     imageUrl:
@@ -244,7 +244,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'EagSS8uliUi',
+    id: 'aKiol5FSorSHdRryeVqmC',
     value: 6,
     name: 'bang',
     imageUrl:
@@ -255,7 +255,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'ukJc1INQovK',
+    id: 'ciORa6mmE7iqWQsCznifB',
     value: 7,
     name: 'bang',
     imageUrl:
@@ -266,7 +266,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'rJpAk_ldt4O',
+    id: 'wrAfgdtGxA2nA0xz3MPKR',
     value: 8,
     name: 'bang',
     imageUrl:
@@ -277,7 +277,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'WfJdFRqh8v1',
+    id: 'Z6-izVSCiM6nZxYH-VfFt',
     value: 9,
     name: 'bang',
     imageUrl:
@@ -288,7 +288,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'RybQbYIlfwW',
+    id: 'Z25VVBv1Xsh-DenDVy_-i',
     value: 10,
     name: 'bang',
     imageUrl:
@@ -299,7 +299,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'ux_9TyM4gPm',
+    id: 'Qh2Z_vFrUc-X2ykBpdAqi',
     value: 11,
     name: 'bang',
     imageUrl:
@@ -310,7 +310,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '8mT1RTyZEx0',
+    id: '3-KPqEw-1DHj8rxslWErI',
     value: 12,
     name: 'bang',
     imageUrl:
@@ -321,7 +321,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '559xYoIaa6J',
+    id: 'Tu4zT2xshZVkN8NXZp4eO',
     value: 13,
     name: 'bang',
     imageUrl:
@@ -332,7 +332,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'aq2n_RYXrbJ',
+    id: 'GZJQQSHuAEJr2LVIZmtxC',
     value: 14,
     name: 'bang',
     imageUrl:
@@ -343,7 +343,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'Mhs_BtmxQnz',
+    id: '4ZM_8tApWN3JM8aOo1RMK',
     value: 12,
     name: 'bang',
     imageUrl:
@@ -354,7 +354,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'qEoZwFB3JOv',
+    id: 'IafqKETKKi10fnDiOsiW6',
     value: 13,
     name: 'bang',
     imageUrl:
@@ -365,7 +365,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'LDWFsDIaVP6',
+    id: '8VcK6behOeu_i5v9rHLny',
     value: 14,
     name: 'bang',
     imageUrl:
@@ -376,7 +376,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'FS1x_i4I7sf',
+    id: 'YMSydDFzDWO2IHeM8eTJ_',
     value: 2,
     name: 'bang',
     imageUrl:
@@ -387,7 +387,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'o30DHsx85PZ',
+    id: 'Ip53iSuaG-CpD_jAgbOI9',
     value: 3,
     name: 'bang',
     imageUrl:
@@ -398,7 +398,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'k02zPBPLXX0',
+    id: 'aUAYA8BDt8dRIi8mwpg-l',
     value: 4,
     name: 'bang',
     imageUrl:
@@ -409,7 +409,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'f0NEYuq3sIQ',
+    id: 'M2AJYGqsVhR3skGVY-Whk',
     value: 5,
     name: 'bang',
     imageUrl:
@@ -420,7 +420,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'ri361zAPWBX',
+    id: 'HI_rI_SU3QgzLZS1Yr6vb',
     value: 6,
     name: 'bang',
     imageUrl:
@@ -431,7 +431,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'Sprz2XLVRgH',
+    id: 'z5GMCxALxC2YRLYz5T3R1',
     value: 7,
     name: 'bang',
     imageUrl:
@@ -442,7 +442,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'vCp3HDm2KCN',
+    id: 'BY-fLgfCVm9WsIxfndwg9',
     value: 8,
     name: 'bang',
     imageUrl:
@@ -453,7 +453,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'FIdS8scgNUz',
+    id: '8ygMPu5ZU94G8OXFvIcrU',
     value: 9,
     name: 'bang',
     imageUrl:
@@ -464,7 +464,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'LRTJGFUEMIR',
+    id: 'R9JWhrhRQBI1hfkjqE4yM',
     value: 6,
     name: 'beer',
     imageUrl:
@@ -475,7 +475,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'mlqAYRROWTC',
+    id: 'y15J765JDDK_i0bqwUU90',
     value: 7,
     name: 'beer',
     imageUrl:
@@ -486,7 +486,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'PupGGWkRHKt',
+    id: 'hsmoBBXqDxuxlDtGXKAsx',
     value: 8,
     name: 'beer',
     imageUrl:
@@ -497,7 +497,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'rHNhiXIrWqj',
+    id: 'C7ZPoHkV2WbKzQY_tfwuY',
     value: 9,
     name: 'beer',
     imageUrl:
@@ -508,7 +508,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'FqUyl-UjjZ4',
+    id: 'W2-Yoi_uIWGMEZ3EmTohM',
     value: 10,
     name: 'beer',
     imageUrl:
@@ -519,7 +519,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'nv4sPpBm4x1',
+    id: 'jAAxJmhcmhLuLY0mjcBdl',
     value: 11,
     name: 'beer',
     imageUrl:
@@ -530,7 +530,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'OP8UlqFPOhI',
+    id: 'wmLKLRyE8mj5y8NyrEIlO',
     value: 13,
     name: 'cat balou',
     imageUrl:
@@ -541,7 +541,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'lT-WqWaXhP_',
+    id: '454JJFe0lu_KGrHlTJqR_',
     value: 9,
     name: 'cat balou',
     imageUrl:
@@ -552,7 +552,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'n_db-dwNxsq',
+    id: '2XpSUS1Np3oF4FH6pIM5o',
     value: 10,
     name: 'cat balou',
     imageUrl:
@@ -563,7 +563,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '4_rWK2wxodo',
+    id: 'zhth5fsp628DfLKvSrAd6',
     value: 11,
     name: 'cat balou',
     imageUrl:
@@ -574,7 +574,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'zi5OpfKonpv',
+    id: 'WTHIUpxcB5scklQDhh98H',
     value: 8,
     name: 'duel',
     imageUrl:
@@ -585,7 +585,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'yUO_e1Yg8VB',
+    id: '8swMRyb53Y7H1ESjDAQVY',
     value: 12,
     name: 'duel',
     imageUrl:
@@ -596,7 +596,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: '368Lg1-bpNn',
+    id: 't4WCFXT3Agy0csOLuvij4',
     value: 11,
     name: 'duel',
     imageUrl:
@@ -607,7 +607,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'k3Gax9IRj4d',
+    id: 'SumZq4lsRCOHQ69HUbimD',
     value: 10,
     name: 'gatling',
     imageUrl:
@@ -618,7 +618,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 't0XIve0oHGd',
+    id: 'SRbrIkg9Sc4vcSxfDI3LJ',
     value: 9,
     name: 'general store',
     imageUrl:
@@ -629,7 +629,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: '48j924lBaID',
+    id: 'aFd7p-zAMNyHHN59cCF2j',
     value: 12,
     name: 'general store',
     imageUrl:
@@ -640,7 +640,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'sR8ita4S5iQ',
+    id: 'wrnzievJVX_P7s-gVO8BC',
     value: 13,
     name: 'indians',
     imageUrl:
@@ -651,7 +651,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'q3MxBwfa-m7',
+    id: 'i1Lb999GxJ4cnFp60Fd4S',
     value: 14,
     name: 'indians',
     imageUrl:
@@ -662,7 +662,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: '6MD26Ex4eqm',
+    id: 'D96z7Ug64csBFSwOcrJAf',
     value: 10,
     name: 'missed',
     imageUrl:
@@ -673,7 +673,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'mxIlQEeXx_9',
+    id: 'TxKie_zatNEHeai9wMF0H',
     value: 11,
     name: 'missed',
     imageUrl:
@@ -684,7 +684,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'aL5uT93z_sv',
+    id: 'kwqaAKWRtVF2bZFFX-m5b',
     value: 12,
     name: 'missed',
     imageUrl:
@@ -695,7 +695,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'OScCyp44JMg',
+    id: 'PAZV9NoPL-gcOFeoUOLUr',
     value: 13,
     name: 'missed',
     imageUrl:
@@ -706,7 +706,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'nrCBmsm5p1P',
+    id: 'VAbi_JY7PDwGPQM5Tv5Co',
     value: 14,
     name: 'missed',
     imageUrl:
@@ -717,7 +717,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'v26AmWEGF5k',
+    id: 'Fe25MR-1k7qVjRUfwMrB4',
     value: 2,
     name: 'missed',
     imageUrl:
@@ -728,7 +728,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'cqN8euZn7q9',
+    id: 'zS4To8Msw0iP41oM93MGu',
     value: 3,
     name: 'missed',
     imageUrl:
@@ -739,7 +739,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'Y3bQ1XTSENs',
+    id: '0Y87LF3J-nyBVqGS1Vjht',
     value: 4,
     name: 'missed',
     imageUrl:
@@ -750,7 +750,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 's_Rv_9ntEyw',
+    id: 'cQEoBaEnl2bQmgkgZTVdF',
     value: 5,
     name: 'missed',
     imageUrl:
@@ -761,7 +761,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'PwD14mrMmve',
+    id: 'fkCeec5GqQgQzwuRlYUjm',
     value: 6,
     name: 'missed',
     imageUrl:
@@ -772,7 +772,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'LElJy9zw1Ai',
+    id: 'dnKjZF_bOHfL-mh04SviX',
     value: 7,
     name: 'missed',
     imageUrl:
@@ -783,7 +783,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'BCLDm9YZrXw',
+    id: 'VbsfV4gubdXleMoIPonUw',
     value: 8,
     name: 'missed',
     imageUrl:
@@ -794,7 +794,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'evOmkBVa59q',
+    id: 'LPiPCjm9Zmalo2xef8p1g',
     value: 11,
     name: 'panic',
     imageUrl:
@@ -805,7 +805,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'yszzm6LLDWG',
+    id: 'JPDllU2Tzmda48pSuN6nH',
     value: 12,
     name: 'panic',
     imageUrl:
@@ -816,7 +816,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'v_mnLl2VOuB',
+    id: 'iZNWQuwmgtLl2Y4UO6Uxs',
     value: 13,
     name: 'panic',
     imageUrl:
@@ -827,7 +827,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'duxuTmkDmhk',
+    id: 'qGLRAI7lrF0LNU2u2m9ne',
     value: 8,
     name: 'panic',
     imageUrl:
@@ -838,7 +838,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: true,
   },
   {
-    id: 'tQAl-auZVwB',
+    id: 'lEj5P0dJNwbnPkRHHOZ0-',
     value: 5,
     name: 'saloon',
     imageUrl:
@@ -849,7 +849,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'olAjWR1wihj',
+    id: 'PIkh0-vSQloPj7p8qeMta',
     value: 8,
     name: 'stagecoach',
     imageUrl:
@@ -860,7 +860,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'kLKn1N1W0Bm',
+    id: '3vwOMxVOKlE_2cE9NkZv1',
     value: 9,
     name: 'stagecoach',
     imageUrl:
@@ -871,7 +871,7 @@ const cardsOriginal: ICard[] = [
     isTargeted: false,
   },
   {
-    id: 'UNw-dUpiOWp',
+    id: 'nGfKimmZ_z_9FJVfT8ztz',
     value: 3,
     name: 'wells fargo',
     imageUrl:

@@ -6,6 +6,19 @@
   grid-template-rows: repeat(8, 12.5%);
 }
 
+@mixin generalStore {
+  .general-store {
+    grid-column: 2 / span 6;
+    grid-row: 3;
+    display: flex;
+    justify-content: center;
+
+    & > * {
+      padding-right: 1rem;
+    }
+  }
+}
+
 @mixin player0 {
   .player0 {
     grid-column: 3 / span 4;

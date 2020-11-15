@@ -17,7 +17,7 @@ interface ICardPileProps {
   className?: string;
 }
 
-export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className }) => {
+export const CardPile: React.FC<ICardPileProps> = React.memo(({ cards, isFacedUp, className }) => {
   return (
     <div className={`${className ?? ''} card-pile`}>
       {cards.map((card, index) => {
@@ -33,4 +33,4 @@ export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className
       })}
     </div>
   );
-};
+});

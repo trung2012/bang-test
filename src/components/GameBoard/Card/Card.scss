@@ -3,6 +3,7 @@
 .card {
   width: $card-width;
   height: $card-height;
+  position: relative;
 
   &-value {
     &-container {

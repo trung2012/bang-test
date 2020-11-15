@@ -1,9 +1,10 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io/dist/types/src/types';
-import { delayBetweenActions, stageNames } from './constants';
+import { delayBetweenActions, gunRange, stageNames } from './constants';
 import { ICard, IGameState } from './types';
 
 export const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  if (!targetPlayerId) return INVALID_MOVE;
   const currentPlayer = G.players[targetPlayerId];
   currentPlayer.hp -= 1;
 };
@@ -19,15 +20,15 @@ export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string
   const targetPlayer = G.players[targetPlayerId];
   const length = targetPlayer.cardsInPlay.length;
 
-  for (let i = length - 1; i >= 0; i--) {
-    const discardedCard = targetPlayer.cardsInPlay.pop();
+  for (let i = 1; i <= length; i++) {
+    const discardedCard = targetPlayer.cardsInPlay.shift();
     if (discardedCard) {
       G.discarded.push(discardedCard);
     }
   }
 };
 
-export const playCardToReact = (G: IGameState, ctx: Ctx) => {};
+export const playCardToReact = (G: IGameState, ctx: Ctx, card: ICard) => {};
 
 export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   G.discarded.push(card);
@@ -56,11 +57,35 @@ export const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
   if (equipmentCard.type !== 'equipment') return INVALID_MOVE;
+  const newGunRange = gunRange[equipmentCard.name];
+  if (newGunRange) {
+    const previouslyEquippedGunIndex = currentPlayer.equipments.findIndex(
+      equipment => gunRange[equipment.name]
+    );
+    if (previouslyEquippedGunIndex !== -1) {
+      const previouslyEquippedGun = currentPlayer.equipments.splice(
+        previouslyEquippedGunIndex,
+        1
+      )[0];
+      moveToDiscard(G, ctx, previouslyEquippedGun);
+    }
+    currentPlayer.gunRange = newGunRange;
+  }
+  if (equipmentCard.name === 'scope') {
+    currentPlayer.actionRange += 1;
+  }
+
   currentPlayer.equipments.push(equipmentCard);
 };
 
-export const jail = (G: IGameState, ctx: Ctx, jailCard: ICard, targetPlayerId: string) => {
+export const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: number) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
   const targetPlayer = G.players[targetPlayerId];
+  const jailCard = currentPlayer.hand.splice(jailCardIndex, 1)[0];
+  if (jailCard.name !== 'jail') {
+    currentPlayer.hand.push(jailCard);
+    return INVALID_MOVE;
+  }
   if (targetPlayer.role === 'sheriff') return INVALID_MOVE;
 
   targetPlayer.equipments.push(jailCard);

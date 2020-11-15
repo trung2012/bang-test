@@ -1,8 +1,11 @@
 @import '../../../sass/_main';
 
 .card-pile {
-  width: 9rem;
-  height: 14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  height: 15rem;
   border-radius: $card-border-radius;
 
   &:hover {

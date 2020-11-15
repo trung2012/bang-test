@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { GameContext } from '../../../context';
 import { Deck, Discarded } from '../Deck';
+import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
 import './GameTable.scss';
 
@@ -27,6 +28,7 @@ export const GameTable = () => {
 
             return player && <Player key={player.id} player={player} playerIndex={index} />;
           })}
+        <GeneralStore />
         <div className='common-cards'>
           <Deck />
           <Discarded />

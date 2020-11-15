@@ -1,6 +1,6 @@
 import { BoardProps } from 'boardgame.io/dist/types/packages/react';
 import React from 'react';
-import { GameContext } from '../../context';
+import { AnimationProvider, ErrorProvider, GameContext } from '../../context';
 import { IGameState } from '../../game/types';
 import { GameTable } from './GameTable.tsx';
 
@@ -25,7 +25,11 @@ const GameBoard: React.FC<BoardProps<IGameState>> = ({
         playersInfo,
       }}
     >
-      <GameTable />
+      <ErrorProvider>
+        <AnimationProvider>
+          <GameTable />
+        </AnimationProvider>
+      </ErrorProvider>
     </GameContext.Provider>
   );
 };

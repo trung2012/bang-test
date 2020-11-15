@@ -6,7 +6,7 @@ export interface IGameState {
   characters: ICharacter[];
   isSuddenDeathOn: boolean;
   currentReactionCardNeeded: CardName | null;
-  activeStage: string;
+  activeStage: string | null;
 }
 
 export interface IGamePlayerMap {

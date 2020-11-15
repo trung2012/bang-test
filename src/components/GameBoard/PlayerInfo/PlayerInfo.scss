@@ -5,4 +5,8 @@
   border: 1px solid gray;
   margin: 2rem;
   z-index: 1;
+
+  &--active {
+    border: 1px solid salmon;
+  }
 }

@@ -1,1 +1,3 @@
-export * from './GameContext';
+export * from './game';
+export * from './error';
+export * from './animation';

@@ -1,4 +1,4 @@
-const shortid = require('shortid');
+const { nanoid } = require('nanoid');
 const fs = require('fs');
 
 const cardVal = {
@@ -226,7 +226,7 @@ const generateCards = cardsToGenerate => {
         const range = values[suit];
         if (range.length <= 1) {
           const cardsToPush = range.map(value => ({
-            id: shortid.generate(),
+            id: nanoid(),
             value,
             name: card.name,
             imageUrl: card.imageUrl,
@@ -241,7 +241,7 @@ const generateCards = cardsToGenerate => {
           const max = range[1];
           for (let v = min; v <= max; v++) {
             const newCard = {
-              id: shortid.generate(),
+              id: nanoid(),
               value: v,
               name: card.name,
               imageUrl: card.imageUrl,

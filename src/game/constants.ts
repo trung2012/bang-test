@@ -1,4 +1,4 @@
-import { ICharacter, ILookup } from './types';
+import { CardName, ICharacter, ILookup } from './types';
 
 export const cardVal = {
   2: 'two',
@@ -173,4 +173,14 @@ export const stageNames = {
   reactToIndians: 'reactToIndians',
 };
 
+export const gunRange: { [gunName: string]: number } = {
+  remington: 3,
+  'rev carabine': 4,
+  schofield: 2,
+  volcanic: 1,
+  winchester: 5,
+};
+
 export const delayBetweenActions = 1500;
+
+export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];

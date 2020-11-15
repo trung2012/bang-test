@@ -19,6 +19,7 @@
   grid-template-columns: repeat(8, 12.5%);
   grid-template-rows: repeat(8, 12.5%);
 
+  @include generalStore;
   @include player0;
   @include player1(2);
 }

@@ -10,7 +10,7 @@ interface IPlayerCardsProps {
   hand: ICard[];
 }
 
-export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
+export const PlayerHand: React.FC<IPlayerCardsProps> = React.memo(({ hand, playerId }) => {
   const { playerID } = useGameContext();
   const isFacedUp = playerId === playerID;
 
@@ -43,4 +43,4 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
       ))}
     </div>
   );
-};
+});

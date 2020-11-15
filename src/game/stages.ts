@@ -7,7 +7,9 @@ const stages: StageMap<IGameState> = {
     moves: {},
   },
   pickFromGeneralStore: {
-    moves: {},
+    moves: {
+      pickCardFromGeneralStore: moves.pickCardFromGeneralStore,
+    },
   },
   duel: {
     moves: {
@@ -15,8 +17,22 @@ const stages: StageMap<IGameState> = {
       takeDamage: moves.takeDamage,
     },
   },
-  reactToGatling: {},
-  reactToIndians: {},
+  reactToGatling: {
+    moves: {
+      takeDamage: moves.takeDamage,
+    },
+  },
+  reactToIndians: {
+    moves: {
+      takeDamage: moves.takeDamage,
+    },
+  },
+  reactToBang: {
+    moves: {
+      playCardToReact: moves.playCardToReact,
+      drawToReact: moves.drawToReact,
+    },
+  },
 };
 
 export default stages;
