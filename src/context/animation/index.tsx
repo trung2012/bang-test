@@ -1,41 +1,32 @@
-import React, { useContext, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 
 export interface IAnimationContext {
-  left: number;
-  top: number;
-  isAnimating: boolean;
-  setTop: (top: number) => void;
-  setLeft: (left: number) => void;
-  setIsAnimating: (isAnimating: boolean) => void;
-  animatedCardId: string;
-  setAnimatedCardId: (cardId: string) => void;
+  cardPositions: ICardPositions;
+  setCardPositions: Dispatch<SetStateAction<ICardPositions>>;
 }
 
-export const AnimationContext = React.createContext<IAnimationContext | null>(null);
+interface ICardPositions {
+  [cardId: string]: ICardPosition;
+}
+interface ICardPosition {
+  left: number;
+  top: number;
+}
+
+export const AnimationContext = React.createContext<IAnimationContext>({
+  cardPositions: {},
+  setCardPositions: () => {},
+});
 
 interface IAnimationProviderProps {
   children: React.ReactNode;
 }
 
 export const AnimationProvider: React.FC<IAnimationProviderProps> = ({ children }) => {
-  const [left, setLeft] = useState(0);
-  const [top, setTop] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [animatedCardId, setAnimatedCardId] = useState('');
+  const [cardPositions, setCardPositions] = useState<ICardPositions>({});
 
   return (
-    <AnimationContext.Provider
-      value={{
-        left,
-        setLeft,
-        top,
-        setTop,
-        isAnimating,
-        setIsAnimating,
-        animatedCardId,
-        setAnimatedCardId,
-      }}
-    >
+    <AnimationContext.Provider value={{ cardPositions, setCardPositions }}>
       {children}
     </AnimationContext.Provider>
   );

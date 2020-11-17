@@ -1,7 +1,7 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
-import { useAnimationContext, useErrorContext, useGameContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { delayBetweenActions } from '../../../game/constants';
 import { ICard, IGamePlayer } from '../../../game/types';
 import { calculateDistanceFromTarget } from '../../../utils';
@@ -17,7 +17,7 @@ interface IPlayerProps {
 }
 
 export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
-  const { playerID, G, playersInfo, moves } = useGameContext();
+  const { G, playersInfo, moves } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
@@ -29,13 +29,9 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
       playersInfo,
-      Number(sourcePlayerId),
-      Number(player.id)
+      sourcePlayerId,
+      player.id
     );
-
-    if (sourceCard.name !== 'jail') {
-      moves.playCard(sourceCardIndex, player.id);
-    }
 
     setTimeout(() => {
       switch (sourceCard.name) {
@@ -44,10 +40,14 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
             setError('Only Calamity Janet can play missed as bang');
             return;
           }
+          if (sourcePlayer.numBangsLeft === 0) {
+            setError('You cannot play anymore bangs');
+          }
           if (sourcePlayer.gunRange < distanceBetweenPlayers) {
             setError('Target is out of range');
             return;
           }
+          moves.playCard(sourceCardIndex, player.id);
           moves.bang(player.id);
           return;
         }
@@ -56,10 +56,15 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
             setError('Target is out of range');
             return;
           }
+          if (sourcePlayer.numBangsLeft === 0) {
+            setError('You cannot play anymore bangs');
+          }
+          moves.playCard(sourceCardIndex, player.id);
           moves.bang(player.id);
           return;
         }
         case 'duel': {
+          moves.playCard(sourceCardIndex, player.id);
           moves.duel(player.id);
           return;
         }

@@ -171,6 +171,7 @@ export const stageNames = {
   duel: 'duel',
   reactToGatling: 'reactToGatling',
   reactToIndians: 'reactToIndians',
+  reactToBang: 'reactToBang'
 };
 
 export const gunRange: { [gunName: string]: number } = {

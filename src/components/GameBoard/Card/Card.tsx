@@ -1,7 +1,7 @@
 import gsap, { Power3 } from 'gsap';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import cardBackImg from '../../../assets/card_back.png';
-import { useAnimationContext } from '../../../context';
+import { AnimationContext } from '../../../context';
 import { ICard } from '../../../game/types';
 // import { useWhyDidYouUpdate } from '../../../hooks';
 import { cardDisplayValue } from './Card.constants';
@@ -18,25 +18,48 @@ interface ICardProps {
 
 export const Card: React.FC<ICardProps> = React.memo(
   ({ card, style, isFacedUp, className, onContextMenu, onClick }) => {
-    const { left, top, animatedCardId, setLeft, setTop } = useAnimationContext();
+    const { cardPositions, setCardPositions } = useContext(AnimationContext);
     const cardValue = cardDisplayValue[card.value];
     const cardRef = useRef<HTMLDivElement | null>(null);
+    // useWhyDidYouUpdate('Card', { card, style, isFacedUp, className, onContextMenu, onClick });
 
     useLayoutEffect(() => {
-      if (card.id === animatedCardId && cardRef.current) {
+      if (cardPositions && cardRef.current) {
+        const oldPosition = cardPositions[card.id];
         const newPosition = cardRef.current.getBoundingClientRect();
-        gsap.from(`#${CSS.escape(animatedCardId)}`, {
-          duration: 0.5,
-          x: left - newPosition.left,
-          y: top - newPosition.top,
-          ease: Power3.easeOut,
-        });
+        if (oldPosition) {
+          gsap.from(`#${CSS.escape(card.id)}`, {
+            duration: 0.5,
+            x: oldPosition.left - newPosition.left,
+            y: oldPosition.top - newPosition.top,
+            ease: Power3.easeOut,
+          });
+        }
 
-        setLeft(newPosition.left);
-        setTop(newPosition.top);
+        setCardPositions(prevPositions => ({
+          ...prevPositions,
+          [card.id]: {
+            left: newPosition.left,
+            top: newPosition.top,
+          },
+        }));
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cardRef]);
+    }, []);
+
+    useEffect(() => {
+      if (!cardPositions[card.id] && cardRef.current) {
+        const newPosition = cardRef.current.getBoundingClientRect();
+        setCardPositions(prevPositions => ({
+          ...prevPositions,
+          [card.id]: {
+            left: newPosition.left,
+            top: newPosition.top,
+          },
+        }));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [card.id]);
 
     if (isFacedUp) {
       return (

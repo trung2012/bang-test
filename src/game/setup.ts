@@ -19,7 +19,10 @@ const setup = (ctx: Ctx) => {
   const generalStore: ICard[] = [];
   const players: IGamePlayerMap = {};
   const playersOrder: string[] = [];
-  const currentReactionCardNeeded = null;
+  const reactionRequired = {
+    cardNeeded: null,
+    quantity: 1,
+  };
   const activeStage = null;
 
   // Create players
@@ -40,7 +43,8 @@ const setup = (ctx: Ctx) => {
       gunRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
       actionRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
       cardsInPlay: [],
-      numBangsLeft: playerCharacter.name === 'willy the kid' ? 100 : 1,
+      numBangsLeft: playerCharacter.name === 'willy the kid' ? 9999 : 1,
+      cardDiscardedThisTurn: 0,
     };
 
     for (let hp = 1; hp <= player.hp; hp++) {
@@ -57,7 +61,7 @@ const setup = (ctx: Ctx) => {
     players,
     generalStore,
     isSuddenDeathOn: false,
-    currentReactionCardNeeded,
+    reactionRequired,
     activeStage,
   } as IGameState;
 };

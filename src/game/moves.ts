@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io/dist/types/src/types';
 import { delayBetweenActions, gunRange, stageNames } from './constants';
-import { ICard, IGameState } from './types';
+import { ICard, IGameState, RobbingType } from './types';
 
 export const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -28,11 +28,15 @@ export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string
   }
 };
 
-export const playCardToReact = (G: IGameState, ctx: Ctx, card: ICard) => {};
+export const playCardToReact = (G: IGameState, ctx: Ctx, cardIndex: number, playerId: string) => {
+  playCard(G, ctx, cardIndex, playerId);
+  setTimeout(() => {
+    clearCardsInPlay(G, ctx, playerId);
+  }, delayBetweenActions);
+};
 
 export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   G.discarded.push(card);
-  return G;
 };
 
 export const discardFromHand = (
@@ -45,6 +49,11 @@ export const discardFromHand = (
   const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
   if (!discardedCard) return INVALID_MOVE;
   moveToDiscard(G, ctx, discardedCard);
+  targetPlayer.cardDiscardedThisTurn += 1;
+  if (targetPlayer.cardDiscardedThisTurn === 2 && targetPlayer.character.name === 'sid ketchum') {
+    targetPlayer.hp = Math.min(targetPlayer.hp + 1, targetPlayer.maxHp);
+    targetPlayer.cardDiscardedThisTurn = 0;
+  }
 };
 
 export const delayedDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
@@ -57,6 +66,9 @@ export const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
   if (equipmentCard.type !== 'equipment') return INVALID_MOVE;
+  if (equipmentCard.name === 'volcanic') {
+    currentPlayer.numBangsLeft = 9999;
+  }
   const newGunRange = gunRange[equipmentCard.name];
   if (newGunRange) {
     const previouslyEquippedGunIndex = currentPlayer.equipments.findIndex(
@@ -143,11 +155,12 @@ export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
 export const drawToReact = (
   G: IGameState,
   ctx: Ctx,
+  targetPlayerId: string,
   isDynamite: boolean = false,
   isJail: boolean = false
 ) => {
   let cards: ICard[] = [];
-  const currentPlayer = G.players[ctx.currentPlayer];
+  const currentPlayer = G.players[targetPlayerId];
   let drawnCard = G.deck.pop();
 
   if (drawnCard) {
@@ -164,39 +177,50 @@ export const drawToReact = (
 
   currentPlayer.cardsInPlay.push(...cards);
 
-  if (isDynamite || isJail) {
-    const isFailure = cards.every(
-      card => card.suit === 'spades' && card.value >= 2 && card.value <= 9
-    );
+  setTimeout(() => {
+    if (isDynamite || isJail) {
+      const isFailure = cards.every(
+        card => card.suit === 'spades' && card.value >= 2 && card.value <= 9
+      );
 
-    if (isFailure) {
-      if (isDynamite) {
-        currentPlayer.hp = currentPlayer.hp - 3;
+      if (isFailure) {
+        if (isDynamite) {
+          currentPlayer.hp = currentPlayer.hp - 3;
+        }
+
+        if (isJail && ctx.events && ctx.events.endTurn) {
+          ctx.events?.endTurn();
+        }
       }
-
-      if (isJail && ctx.events && ctx.events.endTurn) {
-        ctx.events?.endTurn();
+    } else {
+      // Barrel
+      const isFailure = cards.every(card => card.suit !== 'hearts');
+      if (isFailure) {
+        currentPlayer.hp -= 1;
       }
     }
-  } else {
-    // Barrel
-    const isFailure = cards.every(card => card.suit !== 'hearts');
-    if (isFailure) {
-      currentPlayer.hp -= 1;
-    }
-  }
+  }, delayBetweenActions);
 };
 
 export const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
-  G.currentReactionCardNeeded = 'missed';
+  const currentPlayer = G.players[ctx.currentPlayer];
+  G.reactionRequired.cardNeeded = 'missed';
+  if (currentPlayer.character.name === 'slab the killer') {
+    G.reactionRequired.quantity = 2;
+  }
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       value: {
-        [targetPlayerId]: stageNames.drawToReact,
+        [targetPlayerId]: stageNames.reactToBang,
       },
     });
   }
+  G.activeStage = stageNames.reactToBang;
+  G.reactionRequired = {
+    cardNeeded: 'missed',
+    quantity: 1,
+  };
 };
 
 export const beer = (G: IGameState, ctx: Ctx) => {
@@ -212,38 +236,80 @@ export const catbalou = (
   G: IGameState,
   ctx: Ctx,
   targetPlayerId: string,
-  targetCardIndex: number
+  targetCardIndex: number,
+  type: RobbingType
 ) => {
   const targetPlayer = G.players[targetPlayerId];
-  const cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+  let cardToDiscard: ICard;
+  switch (type) {
+    case 'hand':
+      cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      break;
+    case 'equipment':
+      cardToDiscard = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
+      let gunWithRange = gunRange[cardToDiscard.name];
+      if (gunWithRange) {
+        targetPlayer.gunRange = 1;
+        if (cardToDiscard.name === 'volcanic') {
+          targetPlayer.numBangsLeft = 1;
+        }
+      }
+      break;
+  }
   G.discarded.push(cardToDiscard);
 };
 
 export const gatling = (G: IGameState, ctx: Ctx) => {
-  G.currentReactionCardNeeded = 'missed';
+  G.reactionRequired.cardNeeded = 'missed';
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       others: stageNames.reactToGatling,
       moveLimit: 1,
     });
   }
+  G.activeStage = stageNames.reactToGatling;
 };
 
 export const indians = (G: IGameState, ctx: Ctx) => {
-  G.currentReactionCardNeeded = 'bang';
+  G.reactionRequired.cardNeeded = 'bang';
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       others: stageNames.reactToIndians,
       moveLimit: 1,
     });
   }
+  G.activeStage = stageNames.reactToIndians;
 };
 
-export const panic = (G: IGameState, ctx: Ctx, targetPlayerId: string, targetCardIndex: number) => {
+export const panic = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number,
+  type: RobbingType
+) => {
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
-  const cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-  currentPlayer.hand.push(cardToTake);
+  let cardToTake: ICard;
+  switch (type) {
+    case 'hand':
+      cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      currentPlayer.hand.push(cardToTake);
+      break;
+    case 'equipment':
+      cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
+      let gunWithRange = gunRange[cardToTake.name];
+      if (gunWithRange) {
+        targetPlayer.gunRange = 1;
+        currentPlayer.gunRange = gunWithRange;
+        if (cardToTake.name === 'volcanic') {
+          targetPlayer.numBangsLeft = 1;
+          currentPlayer.numBangsLeft = 9999;
+        }
+      }
+      currentPlayer.equipments.push(cardToTake);
+      break;
+  }
 };
 
 export const saloon = (G: IGameState, ctx: Ctx) => {
@@ -306,21 +372,23 @@ export const generalstore = (G: IGameState, ctx: Ctx) => {
       moveLimit: 1,
     });
   }
+  G.activeStage = stageNames.pickFromGeneralStore;
 };
 
 export const pickCardFromGeneralStore = (
   G: IGameState,
   ctx: Ctx,
-  generalStoreCardIndex: number
+  generalStoreCardIndex: number,
+  targetPlayerId: string
 ) => {
-  const currentPlayer = G.players[ctx.currentPlayer];
+  const currentPlayer = G.players[targetPlayerId];
   const selectedCard = G.generalStore.splice(generalStoreCardIndex, 1)[0];
 
   currentPlayer.hand.push(selectedCard);
 };
 
 export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
-  G.currentReactionCardNeeded = 'bang';
+  G.reactionRequired.cardNeeded = 'bang';
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
       value: {
@@ -329,6 +397,7 @@ export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       moveLimit: 1,
     });
   }
+  G.activeStage = stageNames.duel;
 };
 
 export const endTurn = (G: IGameState, ctx: Ctx) => {

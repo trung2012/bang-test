@@ -3,9 +3,6 @@ import moves from './moves';
 import { IGameState } from './types';
 
 const stages: StageMap<IGameState> = {
-  drawToReact: {
-    moves: {},
-  },
   pickFromGeneralStore: {
     moves: {
       pickCardFromGeneralStore: moves.pickCardFromGeneralStore,
@@ -19,11 +16,14 @@ const stages: StageMap<IGameState> = {
   },
   reactToGatling: {
     moves: {
+      playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
+      drawToReact: moves.drawToReact,
     },
   },
   reactToIndians: {
     moves: {
+      playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
     },
   },
@@ -31,6 +31,7 @@ const stages: StageMap<IGameState> = {
     moves: {
       playCardToReact: moves.playCardToReact,
       drawToReact: moves.drawToReact,
+      takeDamage: moves.takeDamage,
     },
   },
 };

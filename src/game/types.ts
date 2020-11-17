@@ -5,8 +5,11 @@ export interface IGameState {
   players: IGamePlayerMap;
   characters: ICharacter[];
   isSuddenDeathOn: boolean;
-  currentReactionCardNeeded: CardName | null;
   activeStage: string | null;
+  reactionRequired: {
+    cardNeeded: CardName | null;
+    quantity: number;
+  };
 }
 
 export interface IGamePlayerMap {
@@ -25,6 +28,7 @@ export interface IGamePlayer {
   role: Role;
   numBangsLeft: number;
   cardsInPlay: ICard[];
+  cardDiscardedThisTurn: number;
   targetedCard?: ICard;
 }
 
@@ -109,3 +113,5 @@ export interface ICardGenerationInfo {
 export interface ILookup {
   [key: number]: any;
 }
+
+export type RobbingType = 'hand' | 'equipment';

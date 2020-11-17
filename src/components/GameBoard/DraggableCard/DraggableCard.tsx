@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import React, { Fragment, useCallback, useState } from 'react';
 import { Draggable, DragComponent } from 'react-dragtastic';
-import { useAnimationContext, useErrorContext, useGameContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { delayBetweenActions } from '../../../game/constants';
 import { ICard } from '../../../game/types';
 import { MoreOptions } from '../../shared';
@@ -51,7 +51,6 @@ const DragComponentContainer = styled.div<{
 export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
   ({ card, index, isFacedUp, playerId }) => {
     const { moves, playerID, isActive, G } = useGameContext();
-    const { setLeft, setTop, setAnimatedCardId } = useAnimationContext();
     const { setError } = useErrorContext();
     const [showCardOptions, setShowCardOptions] = useState(false);
 
@@ -59,15 +58,6 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
       if (!isActive) return;
       if (card.name === 'jail' || card.isTargeted) return;
       const currentPlayer = G.players[playerId];
-
-      const cardEl = document.getElementById(CSS.escape(card.id));
-      console.log(cardEl);
-      if (cardEl) {
-        const oldPosition = cardEl.getBoundingClientRect();
-        setAnimatedCardId(card.id);
-        setLeft(oldPosition.left);
-        setTop(oldPosition.top);
-      }
 
       if (card.type === 'equipment') {
         if (currentPlayer.equipments.find(equipment => equipment.name === card.name)) {
@@ -122,13 +112,6 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
                     className='more-options-item'
                     onClick={event => {
                       event.stopPropagation();
-                      const cardEl = document.getElementById(CSS.escape(card.id));
-                      if (cardEl) {
-                        const oldPosition = cardEl.getBoundingClientRect();
-                        setAnimatedCardId(card.id);
-                        setLeft(oldPosition.left);
-                        setTop(oldPosition.top);
-                      }
                       moves.discardFromHand(playerId, index);
                     }}
                   >

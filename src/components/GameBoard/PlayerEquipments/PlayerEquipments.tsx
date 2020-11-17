@@ -22,6 +22,7 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
           index={index}
           isFacedUp={true}
           playerId={playerId}
+          cardLocation='equipment'
         />
       ))}
     </div>

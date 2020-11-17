@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Droppable } from 'react-dragtastic';
-import { ICard } from '../../../game/types';
+import { ICard, RobbingType } from '../../../game/types';
 import { Card } from '../Card';
 import './DroppableCard.scss';
-import { useAnimationContext, useErrorContext, useGameContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { cardsWhichTargetCards, delayBetweenActions } from '../../../game/constants';
 import { calculateDistanceFromTarget } from '../../../utils';
 
@@ -13,6 +13,7 @@ interface IDroppableCardProps {
   index: number;
   isFacedUp: boolean;
   playerId: string;
+  cardLocation: RobbingType;
 }
 
 type CardContainerProps = {
@@ -33,7 +34,7 @@ const CardContainer = styled.div<CardContainerProps>`
 `;
 
 export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
-  ({ card, index, isFacedUp, playerId }) => {
+  ({ card, index, isFacedUp, playerId, cardLocation }) => {
     const { playerID, G, playersInfo, moves } = useGameContext();
     const { setError } = useErrorContext();
     const { players } = G;
@@ -50,8 +51,8 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
       const distanceBetweenPlayers = calculateDistanceFromTarget(
         players,
         playersInfo,
-        Number(sourcePlayerId),
-        Number(playerId)
+        sourcePlayerId,
+        playerId
       );
       if (sourcePlayer.actionRange < distanceBetweenPlayers) {
         setError('Target player is out of range');
@@ -64,8 +65,9 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
         moves.clearCardsInPlay(playerId);
         setTimeout(() => {
           const moveName = sourceCard.name.replace(' ', '').toLowerCase();
+          const robbingType: RobbingType = cardLocation;
           if (moves[moveName]) {
-            moves[moveName](playerId, index);
+            moves[moveName](playerId, index, robbingType);
           }
         }, 0);
       }, delayBetweenActions);

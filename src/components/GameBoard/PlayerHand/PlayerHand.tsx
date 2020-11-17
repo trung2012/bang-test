@@ -39,6 +39,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = React.memo(({ hand, playe
           index={index}
           isFacedUp={isFacedUp}
           playerId={playerId}
+          cardLocation='hand'
         />
       ))}
     </div>

@@ -4,16 +4,24 @@ import { IGamePlayerMap } from '../game/types';
 export const calculateDistanceFromTarget = (
   players: IGamePlayerMap,
   playersInfo: FilteredMetadata,
-  currentPlayerIndex: number,
-  targetPlayerIndex: number
+  currentPlayerId: string,
+  targetPlayerId: string
 ) => {
+  const playersAlive = playersInfo.filter(player => players[player.id].hp > 0);
+  const currentPlayerIndex = playersAlive.findIndex(
+    player => currentPlayerId === player.id.toString()
+  );
+  const targetPlayerIndex = playersAlive.findIndex(
+    player => targetPlayerId === player.id.toString()
+  );
   let distance = Math.abs(currentPlayerIndex - targetPlayerIndex);
-  const targetPlayer = players[targetPlayerIndex];
+  const targetPlayer = players[targetPlayerId];
+  let trueDistance = Math.min(distance, playersAlive.length - distance);
 
   if (targetPlayer.equipments.find(card => card.name === 'mustang')) {
-    distance += 1;
+    trueDistance += 1;
   }
-  return Math.min(distance, playersInfo.length - distance);
+  return trueDistance;
 };
 
 export const isTargetWithinReach = (reach: number, distance: number) => {
