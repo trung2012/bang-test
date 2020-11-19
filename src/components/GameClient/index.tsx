@@ -1,8 +1,9 @@
 import React from 'react';
+import { EffectsBoardWrapper } from 'bgio-effects/react';
 import { Client } from 'boardgame.io/react';
 import { SocketIO } from 'boardgame.io/multiplayer';
 import { Bang } from '../../game';
-import GameBoard from '../GameBoard';
+import { GameBoard } from '../GameBoard';
 import { SERVER_URL } from '../../config';
 
 interface IGameClientProps {
@@ -18,9 +19,11 @@ export const GameClient: React.FC<IGameClientProps> = ({
   playerCredentials,
   debug,
 }) => {
+  const board = EffectsBoardWrapper(GameBoard);
+
   const ClientComponent = Client({
     game: Bang,
-    board: GameBoard,
+    board,
     multiplayer: SocketIO({ server: SERVER_URL }),
   });
 

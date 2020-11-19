@@ -118,6 +118,11 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
       )[0];
       moveToDiscard(G, ctx, previouslyEquippedGun);
     }
+    if (equipmentCard.name === 'volcanic') {
+      currentPlayer.numBangsLeft = 9999;
+    } else {
+      currentPlayer.numBangsLeft = 1;
+    }
     currentPlayer.gunRange = newGunRange;
   }
   if (equipmentCard.name === 'scope') {
@@ -330,7 +335,6 @@ const panic = (
   switch (type) {
     case 'hand':
       cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-      currentPlayer.hand.push(cardToTake);
       break;
     case 'equipment':
       cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
@@ -343,9 +347,9 @@ const panic = (
           currentPlayer.numBangsLeft = 9999;
         }
       }
-      currentPlayer.equipments.push(cardToTake);
       break;
   }
+  currentPlayer.hand.push(cardToTake);
 };
 
 const saloon = (G: IGameState, ctx: Ctx) => {

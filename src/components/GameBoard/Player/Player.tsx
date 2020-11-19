@@ -2,7 +2,6 @@ import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
 import { useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions } from '../../../game/constants';
 import { ICard, IGamePlayer } from '../../../game/types';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
@@ -33,55 +32,53 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       player.id
     );
 
-    setTimeout(() => {
-      switch (sourceCard.name) {
-        case 'missed': {
-          if (sourcePlayer.character.name !== 'calamity janet') {
-            setError('Only Calamity Janet can play missed as bang');
-            return;
-          }
-          if (sourcePlayer.numBangsLeft <= 0) {
-            setError('You cannot play anymore bangs');
-            return;
-          }
-          if (sourcePlayer.gunRange < distanceBetweenPlayers) {
-            setError('Target is out of range');
-            return;
-          }
-          moves.playCard(sourceCardIndex, player.id);
-          moves.bang(player.id);
+    switch (sourceCard.name) {
+      case 'missed': {
+        if (sourcePlayer.character.name !== 'calamity janet') {
+          setError('Only Calamity Janet can play missed as bang');
           return;
         }
-        case 'bang': {
-          if (sourcePlayer.gunRange < distanceBetweenPlayers) {
-            setError('Target is out of range');
-            return;
-          }
-          if (sourcePlayer.numBangsLeft <= 0) {
-            setError('You cannot play anymore bangs');
-            return;
-          }
-          moves.playCard(sourceCardIndex, player.id);
-          moves.bang(player.id);
+        if (sourcePlayer.numBangsLeft <= 0) {
+          setError('You cannot play anymore bangs');
           return;
         }
-        case 'duel': {
-          moves.playCard(sourceCardIndex, player.id);
-          moves.duel(player.id, sourcePlayerId);
+        if (sourcePlayer.gunRange < distanceBetweenPlayers) {
+          setError('Target is out of range');
           return;
         }
-        case 'jail': {
-          if (player.role === 'sheriff') {
-            setError('Cannot jail sheriff');
-            return;
-          }
-          moves.jail(player.id, sourceCardIndex);
-          return;
-        }
-        default:
-          return;
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
+        return;
       }
-    }, delayBetweenActions);
+      case 'bang': {
+        if (sourcePlayer.gunRange < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        if (sourcePlayer.numBangsLeft <= 0) {
+          setError('You cannot play anymore bangs');
+          return;
+        }
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
+        return;
+      }
+      case 'duel': {
+        moves.playCard(sourceCardIndex, player.id);
+        moves.duel(player.id, sourcePlayerId);
+        return;
+      }
+      case 'jail': {
+        if (player.role === 'sheriff') {
+          setError('Cannot jail sheriff');
+          return;
+        }
+        moves.jail(player.id, sourceCardIndex);
+        return;
+      }
+      default:
+        return;
+    }
   };
 
   return (

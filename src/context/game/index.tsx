@@ -13,7 +13,7 @@ export interface IGameContext {
   playersInfo: FilteredMetadata | undefined;
 }
 
-export const GameContext = React.createContext<IGameContext | undefined>(undefined);
+export const GameContext = React.createContext<IGameContext | null>(null);
 
 export const useGameContext = () => {
   const ctx = useContext(GameContext);

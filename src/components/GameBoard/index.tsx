@@ -4,7 +4,7 @@ import { AnimationProvider, ErrorProvider, GameContext } from '../../context';
 import { IGameState } from '../../game/types';
 import { GameTable } from './GameTable.tsx';
 
-const GameBoard: React.FC<BoardProps<IGameState>> = ({
+export const GameBoard: React.FC<BoardProps<IGameState>> = ({
   G,
   ctx,
   moves,
@@ -33,5 +33,3 @@ const GameBoard: React.FC<BoardProps<IGameState>> = ({
     </GameContext.Provider>
   );
 };
-
-export default GameBoard;
