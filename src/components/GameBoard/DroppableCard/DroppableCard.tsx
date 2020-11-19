@@ -46,6 +46,7 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
     }) => {
       if (!playersInfo?.length) throw Error('Something went wrong');
       const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+      if (sourcePlayerId === playerId) return;
 
       const sourcePlayer = players[sourcePlayerId];
       const distanceBetweenPlayers = calculateDistanceFromTarget(
@@ -70,7 +71,7 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
             moves[moveName](playerId, index, robbingType);
           }
         }, 0);
-      }, delayBetweenActions);
+      }, 0);
     };
 
     return (

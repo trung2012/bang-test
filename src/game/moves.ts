@@ -1,22 +1,43 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
-import { Ctx, MoveMap } from 'boardgame.io/dist/types/src/types';
+import { Ctx, MoveMap } from 'boardgame.io';
 import { delayBetweenActions, gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
 
-export const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const currentPlayer = G.players[targetPlayerId];
   currentPlayer.hp -= 1;
+  clearCardsInPlay(G, ctx, targetPlayerId);
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
+  }
+
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
 };
 
-export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlayerId: string) => {
+const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  if (!targetPlayerId) return INVALID_MOVE;
+  const currentPlayer = G.players[targetPlayerId];
+  currentPlayer.hp -= 3;
+
+  const beerCardIndex = currentPlayer.hand.findIndex(card => card.name === 'beer');
+  if (beerCardIndex && currentPlayer.hp === 0) {
+    playCard(G, ctx, beerCardIndex, targetPlayerId);
+    currentPlayer.hp = 1;
+    clearCardsInPlay(G, ctx, targetPlayerId);
+  }
+};
+
+const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlayerId: string) => {
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
   const cardToPlay = currentPlayer.hand.splice(cardIndex, 1)[0];
   targetPlayer.cardsInPlay.push(cardToPlay);
 };
 
-export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const targetPlayer = G.players[targetPlayerId];
   const length = targetPlayer.cardsInPlay.length;
 
@@ -28,18 +49,34 @@ export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string
   }
 };
 
-export const playCardToReact = (G: IGameState, ctx: Ctx, cardIndex: number, playerId: string) => {
-  playCard(G, ctx, cardIndex, playerId);
-  setTimeout(() => {
-    clearCardsInPlay(G, ctx, playerId);
-  }, delayBetweenActions);
+const playCardToReact = (G: IGameState, ctx: Ctx, cardIndex: number, reactingPlayerId: string) => {
+  const reactingPlayer = G.players[reactingPlayerId];
+  const cardToPlay = reactingPlayer.hand.splice(cardIndex, 1)[0];
+  const previousActiveStage = G.activeStage;
+  const previousSourcePlayerId = G.reactionRequired.sourcePlayerId;
+  reactingPlayer.cardsInPlay.push(cardToPlay);
+  clearCardsInPlay(G, ctx, reactingPlayerId);
+
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
+  }
+
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
+
+  if (cardToPlay.name === 'bang' && previousActiveStage === 'duel') {
+    if (previousSourcePlayerId) {
+      duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
+    }
+  }
 };
 
-export const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
+const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   G.discarded.push(card);
 };
 
-export const discardFromHand = (
+const discardFromHand = (
   G: IGameState,
   ctx: Ctx,
   targetPlayerId: string,
@@ -56,13 +93,13 @@ export const discardFromHand = (
   }
 };
 
-export const delayedDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
+const delayedDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
   setTimeout(() => {
     moveToDiscard(G, ctx, card);
   }, delayBetweenActions);
 };
 
-export const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
+const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
   if (equipmentCard.type !== 'equipment') return INVALID_MOVE;
@@ -90,7 +127,7 @@ export const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   currentPlayer.equipments.push(equipmentCard);
 };
 
-export const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: number) => {
+const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const targetPlayer = G.players[targetPlayerId];
   const jailCard = currentPlayer.hand.splice(jailCardIndex, 1)[0];
@@ -103,7 +140,7 @@ export const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIn
   targetPlayer.equipments.push(jailCard);
 };
 
-export const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
+const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const newCard = G.deck.pop();
   if (newCard) {
@@ -111,14 +148,14 @@ export const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
+const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
   G.deck = G.deck.slice(0, G.deck.length - 2);
   currentPlayer.hand.push(...newCards);
 };
 
-export const drawOneFromDiscardPile = (G: IGameState, ctx: Ctx) => {
+const drawOneFromDiscardPile = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const newCard = G.discarded.pop();
   if (newCard) {
@@ -126,7 +163,7 @@ export const drawOneFromDiscardPile = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
+const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
   let firstCard = G.deck.pop();
@@ -152,12 +189,11 @@ export const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   }, delayBetweenActions);
 };
 
-export const drawToReact = (
+const drawToReact = (
   G: IGameState,
   ctx: Ctx,
   targetPlayerId: string,
-  isDynamite: boolean = false,
-  isJail: boolean = false
+  type: 'dynamite' | 'jail' | 'bang'
 ) => {
   let cards: ICard[] = [];
   const currentPlayer = G.players[targetPlayerId];
@@ -177,32 +213,29 @@ export const drawToReact = (
 
   currentPlayer.cardsInPlay.push(...cards);
 
-  setTimeout(() => {
-    if (isDynamite || isJail) {
-      const isFailure = cards.every(
-        card => card.suit === 'spades' && card.value >= 2 && card.value <= 9
-      );
+  const isDynamiteOrJailFailure = cards.every(
+    card => card.suit === 'spades' && card.value >= 2 && card.value <= 9
+  );
+  const isBangFailure = cards.every(card => card.suit !== 'hearts');
 
-      if (isFailure) {
-        if (isDynamite) {
-          currentPlayer.hp = currentPlayer.hp - 3;
-        }
+  const isFailure = type === 'bang' ? isBangFailure : isDynamiteOrJailFailure;
 
-        if (isJail && ctx.events && ctx.events.endTurn) {
-          ctx.events?.endTurn();
-        }
-      }
-    } else {
-      // Barrel
-      const isFailure = cards.every(card => card.suit !== 'hearts');
-      if (isFailure) {
-        currentPlayer.hp -= 1;
-      }
+  if (isFailure) {
+    if (type === 'dynamite') {
+      dynamiteExplodes(G, ctx, targetPlayerId);
     }
-  }, delayBetweenActions);
+
+    if (type === 'jail' && ctx.events?.endTurn) {
+      ctx.events.endTurn();
+    }
+  }
+
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
 };
 
-export const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   G.reactionRequired.cardNeeded = 'missed';
   if (currentPlayer.character.name === 'slab the killer') {
@@ -214,16 +247,19 @@ export const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       value: {
         [targetPlayerId]: stageNames.reactToBang,
       },
+      moveLimit: 2,
     });
   }
   G.activeStage = stageNames.reactToBang;
   G.reactionRequired = {
     cardNeeded: 'missed',
     quantity: 1,
+    sourcePlayerId: currentPlayer.id,
   };
+  currentPlayer.numBangsLeft -= 1;
 };
 
-export const beer = (G: IGameState, ctx: Ctx) => {
+const beer = (G: IGameState, ctx: Ctx) => {
   if (G.isSuddenDeathOn) {
     return INVALID_MOVE;
   }
@@ -232,7 +268,7 @@ export const beer = (G: IGameState, ctx: Ctx) => {
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
 };
 
-export const catbalou = (
+const catbalou = (
   G: IGameState,
   ctx: Ctx,
   targetPlayerId: string,
@@ -259,29 +295,29 @@ export const catbalou = (
   G.discarded.push(cardToDiscard);
 };
 
-export const gatling = (G: IGameState, ctx: Ctx) => {
-  G.reactionRequired.cardNeeded = 'missed';
+const gatling = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       others: stageNames.reactToGatling,
-      moveLimit: 1,
+      moveLimit: 2,
     });
   }
+  G.reactionRequired.cardNeeded = 'missed';
   G.activeStage = stageNames.reactToGatling;
 };
 
-export const indians = (G: IGameState, ctx: Ctx) => {
-  G.reactionRequired.cardNeeded = 'bang';
+const indians = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       others: stageNames.reactToIndians,
       moveLimit: 1,
     });
   }
+  G.reactionRequired.cardNeeded = 'bang';
   G.activeStage = stageNames.reactToIndians;
 };
 
-export const panic = (
+const panic = (
   G: IGameState,
   ctx: Ctx,
   targetPlayerId: string,
@@ -312,7 +348,7 @@ export const panic = (
   }
 };
 
-export const saloon = (G: IGameState, ctx: Ctx) => {
+const saloon = (G: IGameState, ctx: Ctx) => {
   if (G.isSuddenDeathOn) {
     return INVALID_MOVE;
   }
@@ -323,7 +359,7 @@ export const saloon = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const stagecoach = (G: IGameState, ctx: Ctx) => {
+const stagecoach = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
   // Take 2 cards
@@ -335,7 +371,7 @@ export const stagecoach = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const wellsfargo = (G: IGameState, ctx: Ctx) => {
+const wellsfargo = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
   // Take 3 cards
@@ -347,7 +383,7 @@ export const wellsfargo = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const generalstore = (G: IGameState, ctx: Ctx) => {
+const generalstore = (G: IGameState, ctx: Ctx) => {
   // Take cards equal to the number of players alive
   const numPlayers = ctx.playOrder.reduce((count, id) => {
     const player = G.players[id];
@@ -375,7 +411,7 @@ export const generalstore = (G: IGameState, ctx: Ctx) => {
   G.activeStage = stageNames.pickFromGeneralStore;
 };
 
-export const pickCardFromGeneralStore = (
+const pickCardFromGeneralStore = (
   G: IGameState,
   ctx: Ctx,
   generalStoreCardIndex: number,
@@ -387,8 +423,11 @@ export const pickCardFromGeneralStore = (
   currentPlayer.hand.push(selectedCard);
 };
 
-export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: string) => {
   G.reactionRequired.cardNeeded = 'bang';
+  G.reactionRequired.sourcePlayerId = sourcePlayerId;
+  G.activeStage = stageNames.duel;
+
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
       value: {
@@ -397,20 +436,19 @@ export const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       moveLimit: 1,
     });
   }
-  G.activeStage = stageNames.duel;
-};
 
-export const endTurn = (G: IGameState, ctx: Ctx) => {
-  if (ctx.events?.endTurn) {
-    ctx.events?.endTurn();
-  }
-};
-
-export const endDuelStage = (G: IGameState, ctx: Ctx) => {
-  if (G.activeStage !== 'duel') return INVALID_MOVE;
   if (ctx.events?.endStage) {
     ctx.events.endStage();
   }
+};
+
+const resetGameStage = (G: IGameState, ctx: Ctx) => {
+  G.activeStage = null;
+  G.reactionRequired = {
+    cardNeeded: null,
+    quantity: 1,
+    sourcePlayerId: null,
+  };
 };
 
 const moves: MoveMap<IGameState> = {
@@ -437,6 +475,9 @@ const moves: MoveMap<IGameState> = {
   duel,
   generalstore,
   pickCardFromGeneralStore,
+  dynamiteExplodes,
+  drawOneFromDiscardPile,
+  blackJackDraw,
 };
 
 export default moves;

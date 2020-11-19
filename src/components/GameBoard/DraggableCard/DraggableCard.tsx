@@ -51,13 +51,35 @@ const DragComponentContainer = styled.div<{
 export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
   ({ card, index, isFacedUp, playerId }) => {
     const { moves, playerID, isActive, G } = useGameContext();
+    const { activeStage, players, reactionRequired } = G;
     const { setError } = useErrorContext();
     const [showCardOptions, setShowCardOptions] = useState(false);
+    const isCardDisabled =
+      !!activeStage && !!reactionRequired.cardNeeded && card.name !== reactionRequired.cardNeeded;
 
     const onCardClick = () => {
+      const currentPlayer = players[playerId];
+
       if (!isActive) return;
+
+      if (activeStage && reactionRequired.cardNeeded) {
+        if (currentPlayer.character.name === 'calamity janet') {
+          if (
+            ['bang', 'missed'].includes(card.name) &&
+            ['bang', 'missed'].includes(reactionRequired.cardNeeded)
+          ) {
+            moves.playCardToReact(index, playerId);
+            return;
+          }
+        }
+
+        if (card.name !== reactionRequired.cardNeeded) return;
+
+        moves.playCardToReact(index, playerId);
+        return;
+      }
+
       if (card.name === 'jail' || card.isTargeted) return;
-      const currentPlayer = G.players[playerId];
 
       if (card.type === 'equipment') {
         if (currentPlayer.equipments.find(equipment => equipment.name === card.name)) {
@@ -105,6 +127,7 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
                 isFacedUp={isFacedUp}
                 onContextMenu={onContextMenu}
                 onClick={onCardClick}
+                disabled={isCardDisabled}
               />
               {showCardOptions && (
                 <MoreOptions dismiss={() => setShowCardOptions(false)}>
@@ -128,7 +151,7 @@ export const DraggableCard: React.FC<IDraggableCardProps> = React.memo(
               className='card-dragging'
               draggableDragState={draggableDragState}
             >
-              <Card card={card} isFacedUp={isFacedUp} />
+              <Card card={card} isFacedUp={isFacedUp} disabled={isCardDisabled} />
             </DragComponentContainer>
           )}
         </DragComponent>

@@ -40,8 +40,9 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
             setError('Only Calamity Janet can play missed as bang');
             return;
           }
-          if (sourcePlayer.numBangsLeft === 0) {
+          if (sourcePlayer.numBangsLeft <= 0) {
             setError('You cannot play anymore bangs');
+            return;
           }
           if (sourcePlayer.gunRange < distanceBetweenPlayers) {
             setError('Target is out of range');
@@ -56,8 +57,9 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
             setError('Target is out of range');
             return;
           }
-          if (sourcePlayer.numBangsLeft === 0) {
+          if (sourcePlayer.numBangsLeft <= 0) {
             setError('You cannot play anymore bangs');
+            return;
           }
           moves.playCard(sourceCardIndex, player.id);
           moves.bang(player.id);
@@ -65,7 +67,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         }
         case 'duel': {
           moves.playCard(sourceCardIndex, player.id);
-          moves.duel(player.id);
+          moves.duel(player.id, sourcePlayerId);
           return;
         }
         case 'jail': {

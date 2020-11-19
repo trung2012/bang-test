@@ -10,7 +10,7 @@ const stages: StageMap<IGameState> = {
   },
   duel: {
     moves: {
-      duel: moves.duel,
+      playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
     },
   },

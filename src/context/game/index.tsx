@@ -13,6 +13,13 @@ export interface IGameContext {
   playersInfo: FilteredMetadata | undefined;
 }
 
-export const GameContext = React.createContext<IGameContext>({} as IGameContext);
+export const GameContext = React.createContext<IGameContext | undefined>(undefined);
 
-export const useGameContext = () => useContext(GameContext);
+export const useGameContext = () => {
+  const ctx = useContext(GameContext);
+
+  if (!ctx) {
+    throw new Error('useGameContext must be inside a GameContext Provider with value');
+  }
+  return ctx;
+};

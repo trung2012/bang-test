@@ -7,6 +7,7 @@ export interface IGameState {
   isSuddenDeathOn: boolean;
   activeStage: string | null;
   reactionRequired: {
+    sourcePlayerId: string | null;
     cardNeeded: CardName | null;
     quantity: number;
   };

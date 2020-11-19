@@ -1,4 +1,4 @@
-import { BoardProps } from 'boardgame.io/dist/types/packages/react';
+import { BoardProps } from 'boardgame.io/react';
 import React from 'react';
 import { AnimationProvider, ErrorProvider, GameContext } from '../../context';
 import { IGameState } from '../../game/types';

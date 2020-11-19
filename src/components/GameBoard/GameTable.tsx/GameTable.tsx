@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { GameContext } from '../../../context';
+import React from 'react';
+import { useGameContext } from '../../../context';
 import { Deck, Discarded } from '../Deck';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
 import './GameTable.scss';
 
 export const GameTable = () => {
-  const { G, playersInfo, playerID } = useContext(GameContext);
+  const { G, playersInfo, playerID } = useGameContext();
   const { players } = G;
 
   const clientPlayerIndex = playersInfo?.findIndex((p, index) => playerID === p.id.toString());

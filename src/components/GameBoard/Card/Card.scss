@@ -37,6 +37,20 @@
       box-shadow: $box-shadow-card-active;
     }
   }
+
+  // &-disabled {
+  //   &::after {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     height: 100%;
+  //     z-index: 1;
+  //     border-radius: $card-border-radius;
+  //     background-color: rgba(0, 0, 0, 0.2);
+  //   }
+  // }
 }
 
 .card-dragging {

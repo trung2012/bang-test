@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import cardBackImg from '../../../assets/card_back.png';
 import { AnimationContext } from '../../../context';
 import { ICard } from '../../../game/types';
-// import { useWhyDidYouUpdate } from '../../../hooks';
+import classnames from 'classnames';
 import { cardDisplayValue } from './Card.constants';
 import './Card.scss';
 
@@ -14,10 +14,11 @@ interface ICardProps {
   className?: string;
   onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export const Card: React.FC<ICardProps> = React.memo(
-  ({ card, style, isFacedUp, className, onContextMenu, onClick }) => {
+  ({ card, style, isFacedUp, className, onContextMenu, onClick, disabled }) => {
     const { cardPositions, setCardPositions } = useContext(AnimationContext);
     const cardValue = cardDisplayValue[card.value];
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -49,6 +50,7 @@ export const Card: React.FC<ICardProps> = React.memo(
 
     useEffect(() => {
       if (!cardPositions[card.id] && cardRef.current) {
+        console.log('useEffect');
         const newPosition = cardRef.current.getBoundingClientRect();
         setCardPositions(prevPositions => ({
           ...prevPositions,
@@ -65,7 +67,9 @@ export const Card: React.FC<ICardProps> = React.memo(
       return (
         <div
           id={card.id}
-          className={`${className ?? ''} card`}
+          className={classnames('card', className && className, {
+            'card-disabled': disabled,
+          })}
           style={style}
           title={card.description ?? ''}
           onContextMenu={onContextMenu}
@@ -92,7 +96,9 @@ export const Card: React.FC<ICardProps> = React.memo(
     return (
       <div
         id={card.id}
-        className={`${className ?? ''} card`}
+        className={classnames('card', className && className, {
+          'card-disabled': disabled,
+        })}
         style={style}
         title={card.description ?? ''}
         ref={node => {

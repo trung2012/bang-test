@@ -61,8 +61,8 @@ const setup = (ctx: Ctx) => {
     players,
     generalStore,
     isSuddenDeathOn: false,
-    reactionRequired,
     activeStage,
+    reactionRequired,
   } as IGameState;
 };
 
