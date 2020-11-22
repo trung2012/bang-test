@@ -45,6 +45,7 @@ const setup = (ctx: Ctx) => {
       cardsInPlay: [],
       secretCards: [],
       numBangsLeft: playerCharacter.name === 'willy the kid' ? 9999 : 1,
+      barrelUseLeft: 1,
       cardDiscardedThisTurn: 0,
       cardDrawnAtStartLeft:
         playerCharacter.name === 'black jack' || playerCharacter.name === 'kit carlson' ? 3 : 2,

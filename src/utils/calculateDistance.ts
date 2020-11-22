@@ -21,6 +21,11 @@ export const calculateDistanceFromTarget = (
   if (targetPlayer.equipments.find(card => card.name === 'mustang')) {
     trueDistance += 1;
   }
+
+  if (targetPlayer.character.name === 'paul regret') {
+    trueDistance += 1;
+  }
+
   return trueDistance;
 };
 

@@ -3,16 +3,13 @@ import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
 
-const takePlayerOutOfPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
-  G.playOrder = G.playOrder.filter(playerId => playerId !== targetPlayerId);
-};
-
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
   targetPlayer.hp -= 1;
+
   const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex && targetPlayer.hp === 0) {
+  if (beerCardIndex !== -1 && targetPlayer.hp === 0) {
     const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
     targetPlayer.cardsInPlay.push(cardToPlay);
     targetPlayer.hp = 1;
@@ -27,35 +24,37 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
         G.discarded.push(discardedCard);
       }
     }
-    takePlayerOutOfPlay(G, ctx, targetPlayerId);
-  }
-
-  clearCardsInPlay(G, ctx, targetPlayerId);
-  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
-    resetGameStage(G, ctx);
-  }
-
-  if (targetPlayer.character.name === 'bart cassidy') {
-    const cardDrawn = G.deck.pop();
-    if (cardDrawn) {
-      targetPlayer.hand.push(cardDrawn);
+  } else {
+    if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+      resetGameStage(G, ctx);
     }
-  }
 
-  if (
-    targetPlayer.character.name === 'el gringo' &&
-    targetPlayer.hp > 0 &&
-    ctx.events?.setActivePlayers
-  ) {
-    ctx.events.setActivePlayers({
-      [targetPlayerId]: stageNames.takeCardFromHand,
-      moveLimit: 1,
-    });
-    G.activeStage = stageNames.takeCardFromHand;
-  }
+    if (ctx.events?.endStage) {
+      ctx.events.endStage();
+    }
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
+    clearCardsInPlay(G, ctx, targetPlayerId);
+
+    if (targetPlayer.character.name === 'bart cassidy') {
+      const cardDrawn = G.deck.pop();
+      if (cardDrawn) {
+        targetPlayer.hand.push(cardDrawn);
+      }
+    }
+
+    if (
+      targetPlayer.character.name === 'el gringo' &&
+      targetPlayer.hp > 0 &&
+      ctx.events?.setActivePlayers
+    ) {
+      ctx.events.setActivePlayers({
+        value: {
+          [targetPlayerId]: stageNames.takeCardFromHand,
+        },
+        moveLimit: 1,
+      });
+      G.activeStage = stageNames.takeCardFromHand;
+    }
   }
 };
 
@@ -65,7 +64,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   currentPlayer.hp -= 3;
 
   const beerCardIndex = currentPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex && currentPlayer.hp === 0) {
+  if (beerCardIndex !== -1 && currentPlayer.hp === 0) {
     playCard(G, ctx, beerCardIndex, targetPlayerId);
     currentPlayer.hp = 1;
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -131,8 +130,10 @@ const discardFromHand = (
   const targetPlayer = G.players[targetPlayerId];
   const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
   if (!discardedCard) return INVALID_MOVE;
+
   moveToDiscard(G, ctx, discardedCard);
   targetPlayer.cardDiscardedThisTurn += 1;
+
   if (targetPlayer.cardDiscardedThisTurn === 2 && targetPlayer.character.name === 'sid ketchum') {
     targetPlayer.hp = Math.min(targetPlayer.hp + 1, targetPlayer.maxHp);
     targetPlayer.cardDiscardedThisTurn = 0;
@@ -142,15 +143,18 @@ const discardFromHand = (
 const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
+
   if (equipmentCard.type !== 'equipment') return INVALID_MOVE;
   if (equipmentCard.name === 'volcanic') {
     currentPlayer.numBangsLeft = 9999;
   }
+
   const newGunRange = gunRange[equipmentCard.name];
   if (newGunRange) {
     const previouslyEquippedGunIndex = currentPlayer.equipments.findIndex(
       equipment => gunRange[equipment.name]
     );
+
     if (previouslyEquippedGunIndex !== -1) {
       const previouslyEquippedGun = currentPlayer.equipments.splice(
         previouslyEquippedGunIndex,
@@ -158,6 +162,7 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
       )[0];
       moveToDiscard(G, ctx, previouslyEquippedGun);
     }
+
     if (equipmentCard.name === 'volcanic') {
       currentPlayer.numBangsLeft = 9999;
     } else {
@@ -165,6 +170,7 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
     }
     currentPlayer.gunRange = newGunRange;
   }
+
   if (equipmentCard.name === 'scope') {
     currentPlayer.actionRange += 1;
   }
@@ -211,9 +217,13 @@ const kitCarlsonDraw = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
-      [ctx.currentPlayer]: stageNames.kitCarlsonDiscard,
+      value: {
+        [ctx.currentPlayer]: stageNames.kitCarlsonDiscard,
+      },
       moveLimit: 1,
     });
+
+    G.activeStage = stageNames.kitCarlsonDiscard;
   }
 };
 
@@ -222,6 +232,13 @@ const kitCarlsonDiscard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   const cardToPutBackInDeck = currentPlayer.secretCards.splice(cardIndex, 1)[0];
   if (cardToPutBackInDeck) {
     G.deck.push(cardToPutBackInDeck);
+  }
+
+  while (currentPlayer.secretCards.length > 0) {
+    const card = currentPlayer.secretCards.pop();
+    if (card) {
+      currentPlayer.hand.push(card);
+    }
   }
 
   if (ctx.events?.endStage) {
@@ -253,6 +270,10 @@ const drawFromPlayerHand = (
     currentPlayer.hand.push(cardToTake);
   }
 
+  if (currentPlayer.character.name === 'jesse jones') {
+    currentPlayer.cardDrawnAtStartLeft -= 1;
+  }
+
   if (ctx.events?.endStage) {
     ctx.events.endStage();
   }
@@ -282,12 +303,7 @@ const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const drawToReact = (
-  G: IGameState,
-  ctx: Ctx,
-  targetPlayerId: string,
-  type: 'dynamite' | 'jail' | 'bang'
-) => {
+export const barrel = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   let cards: ICard[] = [];
   const currentPlayer = G.players[targetPlayerId];
   let drawnCard = G.deck.pop();
@@ -306,40 +322,19 @@ export const drawToReact = (
 
   currentPlayer.cardsInPlay.push(...cards);
 
-  const isDynamiteOrJailFailure = cards.every(
-    card => card.suit === 'spades' && card.value >= 2 && card.value <= 9
-  );
-  const isBangFailure = cards.every(card => card.suit !== 'hearts');
+  const isSuccessful = cards.some(card => card.suit === 'hearts');
 
-  const isFailure = type === 'bang' ? isBangFailure : isDynamiteOrJailFailure;
-
-  if (isFailure) {
-    if (type === 'dynamite') {
-      dynamiteExplodes(G, ctx, targetPlayerId);
-    }
-
-    console.log(ctx.events?.endTurn);
-
-    if (type === 'jail' && ctx.events?.endTurn) {
-      const jailCardIndex = currentPlayer.equipments.findIndex(card => card.name === 'jail');
-      const jailCard = currentPlayer.equipments.splice(jailCardIndex, 1)[0];
+  if (isSuccessful) {
+    if (ctx.events?.endStage) {
+      ctx.events.endStage();
       clearCardsInPlay(G, ctx, targetPlayerId);
-      G.discarded.push(jailCard);
-      ctx.events.endTurn();
+      if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+        resetGameStage(G, ctx);
+      }
     }
   }
 
-  if (type === 'dynamite') {
-    const nextPlayerId = (Number(targetPlayerId) + 1) % ctx.playOrder.length;
-    const nextPlayer = G.players[nextPlayerId];
-    const dynamiteCardIndex = currentPlayer.equipments.findIndex(card => card.name === 'dynamite');
-    const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
-    nextPlayer.equipments.push(dynamiteCard);
-  }
-
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
+  currentPlayer.barrelUseLeft -= 1;
 };
 
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -573,7 +568,7 @@ const moves: MoveMap<IGameState> = {
   takeDamage,
   drawOneFromDeck,
   drawTwoFromDeck,
-  drawToReact,
+  barrel,
   drawFromPlayerHand,
   discardFromHand,
   clearCardsInPlay,

@@ -10,7 +10,12 @@ export const Discarded = () => {
   const clientPlayer = G.players[playerID!];
 
   const onDiscardPileClick = () => {
-    if (!isActive || clientPlayer.character.name !== 'pedro ramirez') return;
+    if (
+      !isActive ||
+      clientPlayer.character.name !== 'pedro ramirez' ||
+      clientPlayer.cardDrawnAtStartLeft < 2
+    )
+      return;
     moves.drawOneFromDiscardPile();
   };
 

@@ -18,7 +18,7 @@ const stages: StageMap<IGameState> = {
     moves: {
       playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
-      drawToReact: moves.drawToReact,
+      barrel: moves.barrel,
     },
   },
   reactToIndians: {
@@ -30,13 +30,13 @@ const stages: StageMap<IGameState> = {
   reactToBang: {
     moves: {
       playCardToReact: moves.playCardToReact,
-      drawToReact: moves.drawToReact,
+      barrel: moves.barrel,
       takeDamage: moves.takeDamage,
     },
   },
   takeCardFromHand: {
     moves: {
-      takeCardFromHand: moves.takeCardFromHand,
+      drawFromPlayerHand: moves.drawFromPlayerHand,
     },
   },
   kitCarlsonDiscard: {

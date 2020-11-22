@@ -34,12 +34,19 @@ const DroppableCardContainer = styled.div<CardContainerProps & { numCards: numbe
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const { G, playerID, ctx, moves } = useGameContext();
-  const isFacedUp = playerId === playerID;
+  const targetPlayer = G.players[playerId];
+  const isPlayerDead = targetPlayer.hp <= 0;
+  const isFacedUp = playerId === playerID || isPlayerDead;
 
   const onPlayerHandCardClick = (index: number) => {
+    const currentPlayer = G.players[playerID!];
+    if (currentPlayer.character.name === 'jesse jones' && currentPlayer.cardDrawnAtStartLeft >= 2) {
+      moves.drawFromPlayerHand(playerID, playerId, index);
+      return;
+    }
+
     if (G.activeStage === stageNames.takeCardFromHand) {
-      if (G.players[playerID!].character.name !== 'el gringo' || playerId !== ctx.currentPlayer)
-        return;
+      if (currentPlayer.character.name !== 'el gringo' || playerId !== ctx.currentPlayer) return;
 
       moves.drawFromPlayerHand(playerID, playerId, index);
     }

@@ -115,6 +115,7 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
           cardRef.current = node;
         }
       }}
+      onClick={onClick}
     >
       <img className='card-image' src={cardBackImg} alt='card back' />
     </div>

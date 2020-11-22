@@ -10,9 +10,9 @@ interface IPlayerSecretCards {
   playerId: string;
 }
 
-export const CardInPlay = styled(Card)<{ index: number; isCurrentPlayer: boolean }>`
+export const SecretCard = styled(Card)<{ index: number; isCurrentPlayer: boolean }>`
   position: absolute;
-  left: ${props => `${props.index * 100}%`};
+  left: ${props => `${props.index * 100}px`};
   top: ${props => (props.isCurrentPlayer ? '-100%' : '100%')};
   transform: ${props => `translate(${props.isCurrentPlayer ? '20rem, -20rem' : '0, 30rem'})`};
 `;
@@ -33,7 +33,7 @@ export const PlayerSecretCards: React.FC<IPlayerSecretCards> = ({ cards, playerI
   return (
     <div className='player-cards-in-play'>
       {cards.map((card, index) => (
-        <CardInPlay
+        <SecretCard
           key={card.id}
           card={card}
           index={index}

@@ -31,7 +31,7 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx, currentPlayer: IGamePlay
     currentPlayer.hp -= 3;
     const beerCardIndex = currentPlayer.hand.findIndex(card => card.name === 'beer');
 
-    if (beerCardIndex && currentPlayer.hp === 0) {
+    if (beerCardIndex !== -1 && currentPlayer.hp === 0) {
       const cardToPlay = currentPlayer.hand.splice(beerCardIndex, 1)[0];
       currentPlayer.cardsInPlay.push(cardToPlay);
       currentPlayer.hp = 1;

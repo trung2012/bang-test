@@ -34,6 +34,7 @@ export interface IGamePlayer {
   cardDiscardedThisTurn: number;
   cardDrawnAtStartLeft: number;
   targetedCard?: ICard;
+  barrelUseLeft: number;
 }
 
 export interface ICard {

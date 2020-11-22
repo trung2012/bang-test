@@ -34,6 +34,7 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
       if (!playersInfo?.length) throw Error('Something went wrong');
       const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
       if (sourcePlayerId === playerId) return;
+      if (players[playerId].hp <= 0) return;
 
       const sourcePlayer = players[sourcePlayerId];
       const distanceBetweenPlayers = calculateDistanceFromTarget(

@@ -12,7 +12,7 @@ export const GameTable = () => {
 
   const clientPlayerIndex = playersInfo?.findIndex((p, index) => playerID === p.id.toString());
   const renderedPlayers =
-    playersInfo && clientPlayerIndex
+    playersInfo && clientPlayerIndex && clientPlayerIndex !== -1
       ? [
           playersInfo[clientPlayerIndex],
           ...playersInfo?.slice(clientPlayerIndex + 1),

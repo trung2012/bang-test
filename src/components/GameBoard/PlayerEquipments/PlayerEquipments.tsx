@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useGameContext } from '../../../context';
+import { stageNames } from '../../../game/constants';
 import { ICard } from '../../../game/types';
 import { CardContainerProps, DroppableCard } from '../DroppableCard';
 import './PlayerEquipments.scss';
@@ -16,7 +17,21 @@ const EquipmentCardContainer = styled.div<CardContainerProps>`
 `;
 
 export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipments }) => {
-  const { playerID } = useGameContext();
+  const { G, playerID, moves } = useGameContext();
+
+  const onEquipmentClick = (equipmentCard: ICard) => {
+    if (
+      playerID !== playerId ||
+      equipmentCard.name !== 'barrel' ||
+      G.players[playerId].barrelUseLeft <= 0
+    )
+      return;
+
+    if (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) {
+      moves.barrel(playerId);
+    }
+  };
+
   if (!equipments?.length) {
     return null;
   }
@@ -31,6 +46,7 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
             isFacedUp={true}
             playerId={playerId}
             cardLocation='equipment'
+            onClick={() => onEquipmentClick(card)}
           />
         </EquipmentCardContainer>
       ))}

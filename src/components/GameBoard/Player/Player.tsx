@@ -24,6 +24,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    if (player.hp <= 0) return;
     if (sourcePlayerId === player.id) return;
 
     const sourcePlayer = players[sourcePlayerId];

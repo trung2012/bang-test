@@ -107,7 +107,7 @@ const game: Game<IGameState> = {
           currentPlayer.hp -= 3;
           const beerCardIndex = currentPlayer.hand.findIndex(card => card.name === 'beer');
 
-          if (beerCardIndex && currentPlayer.hp === 0) {
+          if (beerCardIndex !== -1 && currentPlayer.hp === 0) {
             const cardToPlay = currentPlayer.hand.splice(beerCardIndex, 1)[0];
             currentPlayer.cardsInPlay.push(cardToPlay);
             currentPlayer.hp = 1;
@@ -137,7 +137,9 @@ const game: Game<IGameState> = {
                 G.discarded.push(discardedCard);
               }
             }
-            G.playOrder = G.playOrder.filter(playerId => playerId !== currentPlayer.id);
+            if (ctx.events?.endTurn) {
+              ctx.events.endTurn();
+            }
           }
 
           console.log('dynamite fail');
@@ -191,8 +193,7 @@ const game: Game<IGameState> = {
         G.discarded.push(jailCard);
 
         if (isFailure && ctx.events?.endTurn) {
-          console.log('jail fail');
-          G.playOrder = G.playOrder.filter(playerId => playerId !== currentPlayer.id);
+          ctx.events.endTurn();
         }
       }
     },
@@ -202,12 +203,12 @@ const game: Game<IGameState> = {
         const hasVolcanic = player.equipments.find(card => card.name === 'volcanic');
         if (player.character.name !== 'willy the kid' && !hasVolcanic) {
           player.numBangsLeft = 1;
-          player.cardDiscardedThisTurn = 0;
-          player.cardDrawnAtStartLeft =
-            player.character.name === 'black jack' || player.character.name === 'kit carlson'
-              ? 3
-              : 2;
         }
+
+        player.cardDiscardedThisTurn = 0;
+        player.cardDrawnAtStartLeft =
+          player.character.name === 'black jack' || player.character.name === 'kit carlson' ? 3 : 2;
+        player.barrelUseLeft = 1;
       }
     },
   },
