@@ -6,7 +6,6 @@ import { ICard } from '../../../game/types';
 import classnames from 'classnames';
 import { cardDisplayValue } from './Card.constants';
 import './Card.scss';
-import { useWhyDidYouUpdate } from '../../../hooks';
 
 interface ICardProps {
   isFacedUp: boolean;
@@ -30,15 +29,6 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   const { cardPositions, setCardPositions } = useContext(AnimationContext);
   const cardValue = cardDisplayValue[card.value];
   const cardRef = useRef<HTMLDivElement | null>(null);
-  useWhyDidYouUpdate('Card', {
-    card,
-    style,
-    isFacedUp,
-    className,
-    onContextMenu,
-    onClick,
-    disabled,
-  });
 
   useLayoutEffect(() => {
     if (cardPositions && cardRef.current) {
@@ -47,20 +37,21 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
       if (oldPosition) {
         if (oldPosition.left !== newPosition.left && oldPosition.top !== newPosition.top) {
           gsap.from(`#${CSS.escape(card.id)}`, {
-            duration: 0.5,
+            duration: 1,
             x: oldPosition.left - newPosition.left,
             y: oldPosition.top - newPosition.top,
             ease: Power3.easeOut,
+            onComplete: () => {
+              setCardPositions(prevPositions => ({
+                ...prevPositions,
+                [card.id]: {
+                  left: newPosition.left,
+                  top: newPosition.top,
+                },
+              }));
+            },
           });
         }
-
-        setCardPositions(prevPositions => ({
-          ...prevPositions,
-          [card.id]: {
-            left: newPosition.left,
-            top: newPosition.top,
-          },
-        }));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

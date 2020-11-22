@@ -12,6 +12,7 @@ interface IDroppableCardProps {
   isFacedUp: boolean;
   playerId: string;
   cardLocation: RobbingType;
+  onClick?: () => void;
 }
 
 export type CardContainerProps = {
@@ -20,7 +21,7 @@ export type CardContainerProps = {
 };
 
 export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
-  ({ card, index, isFacedUp, playerId, cardLocation }) => {
+  ({ card, index, isFacedUp, playerId, cardLocation, onClick }) => {
     const { G, playersInfo, moves } = useGameContext();
     const { setError } = useErrorContext();
     const { players } = G;
@@ -63,7 +64,7 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
       <Droppable accepts='card' onDrop={onDrop}>
         {droppableDragState => (
           <div className='droppable-card' {...droppableDragState.events}>
-            <Card card={card} isFacedUp={isFacedUp} />
+            <Card card={card} isFacedUp={isFacedUp} onClick={onClick} />
           </div>
         )}
       </Droppable>

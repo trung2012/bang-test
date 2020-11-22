@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useGameContext } from '../../../context';
+import { stageNames } from '../../../game/constants';
 import { ICard } from '../../../game/types';
 import { DraggableCard } from '../DraggableCard';
 import { CardContainerProps, DroppableCard } from '../DroppableCard';
@@ -32,8 +33,17 @@ const DroppableCardContainer = styled.div<CardContainerProps & { numCards: numbe
 `;
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
-  const { playerID } = useGameContext();
+  const { G, playerID, ctx, moves } = useGameContext();
   const isFacedUp = playerId === playerID;
+
+  const onPlayerHandCardClick = (index: number) => {
+    if (G.activeStage === stageNames.takeCardFromHand) {
+      if (G.players[playerID!].character.name !== 'el gringo' || playerId !== ctx.currentPlayer)
+        return;
+
+      moves.drawFromPlayerHand(playerID, playerId, index);
+    }
+  };
 
   if (isFacedUp) {
     return (
@@ -66,6 +76,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
             isFacedUp={isFacedUp}
             playerId={playerId}
             cardLocation='hand'
+            onClick={() => onPlayerHandCardClick(index)}
           />
         </DroppableCardContainer>
       ))}

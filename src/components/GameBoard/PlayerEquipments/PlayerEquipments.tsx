@@ -12,14 +12,7 @@ interface IPlayerEquipments {
 
 const EquipmentCardContainer = styled.div<CardContainerProps>`
   position: absolute;
-  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   left: ${props => `${props.index * 70}px`};
-  transform: translateX(-50%);
-
-  &:hover {
-    transform: ${props =>
-      `translateX(-50%) ${props.isCurrentPlayer ? 'translateY(-40px)' : 'translateY(40px)'}`};
-  }
 `;
 
 export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipments }) => {

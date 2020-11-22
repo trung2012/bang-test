@@ -18,7 +18,7 @@ const setup = (ctx: Ctx) => {
   const discarded: ICard[] = [];
   const generalStore: ICard[] = [];
   const players: IGamePlayerMap = {};
-  const playersOrder: string[] = [];
+  const playOrder: string[] = [];
   const reactionRequired = {
     cardNeeded: null,
     quantity: 1,
@@ -43,8 +43,11 @@ const setup = (ctx: Ctx) => {
       gunRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
       actionRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
       cardsInPlay: [],
+      secretCards: [],
       numBangsLeft: playerCharacter.name === 'willy the kid' ? 9999 : 1,
       cardDiscardedThisTurn: 0,
+      cardDrawnAtStartLeft:
+        playerCharacter.name === 'black jack' || playerCharacter.name === 'kit carlson' ? 3 : 2,
     };
 
     for (let hp = 1; hp <= player.hp; hp++) {
@@ -52,7 +55,7 @@ const setup = (ctx: Ctx) => {
     }
 
     players[playerId] = player;
-    playersOrder.push(playerId);
+    playOrder.push(playerId);
   }
 
   return {
@@ -63,6 +66,7 @@ const setup = (ctx: Ctx) => {
     isSuddenDeathOn: false,
     activeStage,
     reactionRequired,
+    playOrder,
   } as IGameState;
 };
 

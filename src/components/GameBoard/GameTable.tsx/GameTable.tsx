@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGameContext } from '../../../context';
+import { useBgioEffects } from '../../../hooks';
 import { Deck, Discarded } from '../Deck';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
@@ -18,6 +19,8 @@ export const GameTable = () => {
           ...playersInfo?.slice(0, clientPlayerIndex),
         ]
       : playersInfo;
+
+  useBgioEffects();
 
   if (playersInfo && playersInfo.length > 0) {
     return (

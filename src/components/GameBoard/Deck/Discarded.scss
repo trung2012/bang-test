@@ -5,4 +5,8 @@
   height: 15rem;
   border: dashed 4px $color-gray-light;
   cursor: pointer;
+
+  &--active {
+    box-shadow: $box-shadow-card-active;
+  }
 }

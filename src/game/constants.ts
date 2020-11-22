@@ -171,7 +171,9 @@ export const stageNames = {
   duel: 'duel',
   reactToGatling: 'reactToGatling',
   reactToIndians: 'reactToIndians',
-  reactToBang: 'reactToBang'
+  reactToBang: 'reactToBang',
+  takeCardFromHand: 'takeCardFromHand',
+  kitCarlsonDiscard: 'kitCarlsonDiscard',
 };
 
 export const gunRange: { [gunName: string]: number } = {
@@ -182,6 +184,6 @@ export const gunRange: { [gunName: string]: number } = {
   winchester: 5,
 };
 
-export const delayBetweenActions = 1500;
+export const delayBetweenActions = 1250;
 
 export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];

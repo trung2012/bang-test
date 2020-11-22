@@ -3,6 +3,7 @@ export interface IGameState {
   discarded: ICard[];
   generalStore: ICard[];
   players: IGamePlayerMap;
+  playOrder: string[];
   characters: ICharacter[];
   isSuddenDeathOn: boolean;
   activeStage: string | null;
@@ -29,7 +30,9 @@ export interface IGamePlayer {
   role: Role;
   numBangsLeft: number;
   cardsInPlay: ICard[];
+  secretCards: ICard[];
   cardDiscardedThisTurn: number;
+  cardDrawnAtStartLeft: number;
   targetedCard?: ICard;
 }
 

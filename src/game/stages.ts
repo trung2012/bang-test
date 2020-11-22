@@ -34,6 +34,16 @@ const stages: StageMap<IGameState> = {
       takeDamage: moves.takeDamage,
     },
   },
+  takeCardFromHand: {
+    moves: {
+      takeCardFromHand: moves.takeCardFromHand,
+    },
+  },
+  kitCarlsonDiscard: {
+    moves: {
+      kitCarlsonDiscard: moves.kitCarlsonDiscard,
+    },
+  },
 };
 
 export default stages;

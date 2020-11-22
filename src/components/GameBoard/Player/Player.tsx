@@ -8,6 +8,7 @@ import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
 import { PlayerEquipments } from '../PlayerEquipments';
 import { PlayerHand } from '../PlayerHand';
 import { PlayerInfo } from '../PlayerInfo';
+import { PlayerSecretCards } from '../PlayerSecretCards';
 import './Player.scss';
 
 interface IPlayerProps {
@@ -23,6 +24,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    if (sourcePlayerId === player.id) return;
 
     const sourcePlayer = players[sourcePlayerId];
     const distanceBetweenPlayers = calculateDistanceFromTarget(
@@ -73,6 +75,12 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           setError('Cannot jail sheriff');
           return;
         }
+
+        if (player.equipments.find(card => card.name === 'jail')) {
+          setError('Cannot jail someone twice');
+          return;
+        }
+
         moves.jail(player.id, sourceCardIndex);
         return;
       }
@@ -93,6 +101,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       <PlayerEquipments equipments={player.equipments} playerId={player.id} />
       <PlayerHand hand={player.hand} playerId={player.id} />
       <PlayerCardsInPlay cards={player.cardsInPlay} playerId={player.id} />
+      <PlayerSecretCards cards={player.secretCards} playerId={player.id} />
     </div>
   );
 };
