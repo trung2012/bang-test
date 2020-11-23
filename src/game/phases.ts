@@ -7,8 +7,11 @@ interface IGamePhases {
 
 const phases: IGamePhases = {
   main: {
-    endIf: (G: IGameState) => {},
+    endIf: (G: IGameState) => Object.keys(G.players).length === 2,
+    next: 'suddenDeath',
+    start: true,
   },
+  suddenDeath: {},
 };
 
 export default phases;

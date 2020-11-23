@@ -1,7 +1,7 @@
 @mixin gameTableLayout($numPlayers) {
   position: relative;
   display: grid;
-  height: 100vh;
+  min-height: 100vh;
   grid-template-columns: repeat(8, 12.5%);
   grid-template-rows: repeat(8, 12.5%);
 }
@@ -23,12 +23,17 @@
   .player0 {
     grid-column: 3 / span 4;
     grid-row: 8;
-    align-self: center;
+    align-self: flex-end;
     flex-direction: row;
+    align-items: center;
     justify-self: flex-start;
 
-    .player-info-container {
-      align-self: center;
+    .player-info {
+      margin-bottom: 0;
+
+      &-container {
+        align-self: center;
+      }
     }
 
     .player-equipments {

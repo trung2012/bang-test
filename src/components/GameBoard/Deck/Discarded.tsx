@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { useGameContext } from '../../../context';
 import { CardPile } from './CardPile';
 import './Discarded.scss';
+import { hasDynamite, isJailed } from '../../../game/utils';
 
 export const Discarded = () => {
   const { G, isActive, playerID, moves } = useGameContext();
@@ -13,7 +14,9 @@ export const Discarded = () => {
     if (
       !isActive ||
       clientPlayer.character.name !== 'pedro ramirez' ||
-      clientPlayer.cardDrawnAtStartLeft < 2
+      clientPlayer.cardDrawnAtStartLeft < 2 ||
+      hasDynamite(clientPlayer) ||
+      isJailed(clientPlayer)
     )
       return;
     moves.drawOneFromDiscardPile();

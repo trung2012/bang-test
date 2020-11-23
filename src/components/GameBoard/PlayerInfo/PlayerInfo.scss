@@ -1,12 +1,31 @@
+@import '../../../sass/_main';
+
 .player-info {
   position: relative;
-  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 1rem;
-  border: 1px solid gray;
-  margin: 2rem;
+  margin-bottom: 2.5rem;
   z-index: 1;
 
-  &--active {
-    border: 1px solid salmon;
+  & > * {
+    margin-bottom: 1rem;
+  }
+}
+
+.player-character-image {
+  max-width: 100%;
+
+  &-container {
+    overflow: hidden;
+    width: 12rem;
+    height: 11rem;
+    box-shadow: $box-shadow-primary;
+    border-radius: 15px;
+
+    &--active {
+      box-shadow: $box-shadow-player-active;
+    }
   }
 }

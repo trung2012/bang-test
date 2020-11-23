@@ -1,10 +1,17 @@
-.draggable-card {
-  position: absolute;
+.draggable-card,
+.draggable-card-selected {
+  position: relative;
   transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transform: translateX(-50%);
   z-index: 10;
+  margin-right: -4%;
+}
 
+.draggable-card {
   &:hover {
-    transform: translateX(-50%) translateY(-20%);
+    transform: translateY(-20%);
+  }
+
+  &-selected {
+    transform: translateY(-8rem);
   }
 }

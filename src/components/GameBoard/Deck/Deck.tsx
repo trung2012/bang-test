@@ -1,5 +1,7 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
+import { delayBetweenActions } from '../../../game/constants';
+import { hasDynamite, isJailed } from '../../../game/utils';
 import { CardPile } from './CardPile';
 import './Deck.scss';
 
@@ -12,7 +14,30 @@ export const Deck = () => {
   const onDeckClick = () => {
     if (!isActive || clientPlayer.cardDrawnAtStartLeft === 0) return;
 
+    if (hasDynamite(clientPlayer)) {
+      moves.drawToReact(playerID);
+
+      setTimeout(() => {
+        moves.dynamiteResult();
+      }, delayBetweenActions);
+      return;
+    }
+
+    if (isJailed(clientPlayer)) {
+      moves.drawToReact(playerID);
+
+      setTimeout(() => {
+        moves.jailResult();
+      }, delayBetweenActions);
+      return;
+    }
+
     if (clientPlayer.character.name === 'black jack') {
+      moves.blackJackDraw();
+      setTimeout(() => {
+        moves.blackJackResult();
+      }, delayBetweenActions);
+
       return;
     }
 

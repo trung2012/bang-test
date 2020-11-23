@@ -12,26 +12,32 @@ const stages: StageMap<IGameState> = {
     moves: {
       playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   reactToGatling: {
     moves: {
       playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
-      barrel: moves.barrel,
+      drawToReact: moves.drawToReact,
+      barrelResult: moves.barrelResult,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   reactToIndians: {
     moves: {
       playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   reactToBang: {
     moves: {
       playCardToReact: moves.playCardToReact,
-      barrel: moves.barrel,
+      drawToReact: moves.drawToReact,
+      barrelResult: moves.barrelResult,
       takeDamage: moves.takeDamage,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   takeCardFromHand: {

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useGameContext } from '../../../context';
-import { stageNames } from '../../../game/constants';
+import { delayBetweenActions, stageNames } from '../../../game/constants';
 import { ICard } from '../../../game/types';
 import { CardContainerProps, DroppableCard } from '../DroppableCard';
 import './PlayerEquipments.scss';
@@ -28,7 +28,10 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
       return;
 
     if (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) {
-      moves.barrel(playerId);
+      moves.drawToReact(playerID);
+      setTimeout(() => {
+        moves.barrelResult(playerID);
+      }, delayBetweenActions);
     }
   };
 

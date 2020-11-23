@@ -1,6 +1,7 @@
+import React, { Dispatch, Fragment, SetStateAction, useCallback, useState } from 'react';
 import styled from '@emotion/styled';
+import classnames from 'classnames';
 import { INVALID_MOVE } from 'boardgame.io/core';
-import React, { Fragment, useCallback, useState } from 'react';
 import { Draggable, DragComponent } from 'react-dragtastic';
 import { useErrorContext, useGameContext } from '../../../context';
 import { delayBetweenActions } from '../../../game/constants';
@@ -15,24 +16,21 @@ interface IDraggableCardProps {
   index: number;
   isFacedUp: boolean;
   playerId: string;
+  selectedCards?: number[];
+  setSelectedCards?: Dispatch<SetStateAction<number[]>>;
 }
 
 const DraggableCardContainer = styled.div<{
   draggableDragState: IDraggableDragState;
   cardId: string;
   index: number;
-}>(
-  props => ({
-    display:
-      props.draggableDragState.isDragging &&
-      props.draggableDragState.currentlyDraggingId === props.cardId
-        ? 'none'
-        : 'block',
-  }),
-  props => ({
-    left: `${50 + props.index * 70}px`,
-  })
-);
+}>(props => ({
+  display:
+    props.draggableDragState.isDragging &&
+    props.draggableDragState.currentlyDraggingId === props.cardId
+      ? 'none'
+      : 'block',
+}));
 
 const DragComponentContainer = styled.div<{
   draggableDragState: IDragComponentDragState;
@@ -53,34 +51,53 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   index,
   isFacedUp,
   playerId,
+  selectedCards,
+  setSelectedCards,
 }) => {
-  const { moves, playerID, isActive, G } = useGameContext();
+  const { moves, playerID, isActive, G, ctx } = useGameContext();
   const { activeStage, players, reactionRequired } = G;
   const { setError } = useErrorContext();
   const [showCardOptions, setShowCardOptions] = useState(false);
   const isCardDisabled =
     !!activeStage && !!reactionRequired.cardNeeded && card.name !== reactionRequired.cardNeeded;
+  const isSelected = selectedCards?.includes(index);
 
   const onCardClick = () => {
     const currentPlayer = players[playerId];
 
     if (!isActive) return;
 
-    if (activeStage && reactionRequired.cardNeeded) {
-      if (currentPlayer.character.name === 'calamity janet') {
-        if (
-          ['bang', 'missed'].includes(card.name) &&
-          ['bang', 'missed'].includes(reactionRequired.cardNeeded)
-        ) {
-          moves.playCardToReact(index, playerId);
-          return;
-        }
-      }
-
-      if (card.name !== reactionRequired.cardNeeded) return;
-
-      moves.playCardToReact(index, playerId);
+    if (ctx.phase === 'suddenDeath' && (card.name === 'beer' || card.name === 'saloon')) {
+      setError('Beer and saloon cannot be played when there are 2 players left');
       return;
+    }
+
+    if (activeStage && reactionRequired.cardNeeded && selectedCards && setSelectedCards) {
+      if (selectedCards.length < reactionRequired.quantity) {
+        if (isSelected) {
+          setSelectedCards(cards => cards.filter(cardIndex => cardIndex !== index));
+        } else {
+          if (card.name === reactionRequired.cardNeeded) {
+            setSelectedCards(cards => [...cards, index]);
+          }
+        }
+        return;
+      } else {
+        if (currentPlayer.character.name === 'calamity janet') {
+          if (
+            ['bang', 'missed'].includes(card.name) &&
+            ['bang', 'missed'].includes(reactionRequired.cardNeeded)
+          ) {
+            moves.playCardToReact(index, playerId);
+            return;
+          }
+        }
+
+        if (card.name !== reactionRequired.cardNeeded) return;
+
+        moves.playCardToReact(index, playerId);
+        return;
+      }
     }
 
     if (card.name === 'jail' || card.isTargeted) return;
@@ -120,7 +137,10 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       >
         {draggableDragState => (
           <DraggableCardContainer
-            className='draggable-card'
+            className={classnames({
+              'draggable-card': !isSelected,
+              'draggable-card-selected': isSelected,
+            })}
             {...draggableDragState.events}
             draggableDragState={draggableDragState}
             cardId={card.id}

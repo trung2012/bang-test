@@ -89,3 +89,25 @@ export const jailResult = (G: IGameState, ctx: Ctx, currentPlayer: IGamePlayer) 
 
   return isFailure;
 };
+
+export const hasDynamite = (player: IGamePlayer) =>
+  player.equipments.find(card => card.name === 'dynamite');
+export const isJailed = (player: IGamePlayer) =>
+  player.equipments.find(card => card.name === 'jail');
+export const checkIfVultureSamInGame = (G: IGameState) => {
+  let isVultureSamInGame = false;
+  let vultureSamId: string | undefined = undefined;
+  for (const playerId in G.players) {
+    const player = G.players[playerId];
+    if (player.character.name === 'vulture sam') {
+      isVultureSamInGame = true;
+      vultureSamId = playerId;
+      break;
+    }
+  }
+
+  return {
+    isVultureSamInGame,
+    vultureSamId,
+  };
+};

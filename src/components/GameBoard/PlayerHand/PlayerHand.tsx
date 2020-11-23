@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGameContext } from '../../../context';
 import { stageNames } from '../../../game/constants';
 import { ICard } from '../../../game/types';
@@ -37,6 +37,25 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const targetPlayer = G.players[playerId];
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
+  const [selectedCards, setSelectedCards] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (
+      G.activeStage &&
+      G.reactionRequired.cardNeeded &&
+      selectedCards.length === G.reactionRequired.quantity
+    ) {
+      moves.playCardToReact(selectedCards, playerID);
+      setSelectedCards([]);
+    }
+  }, [
+    G.activeStage,
+    G.reactionRequired.cardNeeded,
+    G.reactionRequired.quantity,
+    moves,
+    playerID,
+    selectedCards,
+  ]);
 
   const onPlayerHandCardClick = (index: number) => {
     const currentPlayer = G.players[playerID!];
@@ -62,6 +81,8 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
             index={index}
             isFacedUp={isFacedUp}
             playerId={playerId}
+            selectedCards={selectedCards}
+            setSelectedCards={setSelectedCards}
           />
         ))}
       </div>
@@ -69,7 +90,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   }
 
   return (
-    <div className='player-cards'>
+    <div className='player-hand'>
       {hand.map((card, index) => (
         <DroppableCardContainer
           index={index}

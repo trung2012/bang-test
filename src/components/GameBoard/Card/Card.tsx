@@ -41,17 +41,16 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
             x: oldPosition.left - newPosition.left,
             y: oldPosition.top - newPosition.top,
             ease: Power3.easeOut,
-            onComplete: () => {
-              setCardPositions(prevPositions => ({
-                ...prevPositions,
-                [card.id]: {
-                  left: newPosition.left,
-                  top: newPosition.top,
-                },
-              }));
-            },
           });
         }
+
+        setCardPositions(prevPositions => ({
+          ...prevPositions,
+          [card.id]: {
+            left: newPosition.left,
+            top: newPosition.top,
+          },
+        }));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
