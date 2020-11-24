@@ -11,11 +11,6 @@ interface IPlayerEquipments {
   equipments: ICard[];
 }
 
-const EquipmentCardContainer = styled.div<CardContainerProps>`
-  position: absolute;
-  left: ${props => `${props.index * 70}px`};
-`;
-
 export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipments }) => {
   const { G, playerID, moves } = useGameContext();
 
@@ -42,16 +37,15 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
   return (
     <div className='player-equipments'>
       {equipments.map((card, index) => (
-        <EquipmentCardContainer key={card.id} index={index} isCurrentPlayer={playerID === playerId}>
-          <DroppableCard
-            card={card}
-            index={index}
-            isFacedUp={true}
-            playerId={playerId}
-            cardLocation='equipment'
-            onClick={() => onEquipmentClick(card)}
-          />
-        </EquipmentCardContainer>
+        <DroppableCard
+          key={card.id}
+          card={card}
+          index={index}
+          isFacedUp={true}
+          playerId={playerId}
+          cardLocation='equipment'
+          onClick={() => onEquipmentClick(card)}
+        />
       ))}
     </div>
   );

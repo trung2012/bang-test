@@ -1,0 +1,63 @@
+@import '../../sass/_main';
+
+.ribbon {
+  width: 40rem;
+  height: 6rem;
+  display: flex;
+  position: relative;
+  color: #fff;
+  font-size: 3rem;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  background: $color-secondary-dark;
+  animation: main 250ms linear 1.25s backwards;
+  margin-bottom: 12rem;
+
+  i {
+    position: absolute;
+
+    &:first-child,
+    &:nth-child(2) {
+      position: absolute;
+      left: -2rem;
+      bottom: -2rem;
+      z-index: -1;
+      border: 2rem solid transparent;
+      border-right-color: $color-tertiary-dark;
+      animation: edge 500ms linear 1.25s backwards;
+    }
+
+    &:nth-child(2) {
+      left: auto;
+      right: -2rem;
+      border-right-color: transparent;
+      border-left-color: $color-tertiary-dark;
+    }
+
+    &:nth-child(3),
+    &:last-child {
+      width: 2rem;
+      bottom: -2rem;
+      left: -6rem;
+      z-index: -2;
+      border: 3rem solid $color-tertiary;
+      border-left-color: transparent;
+      animation: back 600ms linear 1.25s backwards;
+      transform-origin: 100% 0;
+    }
+
+    &:last-child {
+      bottom: -2rem;
+      left: auto;
+      right: -6rem;
+      border: 3rem solid $color-tertiary;
+      border-right-color: transparent;
+      transform-origin: 0 0;
+    }
+  }
+  p {
+    text-align: center;
+    color: $color-secondary-dark;
+  }
+}

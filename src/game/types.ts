@@ -120,3 +120,8 @@ export interface ILookup {
 }
 
 export type RobbingType = 'hand' | 'equipment';
+
+export interface IGameResult {
+  winners: IGamePlayer[];
+  team: string;
+}

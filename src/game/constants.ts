@@ -187,7 +187,7 @@ export const delayBetweenActions = 1500;
 
 export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];
 
-export const teamLookUp: { [key: string]: string } = {
+export const teamLookUp = {
   sheriff: 'The Lawful',
   deputy: 'The Lawful',
   outlaw: 'The Outlaws',

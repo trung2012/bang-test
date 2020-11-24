@@ -232,7 +232,11 @@ export const playCardToReact = (
     }
   }
 
-  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+  if (
+    ctx.activePlayers &&
+    Object.keys(ctx.activePlayers).length === 1 &&
+    previousActiveStage === 'duel'
+  ) {
     resetGameStage(G, ctx);
   }
 };

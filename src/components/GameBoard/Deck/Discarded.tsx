@@ -15,6 +15,7 @@ export const Discarded = () => {
       !isActive ||
       clientPlayer.character.name !== 'pedro ramirez' ||
       clientPlayer.cardDrawnAtStartLeft < 2 ||
+      G.discarded.length === 0 ||
       hasDynamite(clientPlayer) ||
       isJailed(clientPlayer)
     )

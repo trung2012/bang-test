@@ -2,12 +2,13 @@ import React from 'react';
 import { useGameContext } from '../../../context';
 import { useBgioEffects } from '../../../hooks';
 import { Deck, Discarded } from '../Deck';
+import { GameOver } from '../GameOver';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
 import './GameTable.scss';
 
 export const GameTable = () => {
-  const { G, playersInfo, playerID } = useGameContext();
+  const { G, ctx, playersInfo, playerID } = useGameContext();
   const { players } = G;
 
   const clientPlayerIndex = playersInfo?.findIndex((p, index) => playerID === p.id.toString());
@@ -21,6 +22,10 @@ export const GameTable = () => {
       : playersInfo;
 
   useBgioEffects();
+
+  if (ctx.gameover) {
+    return <GameOver gameResult={ctx.gameover} />;
+  }
 
   if (playersInfo && playersInfo.length > 0) {
     return (

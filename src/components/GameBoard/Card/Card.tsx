@@ -58,18 +58,18 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
 
   useEffect(() => {
     if (!cardPositions[card.id] && cardRef.current) {
-      console.log('useEffect');
+      const bodyPosition = document.body.getBoundingClientRect();
       const newPosition = cardRef.current.getBoundingClientRect();
       setCardPositions(prevPositions => ({
         ...prevPositions,
         [card.id]: {
-          left: newPosition.left,
-          top: newPosition.top,
+          left: newPosition.left - bodyPosition.left,
+          top: newPosition.top - bodyPosition.top,
         },
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [card.id]);
+  }, []);
 
   if (isFacedUp) {
     return (

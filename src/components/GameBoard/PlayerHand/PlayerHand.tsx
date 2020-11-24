@@ -12,21 +12,22 @@ interface IPlayerCardsProps {
   hand: ICard[];
 }
 
-const maxCardRotationAngle = 130;
-
-const DroppableCardContainer = styled.div<CardContainerProps & { numCards: number }>`
+const DroppableCardContainer = styled.div<
+  CardContainerProps & { numCards: number; maxCardRotationAngle: number }
+>`
   position: absolute;
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: ${props =>
     `rotate(${
-      -maxCardRotationAngle / 2 + props.index * (maxCardRotationAngle / props.numCards)
+      -props.maxCardRotationAngle / 2 + props.index * (props.maxCardRotationAngle / props.numCards)
     }deg)`};
   transform-origin: center top;
 
   &:hover {
     transform: ${props =>
       `rotate(${
-        -maxCardRotationAngle / 2 + props.index * (maxCardRotationAngle / props.numCards)
+        -props.maxCardRotationAngle / 2 +
+        props.index * (props.maxCardRotationAngle / props.numCards)
       }deg)
       ${props.isCurrentPlayer ? 'translateY(-40px)' : 'translateY(40px)'} `};
   }
@@ -38,6 +39,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const maxCardRotationAngle = Math.min(hand.length * 25, 140);
 
   useEffect(() => {
     if (
@@ -96,6 +98,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
           index={index}
           isCurrentPlayer={playerId === playerID}
           numCards={hand.length}
+          maxCardRotationAngle={maxCardRotationAngle}
           key={card.id}
         >
           <DroppableCard

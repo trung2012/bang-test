@@ -1,6 +1,4 @@
 .player-cards-in-play {
-  .card {
-    position: absolute;
-    top: 0;
-  }
+  position: absolute;
+  z-index: 10;
 }

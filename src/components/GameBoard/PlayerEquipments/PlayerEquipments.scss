@@ -1,6 +1,9 @@
 .player-equipments {
   position: absolute;
-  left: 100%;
-  top: 0;
-  z-index: 100;
+  display: flex;
+  z-index: 1;
+
+  & > * {
+    margin-right: -1.5rem;
+  }
 }
