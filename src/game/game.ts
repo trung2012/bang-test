@@ -77,7 +77,7 @@ const game: Game<IGameState> = {
       );
       if (suzyPlayerId !== undefined) {
         const suzyPlayer = G.players[suzyPlayerId];
-        if (suzyPlayer.hand.length === 0) {
+        if (suzyPlayer.hp > 0 && suzyPlayer.hand.length === 0) {
           const newCard = G.deck.pop();
           if (newCard) {
             suzyPlayer.hand.push(newCard);

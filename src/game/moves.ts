@@ -10,7 +10,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   targetPlayer.hp -= 1;
 
   const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex !== -1 && targetPlayer.hp === 0) {
+  if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
     const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
     targetPlayer.cardsInPlay.push(cardToPlay);
     targetPlayer.hp = 1;
@@ -29,6 +29,13 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
           vultureSamPlayer.hand.push(cardToTake);
         }
       }
+
+      while (targetPlayer.equipments.length > 0) {
+        const cardToTake = targetPlayer.equipments.pop();
+        if (cardToTake) {
+          vultureSamPlayer.hand.push(cardToTake);
+        }
+      }
     } else {
       discardHand(G, ctx, targetPlayerId);
     }
@@ -41,8 +48,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
         : ctx.currentPlayer;
     const playerCausingDeath = G.players[playerCausingDeathId];
 
-    if (targetPlayer.role === 'outlaw') {
-      drawBounty(G, ctx, playerCausingDeathId);
+    if (targetPlayer.role === 'outlaw' && ctx.currentPlayer !== targetPlayerId) {
+      drawBounty(G, ctx, ctx.currentPlayer);
     }
 
     if (targetPlayer.role === 'deputy' && playerCausingDeath.role === 'sheriff') {
@@ -60,6 +67,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     if (ctx.events?.endStage) {
       ctx.events.endStage();
+      targetPlayer.barrelUseLeft = 1;
     }
 
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -89,28 +97,35 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
-  const currentPlayer = G.players[targetPlayerId];
-  currentPlayer.hp -= 3;
+  const targetPlayer = G.players[targetPlayerId];
+  targetPlayer.hp -= 3;
 
-  const dynamiteCardIndex = currentPlayer.equipments.findIndex(card => card.name === 'dynamite');
-  const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
+  const dynamiteCardIndex = targetPlayer.equipments.findIndex(card => card.name === 'dynamite');
+  const dynamiteCard = targetPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
   G.discarded.push(dynamiteCard);
 
-  const beerCardIndex = currentPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex !== -1 && currentPlayer.hp === 0) {
+  const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
+  if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
     playCard(G, ctx, beerCardIndex, targetPlayerId);
-    currentPlayer.hp = 1;
+    targetPlayer.hp = 1;
   }
 
   clearCardsInPlay(G, ctx, targetPlayerId);
 
-  if (currentPlayer.hp <= 0) {
+  if (targetPlayer.hp <= 0) {
     const { isVultureSamInGame, vultureSamId } = checkIfVultureSamInGame(G);
 
     if (isVultureSamInGame && vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
-      while (currentPlayer.hand.length > 0) {
-        const cardToTake = currentPlayer.hand.pop();
+      while (targetPlayer.hand.length > 0) {
+        const cardToTake = targetPlayer.hand.pop();
+        if (cardToTake) {
+          vultureSamPlayer.hand.push(cardToTake);
+        }
+      }
+
+      while (targetPlayer.equipments.length > 0) {
+        const cardToTake = targetPlayer.equipments.pop();
         if (cardToTake) {
           vultureSamPlayer.hand.push(cardToTake);
         }
@@ -121,6 +136,12 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
 
     if (ctx.events?.endTurn) {
       ctx.events.endTurn();
+    }
+  } else {
+    if (targetPlayer.character.name === 'bart cassidy') {
+      const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
+      G.deck = G.deck.slice(0, G.deck.length - 3);
+      targetPlayer.hand.push(...newCards);
     }
   }
 };
@@ -223,6 +244,14 @@ export const playCardToReact = (
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
+    reactingPlayer.barrelUseLeft = 1;
+    if (reactingPlayer.character.name === 'jourdonnais') {
+      reactingPlayer.jourdonnaisPowerUseLeft = 1;
+    }
+  }
+
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
   }
 
   if (onlyCardToPlay && onlyCardToPlay.name === 'bang' && previousActiveStage === 'duel') {
@@ -230,14 +259,6 @@ export const playCardToReact = (
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
       return;
     }
-  }
-
-  if (
-    ctx.activePlayers &&
-    Object.keys(ctx.activePlayers).length === 1 &&
-    previousActiveStage === 'duel'
-  ) {
-    resetGameStage(G, ctx);
   }
 };
 
@@ -440,9 +461,21 @@ const blackJackResult = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const barrelResult = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+export const barrelResult = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  isInnatePower: boolean
+) => {
   const reactingPlayer = G.players[targetPlayerId];
-  const isSuccessful = reactingPlayer.cardsInPlay.some(card => card.suit === 'hearts');
+  const isSuccessful = reactingPlayer.cardsInPlay.every(card => card.suit === 'hearts');
+
+  clearCardsInPlay(G, ctx, targetPlayerId);
+  if (!isInnatePower) {
+    reactingPlayer.barrelUseLeft -= 1;
+  } else {
+    reactingPlayer.jourdonnaisPowerUseLeft -= 1;
+  }
 
   if (isSuccessful) {
     if (
@@ -452,6 +485,10 @@ export const barrelResult = (G: IGameState, ctx: Ctx, targetPlayerId: string) =>
     ) {
       if (ctx.events?.endStage) {
         ctx.events.endStage();
+        reactingPlayer.barrelUseLeft = 1;
+        if (reactingPlayer.character.name === 'jourdonnais') {
+          reactingPlayer.jourdonnaisPowerUseLeft = 1;
+        }
         if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
           resetGameStage(G, ctx);
         }
@@ -460,9 +497,6 @@ export const barrelResult = (G: IGameState, ctx: Ctx, targetPlayerId: string) =>
       G.reactionRequired.quantity -= 1;
     }
   }
-
-  clearCardsInPlay(G, ctx, targetPlayerId);
-  reactingPlayer.barrelUseLeft -= 1;
 };
 
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -581,7 +615,9 @@ const saloon = (G: IGameState, ctx: Ctx) => {
 
   for (const playerId of ctx.playOrder) {
     const player = G.players[playerId];
-    player.hp = Math.min(player.maxHp, player.hp + 1);
+    if (player.hp > 0) {
+      player.hp = Math.min(player.maxHp, player.hp + 1);
+    }
   }
 };
 
@@ -701,6 +737,12 @@ export const doNothing = (G: IGameState, ctx: Ctx) => {
   return G;
 };
 
+export const endTurn = (G: IGameState, ctx: Ctx) => {
+  if (ctx.events?.endTurn) {
+    ctx.events.endTurn();
+  }
+};
+
 const moves: MoveMap<IGameState> = {
   takeDamage,
   drawOneFromDeck,
@@ -737,6 +779,7 @@ const moves: MoveMap<IGameState> = {
   drawToReact,
   drawBounty,
   discardEquipments,
+  endTurn,
 };
 
 export default moves;

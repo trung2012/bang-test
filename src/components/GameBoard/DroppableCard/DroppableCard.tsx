@@ -43,7 +43,7 @@ export const DroppableCard: React.FC<IDroppableCardProps> = React.memo(
         sourcePlayerId,
         playerId
       );
-      if (sourcePlayer.actionRange < distanceBetweenPlayers) {
+      if (sourcePlayer.actionRange < distanceBetweenPlayers && sourceCard.name !== 'cat balou') {
         setError('Target player is out of range');
         return;
       }

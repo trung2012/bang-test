@@ -4,6 +4,7 @@ import { IServerPlayer } from '../../../api/types';
 import { useErrorContext, useGameContext } from '../../../context';
 import { ICard, IGamePlayer } from '../../../game/types';
 import { calculateDistanceFromTarget } from '../../../utils';
+import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
 import { PlayerEquipments } from '../PlayerEquipments';
 import { PlayerHand } from '../PlayerHand';
@@ -95,6 +96,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       <Droppable accepts='card' onDrop={onDrop}>
         {dragState => (
           <div className='player-info-container' {...dragState.events}>
+            <PlayerButtons player={player} />
             <PlayerInfo player={player} />
           </div>
         )}

@@ -29,8 +29,6 @@
     justify-self: flex-start;
 
     .player-info {
-      margin-bottom: 0;
-
       &-container {
         align-self: center;
       }
@@ -58,6 +56,20 @@
       grid-row: 1;
       align-self: flex-start;
       justify-self: center;
+      margin-top: 1rem;
+
+      .player-equipments {
+        left: $card-width * 2;
+      }
+
+      .player-hand {
+        transform: translateX(3rem) rotate(5deg);
+      }
+
+      .player-cards-in-play {
+        left: -$card-width;
+        top: $card-height * 0.2;
+      }
     }
   }
 
@@ -167,7 +179,7 @@
       margin-top: 1rem;
 
       .player-equipments {
-        left: $card-width * 1.6;
+        left: $card-width * 2;
       }
 
       .player-hand {
@@ -211,7 +223,7 @@
       margin-top: 1rem;
 
       .player-equipments {
-        left: $card-width * 1.6;
+        left: $card-width * 2;
       }
 
       .player-hand {

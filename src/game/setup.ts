@@ -49,6 +49,7 @@ const setup = (ctx: Ctx) => {
       cardDiscardedThisTurn: 0,
       cardDrawnAtStartLeft:
         playerCharacter.name === 'black jack' || playerCharacter.name === 'kit carlson' ? 3 : 2,
+      jourdonnaisPowerUseLeft: playerCharacter.name === 'jourdonnais' ? 1 : 0,
     };
 
     for (let hp = 1; hp <= player.hp; hp++) {

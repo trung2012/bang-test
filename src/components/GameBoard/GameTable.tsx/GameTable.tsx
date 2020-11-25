@@ -1,17 +1,20 @@
-import React from 'react';
-import { useGameContext } from '../../../context';
+import React, { useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import { useErrorContext, useGameContext } from '../../../context';
 import { useBgioEffects } from '../../../hooks';
 import { Deck, Discarded } from '../Deck';
 import { GameOver } from '../GameOver';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
 import './GameTable.scss';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export const GameTable = () => {
   const { G, ctx, playersInfo, playerID } = useGameContext();
+  const { error, setError } = useErrorContext();
   const { players } = G;
 
-  const clientPlayerIndex = playersInfo?.findIndex((p, index) => playerID === p.id.toString());
+  const clientPlayerIndex = playersInfo?.findIndex(p => playerID === p.id.toString());
   const renderedPlayers =
     playersInfo && clientPlayerIndex && clientPlayerIndex !== -1
       ? [
@@ -20,6 +23,16 @@ export const GameTable = () => {
           ...playersInfo?.slice(0, clientPlayerIndex),
         ]
       : playersInfo;
+
+  useEffect(() => {
+    if (error) {
+      toast.warn(error, {
+        onClose: () => {
+          setError('');
+        },
+      });
+    }
+  }, [error, setError]);
 
   useBgioEffects();
 
@@ -41,6 +54,17 @@ export const GameTable = () => {
           <Deck />
           <Discarded />
         </div>
+        <ToastContainer
+          position='top-center'
+          autoClose={4500}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     );
   }

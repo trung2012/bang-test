@@ -1,0 +1,14 @@
+@import '../../../sass/_variables';
+
+.tomb {
+  height: 15rem;
+  width: 10rem;
+}
+
+.player-role-img {
+  width: $card-width;
+  height: $card-height;
+  transform: rotate(15deg);
+  border-radius: $card-border-radius;
+  box-shadow: $box-shadow-primary;
+}

@@ -35,6 +35,7 @@ export interface IGamePlayer {
   cardDrawnAtStartLeft: number;
   targetedCard?: ICard;
   barrelUseLeft: number;
+  jourdonnaisPowerUseLeft: number;
 }
 
 export interface ICard {
@@ -57,6 +58,7 @@ export interface ICharacter {
   hp: number;
   description: string;
   imageUrl: string;
+  hasActivePower?: boolean;
 }
 
 export type Role = 'sheriff' | 'deputy' | 'outlaw' | 'renegade';

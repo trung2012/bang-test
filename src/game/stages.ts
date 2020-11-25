@@ -12,7 +12,6 @@ const stages: StageMap<IGameState> = {
     moves: {
       playCardToReact: moves.playCardToReact,
       takeDamage: moves.takeDamage,
-      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   reactToGatling: {
