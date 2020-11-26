@@ -1,9 +1,21 @@
-import { EffectsPluginConfig } from 'bgio-effects/dist/types';
-
-export const config: EffectsPluginConfig = {
+export const config = {
   effects: {
-    delayUpdate: {
-      duration: 1.5,
+    gunshot: {
+      create: (cardId: string) => cardId,
     },
+    explosion: {},
+    gunCock: {
+      create: (cardId: string) => cardId,
+    },
+    takeDamage: {},
+    gatling: {
+      create: (cardId: string) => cardId,
+    },
+    horse: {
+      create: (cardId: string) => cardId,
+    },
+    swoosh: {},
   },
 };
+
+export type BangEffectsConfig = typeof config;

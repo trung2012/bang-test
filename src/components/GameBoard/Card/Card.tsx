@@ -37,7 +37,7 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
       if (oldPosition) {
         if (oldPosition.left !== newPosition.left && oldPosition.top !== newPosition.top) {
           gsap.from(`#${CSS.escape(card.id)}`, {
-            duration: 1,
+            duration: 0.8,
             x: oldPosition.left - newPosition.left,
             y: oldPosition.top - newPosition.top,
             ease: Power3.easeOut,

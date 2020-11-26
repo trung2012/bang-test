@@ -24,6 +24,7 @@ const setup = (ctx: Ctx) => {
     quantity: 1,
   };
   const activeStage = null;
+  const dynamiteTimer = 1;
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -69,6 +70,7 @@ const setup = (ctx: Ctx) => {
     activeStage,
     reactionRequired,
     playOrder,
+    dynamiteTimer,
   } as IGameState;
 };
 

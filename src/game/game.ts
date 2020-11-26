@@ -1,4 +1,4 @@
-import { Ctx, Game } from 'boardgame.io';
+import { Game } from 'boardgame.io';
 import { TurnOrder } from 'boardgame.io/core';
 import { EffectsPlugin } from 'bgio-effects/plugin';
 import { gameNames, teamLookUp } from './constants';
@@ -20,8 +20,8 @@ declare module 'boardgame.io' {
 
 const game: Game<IGameState> = {
   name: gameNames.bang,
-  setup,
   plugins: [EffectsPlugin(config)],
+  setup,
   moves,
   phases,
   endIf: (G, ctx): IGameResult | undefined => {
@@ -72,6 +72,13 @@ const game: Game<IGameState> = {
     },
     stages,
     onMove: (G, ctx) => {
+      if (G.deck.length <= 6) {
+        while (G.discarded.length > 2) {
+          G.deck.push(G.discarded.pop() as ICard);
+        }
+        G.deck = ctx.random?.Shuffle ? ctx.random?.Shuffle(G.deck) : G.deck;
+      }
+
       let suzyPlayerId = ctx.playOrder.find(
         playerId => G.players[playerId].character.name === 'suzy lafayette'
       );
@@ -83,14 +90,6 @@ const game: Game<IGameState> = {
             suzyPlayer.hand.push(newCard);
           }
         }
-      }
-    },
-    onBegin: (G, ctx) => {
-      if (G.deck.length <= 10) {
-        while (G.discarded.length > 2) {
-          G.deck.push(G.discarded.pop() as ICard);
-        }
-        G.deck = ctx.random?.Shuffle ? ctx.random?.Shuffle(G.deck) : G.deck;
       }
     },
     onEnd: (G, ctx) => {

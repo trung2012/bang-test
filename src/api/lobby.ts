@@ -3,7 +3,7 @@ import { SERVER_URL } from '../config';
 import { IPlayerJoinData, IRoomData } from './types';
 
 const gameName = 'bang';
-axios.defaults.baseURL = `http://${SERVER_URL}/games/${gameName}`;
+axios.defaults.baseURL = `${SERVER_URL}/games/${gameName}`;
 
 const createGame = async (numPlayers: number) => {
   try {

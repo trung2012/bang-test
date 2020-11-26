@@ -30,6 +30,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       return;
     }
 
+    if (player.equipments.some(card => card.name === 'dynamite') && G.dynamiteTimer === 0) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
     moves.endTurn();
   };
 

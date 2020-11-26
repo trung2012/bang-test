@@ -2,12 +2,13 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { checkIfVultureSamInGame } from './utils';
+import { checkIfVultureSamInGame, hasDynamite } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
   targetPlayer.hp -= 1;
+  ctx.effects.takeDamage();
 
   const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
   if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
@@ -96,13 +97,16 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 };
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  ctx.effects.explosion();
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
   targetPlayer.hp -= 3;
 
   const dynamiteCardIndex = targetPlayer.equipments.findIndex(card => card.name === 'dynamite');
   const dynamiteCard = targetPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
-  G.discarded.push(dynamiteCard);
+  if (dynamiteCard) {
+    G.discarded.push(dynamiteCard);
+  }
 
   const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
   if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
@@ -111,6 +115,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   }
 
   clearCardsInPlay(G, ctx, targetPlayerId);
+  G.dynamiteTimer = 1;
 
   if (targetPlayer.hp <= 0) {
     const { isVultureSamInGame, vultureSamId } = checkIfVultureSamInGame(G);
@@ -147,6 +152,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
 };
 
 export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlayerId: string) => {
+  ctx.effects.swoosh();
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
   const cardToPlay = currentPlayer.hand.splice(cardIndex, 1)[0];
@@ -159,6 +165,7 @@ export const clearCardsInPlay = (G: IGameState, ctx: Ctx, targetPlayerId: string
   while (targetPlayer.cardsInPlay.length > 0) {
     const discardedCard = targetPlayer.cardsInPlay.shift();
     if (discardedCard) {
+      ctx.effects.swoosh();
       G.discarded.push(discardedCard);
     }
   }
@@ -286,6 +293,7 @@ const discardFromHand = (
 };
 
 const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
+  ctx.effects.swoosh();
   const currentPlayer = G.players[ctx.currentPlayer];
   const equipmentCard = currentPlayer.hand.splice(cardIndex, 1)[0];
 
@@ -295,7 +303,9 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   }
 
   const newGunRange = gunRange[equipmentCard.name];
+
   if (newGunRange) {
+    ctx.effects.gunCock(equipmentCard.id);
     const previouslyEquippedGunIndex = currentPlayer.equipments.findIndex(
       equipment => gunRange[equipment.name]
     );
@@ -316,11 +326,15 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
     currentPlayer.gunRange = newGunRange;
   }
 
+  currentPlayer.equipments.push(equipmentCard);
+
   if (equipmentCard.name === 'scope') {
     currentPlayer.actionRange += 1;
   }
 
-  currentPlayer.equipments.push(equipmentCard);
+  if (equipmentCard.name === 'mustang') {
+    ctx.effects.horse(equipmentCard.id);
+  }
 };
 
 const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: number) => {
@@ -501,6 +515,8 @@ export const barrelResult = (
 
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const currentPlayer = G.players[ctx.currentPlayer];
+  const bangCard = G.players[targetPlayerId].cardsInPlay[0];
+  ctx.effects.gunshot(bangCard.id);
   G.activeStage = stageNames.reactToBang;
   G.reactionRequired = {
     cardNeeded: 'missed',
@@ -522,7 +538,7 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 };
 
 const beer = (G: IGameState, ctx: Ctx) => {
-  if (G.isSuddenDeathOn) {
+  if (ctx.phase === 'suddenDeath') {
     return INVALID_MOVE;
   }
 
@@ -558,8 +574,18 @@ const catbalou = (
 };
 
 const gatling = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const gatlingCard = currentPlayer.cardsInPlay[0];
+  if (gatlingCard) {
+    ctx.effects.gatling(gatlingCard.id);
+  }
+
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
+      currentPlayer: {
+        stage: stageNames.clearCardsInPlay,
+        moveLimit: 1,
+      },
       others: stageNames.reactToGatling,
     });
   }
@@ -738,6 +764,11 @@ export const doNothing = (G: IGameState, ctx: Ctx) => {
 };
 
 export const endTurn = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  if (G.dynamiteTimer > 0 && hasDynamite(currentPlayer)) {
+    G.dynamiteTimer = 0;
+  }
+
   if (ctx.events?.endTurn) {
     ctx.events.endTurn();
   }

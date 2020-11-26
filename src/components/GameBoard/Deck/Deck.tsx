@@ -14,7 +14,7 @@ export const Deck = () => {
   const onDeckClick = () => {
     if (!isActive || clientPlayer.cardDrawnAtStartLeft === 0) return;
 
-    if (hasDynamite(clientPlayer)) {
+    if (hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
       moves.drawToReact(playerID);
 
       setTimeout(() => {

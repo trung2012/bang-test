@@ -77,7 +77,11 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         if (isSelected) {
           setSelectedCards(cards => cards.filter(cardIndex => cardIndex !== index));
         } else {
-          if (card.name === reactionRequired.cardNeeded) {
+          if (
+            card.name === reactionRequired.cardNeeded ||
+            (['bang', 'missed'].includes(card.name) &&
+              ['bang', 'missed'].includes(reactionRequired.cardNeeded))
+          ) {
             setSelectedCards(cards => [...cards, index]);
           }
         }
@@ -88,7 +92,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
             ['bang', 'missed'].includes(card.name) &&
             ['bang', 'missed'].includes(reactionRequired.cardNeeded)
           ) {
-            moves.playCardToReact(index, playerId);
+            moves.playCardToReact([index], playerId);
             return;
           }
         }
@@ -113,14 +117,14 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     moves.playCard(index, playerID);
+    const moveName = card.name.replace(' ', '').toLowerCase();
+    if (moves[moveName]) {
+      moves[moveName]();
+    }
 
     setTimeout(() => {
       moves.clearCardsInPlay(playerID);
-      const moveName = card.name.replace(' ', '').toLowerCase();
-      if (moves[moveName]) {
-        moves[moveName]();
-      }
-    }, delayBetweenActions);
+    }, delayBetweenActions * 1.5);
   };
 
   const onContextMenu = useCallback((event: React.MouseEvent<HTMLDivElement>) => {

@@ -12,6 +12,7 @@ export interface IGameState {
     cardNeeded: CardName | null;
     quantity: number;
   };
+  dynamiteTimer: number;
 }
 
 export interface IGamePlayerMap {

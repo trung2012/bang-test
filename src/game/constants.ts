@@ -24,22 +24,22 @@ export const characters: ICharacter[] = [
   //   imageUrl:
   //     'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bartcassidy_ouhp6h.png',
   // },
-  // {
-  //   name: 'black jack',
-  //   hp: 4,
-  //   description:
-  //     'During phase 1 of his turn, he must show the second card he draws: if it’s Heart or Diamonds (just like a “draw!”), he draws one additional card (without revealing it).',
-  //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/blackjack_cgpncq.png',
-  // },
-  // {
-  //   name: 'calamity janet',
-  //   hp: 4,
-  //   description:
-  //     'She can use BANG! cards as Missed! cards and vice versa. If she plays a Missed! as a BANG! , she cannot play another BANG! card that turn (unless she has a Volcanic in play).',
-  //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/calamityjanet_tfl8jr.png',
-  // },
+  {
+    name: 'black jack',
+    hp: 4,
+    description:
+      'During phase 1 of his turn, he must show the second card he draws: if it’s Heart or Diamonds (just like a “draw!”), he draws one additional card (without revealing it).',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/blackjack_cgpncq.png',
+  },
+  {
+    name: 'calamity janet',
+    hp: 4,
+    description:
+      'She can use BANG! cards as Missed! cards and vice versa. If she plays a Missed! as a BANG! , she cannot play another BANG! card that turn (unless she has a Volcanic in play).',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/calamityjanet_tfl8jr.png',
+  },
   // {
   //   name: 'el gringo',
   //   hp: 3,
@@ -48,31 +48,31 @@ export const characters: ICharacter[] = [
   //   imageUrl:
   //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/elgringo_qql1r7.png',
   // },
-  {
-    name: 'jesse jones',
-    hp: 4,
-    description:
-      'During phase 1 of his turn, he may choose to draw the first card from the deck, or randomly from the hand of any other player. Then he draws the second card from the deck.',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/jessejones_wb46wp.png',
-  },
-  {
-    name: 'jourdonnais',
-    hp: 4,
-    description:
-      'He is considered to have a Barrel in play at all times; he can “draw!” when he is the target of a BANG! , and on a Heart he is missed. If he has another real Barrel card in play, he can count both of them, giving him two chances to cancel the BANG! before playing a Missed! .',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/jourdonnais_znr8vy.png',
-    hasActivePower: true,
-  },
   // {
-  //   name: 'kit carlson',
+  //   name: 'jesse jones',
   //   hp: 4,
   //   description:
-  //     'During phase 1 of his turn, he looks at the top three cards of the deck: he chooses 2 to draw, and puts the other one back on the top of the deck, face down.',
+  //     'During phase 1 of his turn, he may choose to draw the first card from the deck, or randomly from the hand of any other player. Then he draws the second card from the deck.',
   //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/kitcarlson_a9jhr2.png',
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/jessejones_wb46wp.png',
   // },
+  // {
+  //   name: 'jourdonnais',
+  //   hp: 4,
+  //   description:
+  //     'He is considered to have a Barrel in play at all times; he can “draw!” when he is the target of a BANG! , and on a Heart he is missed. If he has another real Barrel card in play, he can count both of them, giving him two chances to cancel the BANG! before playing a Missed! .',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/jourdonnais_znr8vy.png',
+  //   hasActivePower: true,
+  // },
+  {
+    name: 'kit carlson',
+    hp: 4,
+    description:
+      'During phase 1 of his turn, he looks at the top three cards of the deck: he chooses 2 to draw, and puts the other one back on the top of the deck, face down.',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/kitcarlson_a9jhr2.png',
+  },
   // {
   //   name: 'lucky duke',
   //   hp: 4,
@@ -166,6 +166,7 @@ export const gameNames = {
 };
 
 export const stageNames = {
+  clearCardsInPlay: 'clearCardsInPlay',
   drawToReact: 'drawToReact',
   pickFromGeneralStore: 'pickFromGeneralStore',
   duel: 'duel',
@@ -185,6 +186,8 @@ export const gunRange: { [gunName: string]: number } = {
 };
 
 export const delayBetweenActions = 1500;
+export const animationDelayMilliseconds = 1000;
+export const animationDelaySeconds = animationDelayMilliseconds / 1000;
 
 export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];
 
