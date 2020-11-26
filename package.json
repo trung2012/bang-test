@@ -39,7 +39,7 @@
     "server": "ts-node-dev --ignore-watch \"src\" ./server.ts",
     "client": "react-scripts start",
     "dev": "concurrently \"yarn run client\" \"yarn run server\" ",
-    "start": "ts-node -T -O ./server.ts"
+    "start": "ts-node -T -O server.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
