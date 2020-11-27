@@ -62,10 +62,25 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     !!activeStage && !!reactionRequired.cardNeeded && card.name !== reactionRequired.cardNeeded;
   const isSelected = selectedCards?.includes(index);
 
+  const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (playerID !== playerId) return;
+    const currentPlayer = players[playerId];
+
+    if (!isActive) {
+      if (currentPlayer.character.name === 'sid ketchum') {
+        moves.discardFromHand(playerId, index);
+      }
+      return;
+    }
+
+    moves.discardFromHand(playerId, index);
+  };
+
   const onCardClick = () => {
     const currentPlayer = players[playerId];
 
-    if (!isActive) return;
+    if (!isActive || playerID !== playerId) return;
 
     if (ctx.phase === 'suddenDeath' && card.name === 'beer') {
       setError('Beer cannot be played when there are 2 players left');
@@ -117,14 +132,14 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     moves.playCard(index, playerID);
-    const moveName = card.name.replace(' ', '').toLowerCase();
-    if (moves[moveName]) {
-      moves[moveName]();
-    }
 
     setTimeout(() => {
       moves.clearCardsInPlay(playerID);
-    }, delayBetweenActions * 1.5);
+      const moveName = card.name.replace(' ', '').toLowerCase();
+      if (moves[moveName]) {
+        moves[moveName]();
+      }
+    }, delayBetweenActions);
   };
 
   const onContextMenu = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -159,13 +174,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
             />
             {showCardOptions && (
               <MoreOptions dismiss={() => setShowCardOptions(false)}>
-                <div
-                  className='more-options-item'
-                  onClick={event => {
-                    event.stopPropagation();
-                    moves.discardFromHand(playerId, index);
-                  }}
-                >
+                <div className='more-options-item' onClick={e => onDiscardClick(e)}>
                   Discard
                 </div>
               </MoreOptions>

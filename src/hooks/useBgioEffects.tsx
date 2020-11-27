@@ -11,6 +11,7 @@ const grunt = require('../assets/sounds/hit.mp3');
 const horse = require('../assets/sounds/horse.mp3');
 const swoosh = require('../assets/sounds/swoosh.mp3');
 const gatling = require('../assets/sounds/gatling.mp3');
+const jail = require('../assets/sounds/jail.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot);
@@ -18,8 +19,9 @@ export const useBgioEffects = () => {
   const [playGunCock] = useSound(gunCock);
   const [playGrunt] = useSound(grunt);
   const [playHorse] = useSound(horse);
-  const [playSwoosh] = useSound(swoosh, { volume: 0.25 });
+  const [playSwoosh] = useSound(swoosh, { volume: 0.2 });
   const [playGatling] = useSound(gatling);
+  const [playJail] = useSound(jail);
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -27,6 +29,8 @@ export const useBgioEffects = () => {
       setTimeout(() => {
         playGunShot();
       }, animationDelayMilliseconds);
+
+      console.log(document.querySelector(`#${CSS.escape(cardId)}`));
 
       gsap.to(`#${CSS.escape(cardId)}`, {
         rotate: -70,
@@ -109,33 +113,7 @@ export const useBgioEffects = () => {
     () => {
       playSwoosh();
     },
-    []
-  );
-
-  useEffectListener<BangEffectsConfig>(
-    'horse',
-    (cardId: string) => {
-      setTimeout(() => {
-        playHorse();
-      }, animationDelayMilliseconds);
-
-      gsap.to(`#${CSS.escape(cardId)}`, {
-        x: 15,
-        y: -70,
-        delay: animationDelaySeconds,
-        ease: Expo.easeOut,
-        duration: 1.5,
-        onComplete: () => {
-          gsap.to(`#${CSS.escape(cardId)}`, {
-            x: 0,
-            y: 0,
-            duration: 0.3,
-            ease: Sine.easeOut,
-          });
-        },
-      });
-    },
-    [playHorse]
+    [playSwoosh]
   );
 
   useEffectListener<BangEffectsConfig>(
@@ -195,5 +173,15 @@ export const useBgioEffects = () => {
       );
     },
     [playGatling]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'jail',
+    () => {
+      setTimeout(() => {
+        playJail();
+      }, animationDelayMilliseconds);
+    },
+    [playJail]
   );
 };

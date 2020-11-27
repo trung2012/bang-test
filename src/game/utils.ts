@@ -1,5 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { IGameState, ICard, IGamePlayer } from './types';
+import { stageNames } from './constants';
+import { IGameState, ICard, IGamePlayer, CharacterName } from './types';
 
 export const drawCardToReact = (G: IGameState, ctx: Ctx, currentPlayer: IGamePlayer) => {
   let cards: ICard[] = [];
@@ -94,20 +95,44 @@ export const hasDynamite = (player: IGamePlayer) =>
   player.equipments.find(card => card.name === 'dynamite');
 export const isJailed = (player: IGamePlayer) =>
   player.equipments.find(card => card.name === 'jail');
-export const checkIfVultureSamInGame = (G: IGameState) => {
-  let isVultureSamInGame = false;
-  let vultureSamId: string | undefined = undefined;
+
+export const isCharacterInGame = (G: IGameState, characterName: CharacterName) => {
+  let matchingPlayerId: string | undefined = undefined;
   for (const playerId in G.players) {
     const player = G.players[playerId];
-    if (player.character.name === 'vulture sam') {
-      isVultureSamInGame = true;
-      vultureSamId = playerId;
+    if (player.character.name === characterName) {
+      matchingPlayerId = playerId;
       break;
     }
   }
 
-  return {
-    isVultureSamInGame,
-    vultureSamId,
-  };
+  return matchingPlayerId;
+};
+
+export const setSidKetchumState = (G: IGameState, ctx: Ctx) => {
+  if (G.sidKetchumId && (!ctx.activePlayers || !ctx.activePlayers[G.sidKetchumId])) {
+    if (G.sidKetchumId !== ctx.currentPlayer && G.players[G.sidKetchumId].hp > 0) {
+      if (ctx.events?.setActivePlayers) {
+        ctx.events.setActivePlayers({
+          currentPlayer: 'play',
+          value: {
+            [G.sidKetchumId]: 'sidKetchum',
+          },
+        });
+      }
+    }
+  }
+};
+
+export const setSidKetchumStateAfterEndingStage = (G: IGameState, ctx: Ctx) => {
+  if (G.sidKetchumId && G.sidKetchumId !== ctx.currentPlayer && G.players[G.sidKetchumId].hp > 0) {
+    if (ctx.events?.setActivePlayers) {
+      ctx.events.setActivePlayers({
+        currentPlayer: 'play',
+        value: {
+          [G.sidKetchumId]: stageNames.sidKetchum,
+        },
+      });
+    }
+  }
 };

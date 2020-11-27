@@ -66,9 +66,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
               <PowerIcon className='player-button-icon' />
             </PlayerButton>
           )}
-          <PlayerButton tooltipTitle='End turn' onClick={onPassClick}>
-            <PassIcon className='player-button-icon' />
-          </PlayerButton>
+          {player.id === playerID && (
+            <PlayerButton tooltipTitle='End turn' onClick={onPassClick}>
+              <PassIcon className='player-button-icon' />
+            </PlayerButton>
+          )}
           {isReactingToBullets && (
             <PlayerButton tooltipTitle='Take damage' onClick={onTakeDamageClick}>
               <DamageIcon className='player-button-icon damage-icon' />

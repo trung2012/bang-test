@@ -32,17 +32,8 @@ export const Deck = () => {
       return;
     }
 
-    if (clientPlayer.character.name === 'black jack') {
-      moves.blackJackDraw();
-      setTimeout(() => {
-        moves.blackJackResult();
-      }, delayBetweenActions);
-
-      return;
-    }
-
-    if (clientPlayer.character.name === 'kit carlson') {
-      moves.kitCarlsonDraw();
+    if (clientPlayer.cardDrawnAtStartLeft < 2) {
+      setError('You cannot draw at the moment');
       return;
     }
 
@@ -55,8 +46,17 @@ export const Deck = () => {
       return;
     }
 
-    if (clientPlayer.cardDrawnAtStartLeft < 2) {
-      setError('You cannot draw at the moment');
+    if (clientPlayer.character.name === 'black jack') {
+      moves.blackJackDraw();
+      setTimeout(() => {
+        moves.blackJackResult();
+      }, 2000);
+
+      return;
+    }
+
+    if (clientPlayer.character.name === 'kit carlson') {
+      moves.kitCarlsonDraw();
       return;
     }
     moves.drawTwoFromDeck();

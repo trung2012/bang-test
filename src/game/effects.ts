@@ -15,6 +15,7 @@ export const config = {
       create: (cardId: string) => cardId,
     },
     swoosh: {},
+    jail: {},
   },
 };
 

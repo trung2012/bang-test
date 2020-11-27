@@ -2,7 +2,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { checkIfVultureSamInGame, hasDynamite } from './utils';
+import { isCharacterInGame, hasDynamite, setSidKetchumStateAfterEndingStage } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -20,9 +20,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   }
 
   if (targetPlayer.hp <= 0) {
-    const { isVultureSamInGame, vultureSamId } = checkIfVultureSamInGame(G);
+    const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
-    if (isVultureSamInGame && vultureSamId && vultureSamId !== targetPlayerId) {
+    if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
       while (targetPlayer.hand.length > 0) {
         const cardToTake = targetPlayer.hand.pop();
@@ -69,6 +69,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (ctx.events?.endStage) {
       ctx.events.endStage();
       targetPlayer.barrelUseLeft = 1;
+
+      setSidKetchumStateAfterEndingStage(G, ctx);
     }
 
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -118,9 +120,9 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   G.dynamiteTimer = 1;
 
   if (targetPlayer.hp <= 0) {
-    const { isVultureSamInGame, vultureSamId } = checkIfVultureSamInGame(G);
+    const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
-    if (isVultureSamInGame && vultureSamId && vultureSamId !== targetPlayerId) {
+    if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
       while (targetPlayer.hand.length > 0) {
         const cardToTake = targetPlayer.hand.pop();
@@ -255,6 +257,8 @@ export const playCardToReact = (
     if (reactingPlayer.character.name === 'jourdonnais') {
       reactingPlayer.jourdonnaisPowerUseLeft = 1;
     }
+
+    setSidKetchumStateAfterEndingStage(G, ctx);
   }
 
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
@@ -348,6 +352,7 @@ const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: nu
   if (targetPlayer.role === 'sheriff') return INVALID_MOVE;
 
   targetPlayer.equipments.push(jailCard);
+  ctx.effects.jail();
 };
 
 const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
@@ -457,6 +462,7 @@ const blackJackDraw = (G: IGameState, ctx: Ctx) => {
   if (secondCard) {
     currentPlayer.cardsInPlay.push(secondCard);
   }
+  currentPlayer.cardDrawnAtStartLeft -= 2;
 };
 
 const blackJackResult = (G: IGameState, ctx: Ctx) => {
@@ -467,6 +473,7 @@ const blackJackResult = (G: IGameState, ctx: Ctx) => {
     currentPlayer.cardsInPlay[0].suit === 'diamond'
   ) {
     drawOneFromDeck(G, ctx);
+    currentPlayer.cardDrawnAtStartLeft -= 1;
   }
 
   let cardFlipped = currentPlayer.cardsInPlay.pop();
@@ -506,6 +513,8 @@ export const barrelResult = (
         if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
           resetGameStage(G, ctx);
         }
+
+        setSidKetchumStateAfterEndingStage(G, ctx);
       }
     } else {
       G.reactionRequired.quantity -= 1;
@@ -516,7 +525,6 @@ export const barrelResult = (
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const bangCard = G.players[targetPlayerId].cardsInPlay[0];
-  ctx.effects.gunshot(bangCard.id);
   G.activeStage = stageNames.reactToBang;
   G.reactionRequired = {
     cardNeeded: 'missed',
@@ -526,6 +534,7 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (currentPlayer.character.name === 'slab the killer') {
     G.reactionRequired.quantity = 2;
   }
+  ctx.effects.gunshot(bangCard.id);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
@@ -716,6 +725,11 @@ const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: s
   G.reactionRequired.sourcePlayerId = sourcePlayerId;
   G.activeStage = stageNames.duel;
 
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+    setSidKetchumStateAfterEndingStage(G, ctx);
+  }
+
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
       value: {
@@ -723,10 +737,6 @@ const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: s
       },
       moveLimit: 1,
     });
-  }
-
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
   }
 };
 

@@ -13,6 +13,7 @@ export interface IGameState {
     quantity: number;
   };
   dynamiteTimer: number;
+  sidKetchumId: string | null;
 }
 
 export interface IGamePlayerMap {

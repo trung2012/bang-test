@@ -25,6 +25,7 @@ const setup = (ctx: Ctx) => {
   };
   const activeStage = null;
   const dynamiteTimer = 1;
+  let sidKetchumId: string | null = null;
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -57,6 +58,10 @@ const setup = (ctx: Ctx) => {
       player.hand.push(deck.pop() as ICard);
     }
 
+    if (playerCharacter.name === 'sid ketchum') {
+      sidKetchumId = playerId;
+    }
+
     players[playerId] = player;
     playOrder.push(playerId);
   }
@@ -71,6 +76,7 @@ const setup = (ctx: Ctx) => {
     reactionRequired,
     playOrder,
     dynamiteTimer,
+    sidKetchumId,
   } as IGameState;
 };
 

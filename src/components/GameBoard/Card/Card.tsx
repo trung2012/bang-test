@@ -40,6 +40,7 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
             duration: 0.8,
             x: oldPosition.left - newPosition.left,
             y: oldPosition.top - newPosition.top,
+            rotate: 0,
             ease: Power3.easeOut,
           });
         }

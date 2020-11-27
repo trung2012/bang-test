@@ -9,6 +9,7 @@ import stages from './stages';
 import { ICard, IGameResult, IGameState } from './types';
 // import { drawCardToReact, dynamiteResult, jailResult } from './utils';
 import { config } from './effects';
+import { setSidKetchumState } from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {
@@ -91,6 +92,9 @@ const game: Game<IGameState> = {
           }
         }
       }
+    },
+    onBegin: (G, ctx) => {
+      setSidKetchumState(G, ctx);
     },
     onEnd: (G, ctx) => {
       for (const playerId in G.players) {

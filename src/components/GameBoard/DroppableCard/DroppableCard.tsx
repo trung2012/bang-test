@@ -28,7 +28,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   cardLocation,
   onClick,
 }) => {
-  const { G, playersInfo, moves } = useGameContext();
+  const { G, ctx, playersInfo, moves } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
@@ -36,6 +36,14 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
     if (sourcePlayerId === playerId) return;
+    if (
+      sourcePlayerId !== ctx.currentPlayer &&
+      players[sourcePlayerId].character.name === 'sid ketchum'
+    ) {
+      setError('You can only discard if it is not your turn');
+      return;
+    }
+
     if (players[playerId].hp <= 0) return;
 
     const sourcePlayer = players[sourcePlayerId];
@@ -55,6 +63,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     setTimeout(() => {
       const moveName = sourceCard.name.replace(' ', '').toLowerCase();
       const robbingType: RobbingType = cardLocation;
+      moves.clearCardsInPlay(playerId);
       if (moves[moveName]) {
         moves[moveName](playerId, index, robbingType);
       }

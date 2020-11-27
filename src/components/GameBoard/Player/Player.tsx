@@ -18,17 +18,22 @@ interface IPlayerProps {
 }
 
 export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
-  const { G, playersInfo, moves } = useGameContext();
+  const { G, ctx, playersInfo, moves } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    const sourcePlayer = players[sourcePlayerId];
+    if (sourcePlayerId !== ctx.currentPlayer && sourcePlayer.character.name === 'sid ketchum') {
+      setError('You can only discard if it is not your turn');
+      return;
+    }
+
     if (player.hp <= 0) return;
     if (sourcePlayerId === player.id) return;
 
-    const sourcePlayer = players[sourcePlayerId];
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
       playersInfo,

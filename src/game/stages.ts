@@ -54,6 +54,12 @@ const stages: StageMap<IGameState> = {
       clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
+  sidKetchum: {
+    moves: {
+      discardFromHand: moves.discardFromHand,
+    },
+  },
+  play: {},
 };
 
 export default stages;

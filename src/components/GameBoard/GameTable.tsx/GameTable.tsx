@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useErrorContext, useGameContext } from '../../../context';
-import { useBgioEffects } from '../../../hooks';
 import { Deck, Discarded } from '../Deck';
 import { GameOver } from '../GameOver';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
 import './GameTable.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { useBgioEffects } from '../../../hooks';
 
 export const GameTable = () => {
   const { G, ctx, playersInfo, playerID } = useGameContext();
@@ -24,17 +24,17 @@ export const GameTable = () => {
         ]
       : playersInfo;
 
+  useBgioEffects();
+
   useEffect(() => {
     if (error) {
-      toast.warn(error, {
+      toast.error(error, {
         onClose: () => {
           setError('');
         },
       });
     }
   }, [error, setError]);
-
-  useBgioEffects();
 
   if (ctx.gameover) {
     return <GameOver gameResult={ctx.gameover} />;
