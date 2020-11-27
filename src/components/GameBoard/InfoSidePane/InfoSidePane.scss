@@ -1,0 +1,57 @@
+@import '../../../sass/_main';
+
+.info-side-pane,
+.info-side-pane--active {
+  position: fixed;
+  right: 0;
+  min-height: 100vh;
+  max-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  padding-top: 5rem;
+  box-shadow: $box-shadow-secondary;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1000;
+
+  p {
+    text-align: left;
+    padding: 0 2rem;
+    line-height: 2rem;
+  }
+}
+
+.character-image-info {
+  margin-bottom: 1rem;
+}
+
+.info-side-pane {
+  transform: translateX(100%);
+}
+
+.info-side-pane--active {
+  transform: translateX(0);
+}
+
+.side-pane-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-weight: bold;
+  font-size: 3rem;
+  cursor: pointer;
+  line-height: 1rem;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.info-icon {
+  grid-column: 8;
+  grid-row: 8;
+  align-self: center;
+  justify-self: center;
+}

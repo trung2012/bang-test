@@ -1,3 +1,9 @@
+@import '../../../sass/_variables';
+
 .deck {
   cursor: pointer;
+
+  &--active {
+    box-shadow: $box-shadow-deck-active;
+  }
 }

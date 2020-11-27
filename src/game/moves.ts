@@ -241,7 +241,8 @@ export const playCardToReact = (
   const previousActiveStage = G.activeStage;
   const previousSourcePlayerId = G.reactionRequired.sourcePlayerId;
   const onlyCardToPlayIndex = cardIndexes.length === 1 ? cardIndexes[0] : null;
-  const onlyCardToPlay = onlyCardToPlayIndex ? reactingPlayer.hand[onlyCardToPlayIndex] : null;
+  const onlyCardToPlay =
+    onlyCardToPlayIndex !== null ? reactingPlayer.hand[onlyCardToPlayIndex] : null;
   cardIndexes.sort((a, b) => a - b);
 
   for (let i = cardIndexes.length - 1; i >= 0; i--) {
@@ -552,6 +553,10 @@ const beer = (G: IGameState, ctx: Ctx) => {
   }
 
   const currentPlayer = G.players[ctx.currentPlayer];
+  const beerCard = currentPlayer.cardsInPlay[0];
+  if (beerCard) {
+    ctx.effects.beer(beerCard.id);
+  }
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
 };
 
@@ -605,6 +610,10 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 const indians = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
+      currentPlayer: {
+        stage: stageNames.clearCardsInPlay,
+        moveLimit: 1,
+      },
       others: stageNames.reactToIndians,
       moveLimit: 1,
     });
@@ -702,7 +711,6 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       all: stageNames.pickFromGeneralStore,
-      moveLimit: 1,
     });
   }
   G.activeStage = stageNames.pickFromGeneralStore;
@@ -718,6 +726,9 @@ const pickCardFromGeneralStore = (
   const selectedCard = G.generalStore.splice(generalStoreCardIndex, 1)[0];
 
   currentPlayer.hand.push(selectedCard);
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
 };
 
 const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: string) => {

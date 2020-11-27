@@ -9,10 +9,10 @@
   border-radius: $card-border-radius;
 
   &:hover {
-    box-shadow: $box-shadow-deck-active;
+    box-shadow: $box-shadow-deck-active-hover;
   }
 
   .card-image {
-    box-shadow: 0px 1px 3px rgb(119, 119, 119);
+    box-shadow: $box-shadow-deck-card;
   }
 }

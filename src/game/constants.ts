@@ -187,7 +187,7 @@ export const gunRange: { [gunName: string]: number } = {
 };
 
 export const delayBetweenActions = 1500;
-export const animationDelayMilliseconds = 1000;
+export const animationDelayMilliseconds = 900;
 export const animationDelaySeconds = animationDelayMilliseconds / 1000;
 
 export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];

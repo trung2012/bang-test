@@ -16,6 +16,9 @@ export const config = {
     },
     swoosh: {},
     jail: {},
+    beer: {
+      create: (cardId: string) => cardId,
+    },
   },
 };
 

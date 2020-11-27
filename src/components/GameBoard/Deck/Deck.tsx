@@ -3,6 +3,7 @@ import { useErrorContext, useGameContext } from '../../../context';
 import { delayBetweenActions } from '../../../game/constants';
 import { hasDynamite, isJailed } from '../../../game/utils';
 import { CardPile } from './CardPile';
+import classnames from 'classnames';
 import './Deck.scss';
 
 export const Deck = () => {
@@ -62,5 +63,14 @@ export const Deck = () => {
     moves.drawTwoFromDeck();
   };
 
-  return <CardPile className='deck' cards={deck} isFacedUp={false} onClick={onDeckClick} />;
+  return (
+    <CardPile
+      className={classnames('deck', {
+        'deck--active': isActive && clientPlayer.cardDrawnAtStartLeft > 0,
+      })}
+      cards={deck}
+      isFacedUp={false}
+      onClick={onDeckClick}
+    />
+  );
 };

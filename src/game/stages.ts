@@ -6,6 +6,7 @@ const stages: StageMap<IGameState> = {
   pickFromGeneralStore: {
     moves: {
       pickCardFromGeneralStore: moves.pickCardFromGeneralStore,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   duel: {

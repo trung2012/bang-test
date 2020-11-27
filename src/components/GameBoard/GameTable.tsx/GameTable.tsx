@@ -8,6 +8,7 @@ import { Player } from '../Player';
 import './GameTable.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useBgioEffects } from '../../../hooks';
+import { InfoSidePane } from '../InfoSidePane';
 
 export const GameTable = () => {
   const { G, ctx, playersInfo, playerID } = useGameContext();
@@ -65,6 +66,7 @@ export const GameTable = () => {
           draggable
           pauseOnHover
         />
+        <InfoSidePane />
       </div>
     );
   }

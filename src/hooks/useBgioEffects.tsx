@@ -1,6 +1,6 @@
 import { useEffectListener } from 'bgio-effects/react';
 import gsap, { Expo } from 'gsap';
-import { RoughEase, Sine } from 'gsap/all';
+import { Power2, RoughEase, Sine } from 'gsap/all';
 import useSound from 'use-sound';
 import { animationDelayMilliseconds, animationDelaySeconds } from '../game';
 import { BangEffectsConfig } from '../game/effects';
@@ -12,6 +12,7 @@ const horse = require('../assets/sounds/horse.mp3');
 const swoosh = require('../assets/sounds/swoosh.mp3');
 const gatling = require('../assets/sounds/gatling.mp3');
 const jail = require('../assets/sounds/jail.mp3');
+const drinking = require('../assets/sounds/drinking.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot);
@@ -22,6 +23,7 @@ export const useBgioEffects = () => {
   const [playSwoosh] = useSound(swoosh, { volume: 0.2 });
   const [playGatling] = useSound(gatling);
   const [playJail] = useSound(jail);
+  const [playDrinking] = useSound(drinking);
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -183,5 +185,26 @@ export const useBgioEffects = () => {
       }, animationDelayMilliseconds);
     },
     [playJail]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'beer',
+    (cardId: string) => {
+      playDrinking();
+
+      gsap.to(`#${CSS.escape(cardId)}`, {
+        rotate: 80,
+        ease: Power2.easeOut,
+        duration: 1.25,
+        onComplete: () => {
+          gsap.to(`#${CSS.escape(cardId)}`, {
+            rotate: 0,
+            duration: 0.7,
+            ease: Sine.easeOut,
+          });
+        },
+      });
+    },
+    [playDrinking]
   );
 };

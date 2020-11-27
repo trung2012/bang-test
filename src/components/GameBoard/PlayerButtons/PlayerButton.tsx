@@ -15,7 +15,7 @@ export const PlayerButton: React.FC<IPlayerButtonProps> = ({
   tooltipTitle,
   onClick,
 }) => {
-  const playerButtonClassName = `${className ? className : ''} player-button`;
+  const playerButtonClassName = `player-button ${className ? className : ''}`;
 
   return (
     <Tippy content={tooltipTitle}>
