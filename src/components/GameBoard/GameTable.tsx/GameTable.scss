@@ -12,7 +12,7 @@
   border: 3px solid $color-primary;
 }
 
-.game-table--2-players {
+.game-table {
   position: relative;
   display: grid;
   height: 100vh;
@@ -20,6 +20,43 @@
   grid-template-rows: repeat(8, 12.5%);
 
   @include generalStore;
+}
+
+.game-table--2-players {
   @include player0;
   @include player1(2);
+}
+
+.game-table--4-players {
+  @include player0;
+  @include player1(4);
+  @include player2(4);
+  @include player3(4);
+}
+
+.game-table--5-players {
+  @include player0;
+  @include player1(5);
+  @include player2(5);
+  @include player3(5);
+  @include player4(5);
+}
+
+.game-table--6-players {
+  @include player0;
+  @include player1(6);
+  @include player2(6);
+  @include player3(6);
+  @include player4(6);
+  @include player5(6);
+}
+
+.game-table--7-players {
+  @include player0;
+  @include player1(7);
+  @include player2(7);
+  @include player3(7);
+  @include player4(7);
+  @include player5(7);
+  @include player6(7);
 }

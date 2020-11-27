@@ -43,7 +43,7 @@ export const GameTable = () => {
 
   if (playersInfo && playersInfo.length > 0) {
     return (
-      <div className={`game-table--${playersInfo.length}-players`}>
+      <div className={`game-table game-table--${playersInfo.length}-players`}>
         {renderedPlayers &&
           renderedPlayers.map((p, index) => {
             const player = { ...players[p.id], name: p.name };
