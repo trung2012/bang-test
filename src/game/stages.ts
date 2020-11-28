@@ -50,11 +50,7 @@ const stages: StageMap<IGameState> = {
       kitCarlsonDiscard: moves.kitCarlsonDiscard,
     },
   },
-  clearCardsInPlay: {
-    moves: {
-      clearCardsInPlay: moves.clearCardsInPlay,
-    },
-  },
+  clearCardsInPlay: {},
   sidKetchum: {
     moves: {
       discardFromHand: moves.discardFromHand,

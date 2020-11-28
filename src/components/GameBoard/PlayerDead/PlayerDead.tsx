@@ -11,7 +11,7 @@ export const PlayerDead: React.FC<{ player: IGamePlayer }> = ({ player }) => {
 
   return (
     <>
-      {playerName && <div>{player.name}</div>}
+      {playerName && <div className='player-dead-name'>{player.name}</div>}
       <TombSvg className='tomb' />
       {player.role !== 'sheriff' && (
         <img className='player-role-img' src={playerRoleImg} alt={player.role} />

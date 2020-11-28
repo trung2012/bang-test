@@ -33,7 +33,7 @@ export const Deck = () => {
       return;
     }
 
-    if (clientPlayer.cardDrawnAtStartLeft < 2) {
+    if (clientPlayer.cardDrawnAtStartLeft <= 0) {
       setError('You cannot draw at the moment');
       return;
     }

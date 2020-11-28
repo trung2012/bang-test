@@ -36,7 +36,7 @@ export const LobbySetup: React.FC<ILobbySetupProps> = ({ startGame, roomId }) =>
 
   useInterval(() => {
     dispatch(getRoomData(roomId));
-  }, 1000);
+  }, 500);
 
   useEffect(() => {
     let startGameTimeout: ReturnType<typeof setTimeout>;

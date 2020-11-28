@@ -49,7 +49,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
             alt={player.character.name}
           />
         </div>
-        {isClientPlayer && <div>{player.role}</div>}
+        {isClientPlayer && <div className='player-role'>{player.role}</div>}
       </div>
       <PlayerHp hp={player.hp} maxHp={player.maxHp} />
     </>
