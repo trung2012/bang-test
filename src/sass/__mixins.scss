@@ -44,7 +44,7 @@
     }
 
     .player-cards-in-play {
-      transform: translate(20rem, -25rem);
+      transform: translate(30rem, -25rem);
     }
   }
 }
@@ -67,8 +67,7 @@
       }
 
       .player-cards-in-play {
-        left: -$card-width;
-        top: $card-height * 0.2;
+        top: $card-height * 2;
       }
     }
   }

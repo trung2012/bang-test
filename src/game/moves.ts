@@ -328,7 +328,8 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
     } else {
       currentPlayer.numBangsLeft = 1;
     }
-    currentPlayer.gunRange = newGunRange;
+    currentPlayer.gunRange =
+      currentPlayer.character.name === 'rose doolan' ? newGunRange + 1 : newGunRange;
   }
 
   currentPlayer.equipments.push(equipmentCard);
@@ -490,7 +491,7 @@ export const barrelResult = (
   isInnatePower: boolean
 ) => {
   const reactingPlayer = G.players[targetPlayerId];
-  const isSuccessful = reactingPlayer.cardsInPlay.every(card => card.suit === 'hearts');
+  const isSuccessful = reactingPlayer.cardsInPlay.some(card => card.suit === 'hearts');
 
   clearCardsInPlay(G, ctx, targetPlayerId);
   if (!isInnatePower) {
@@ -577,10 +578,13 @@ const catbalou = (
       cardToDiscard = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
       let gunWithRange = gunRange[cardToDiscard.name];
       if (gunWithRange) {
-        targetPlayer.gunRange = 1;
+        targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
         if (cardToDiscard.name === 'volcanic') {
           targetPlayer.numBangsLeft = 1;
         }
+      }
+      if (cardToDiscard.name === 'scope') {
+        targetPlayer.actionRange -= 1;
       }
       break;
   }
@@ -640,12 +644,16 @@ const panic = (
       cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
       let gunWithRange = gunRange[cardToTake.name];
       if (gunWithRange) {
-        targetPlayer.gunRange = 1;
+        targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
         currentPlayer.gunRange = gunWithRange;
         if (cardToTake.name === 'volcanic') {
           targetPlayer.numBangsLeft = 1;
           currentPlayer.numBangsLeft = 9999;
         }
+      }
+      if (cardToTake.name === 'scope') {
+        targetPlayer.actionRange -= 1;
+        currentPlayer.actionRange += 1;
       }
       break;
   }

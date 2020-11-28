@@ -132,13 +132,13 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     moves.playCard(index, playerID);
-    const moveName = card.name.replace(' ', '').toLowerCase();
-    if (moves[moveName]) {
-      moves[moveName]();
-    }
 
     setTimeout(() => {
       moves.clearCardsInPlay(playerID);
+      const moveName = card.name.replace(' ', '').toLowerCase();
+      if (moves[moveName]) {
+        moves[moveName]();
+      }
     }, delayBetweenActions);
   };
 

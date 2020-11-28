@@ -1,5 +1,5 @@
 import { useEffectListener } from 'bgio-effects/react';
-import gsap, { Expo } from 'gsap';
+import gsap, { Expo, Power3 } from 'gsap';
 import { Power2, RoughEase, Sine } from 'gsap/all';
 import useSound from 'use-sound';
 import { animationDelayMilliseconds, animationDelaySeconds } from '../game';
@@ -94,7 +94,7 @@ export const useBgioEffects = () => {
         {
           y: 0,
           delay: animationDelaySeconds,
-          ease: 'elastic.out(1, 0.3)',
+          ease: Power3.easeOut,
           duration: 0.9,
         }
       );

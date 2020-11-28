@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { stageNames } from './constants';
-import { IGameState, ICard, IGamePlayer, CharacterName } from './types';
+import { gunRange, stageNames } from './constants';
+import { IGameState, ICard, IGamePlayer, CharacterName, RobbingType } from './types';
 
 export const drawCardToReact = (G: IGameState, ctx: Ctx, currentPlayer: IGamePlayer) => {
   let cards: ICard[] = [];
@@ -134,5 +134,31 @@ export const setSidKetchumStateAfterEndingStage = (G: IGameState, ctx: Ctx) => {
         },
       });
     }
+  }
+};
+
+export const processEquipmentRemoval = (
+  currentPlayer: IGamePlayer,
+  targetPlayer: IGamePlayer,
+  targetCardIndex: number,
+  cardToTake: ICard,
+  type: RobbingType
+) => {
+  switch (type) {
+    case 'hand':
+      cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      break;
+    case 'equipment':
+      cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
+      let gunWithRange = gunRange[cardToTake.name];
+      if (gunWithRange) {
+        targetPlayer.gunRange = 1;
+        currentPlayer.gunRange = gunWithRange;
+        if (cardToTake.name === 'volcanic') {
+          targetPlayer.numBangsLeft = 1;
+          currentPlayer.numBangsLeft = 9999;
+        }
+      }
+      break;
   }
 };
