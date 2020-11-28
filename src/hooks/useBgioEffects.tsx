@@ -32,8 +32,6 @@ export const useBgioEffects = () => {
         playGunShot();
       }, animationDelayMilliseconds);
 
-      console.log(document.querySelector(`#${CSS.escape(cardId)}`));
-
       gsap.to(`#${CSS.escape(cardId)}`, {
         rotate: -70,
         delay: animationDelaySeconds,

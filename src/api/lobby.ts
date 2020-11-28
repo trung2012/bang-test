@@ -29,7 +29,6 @@ const getGameData = async (roomId: string): Promise<IRoomData> => {
 };
 
 const leaveRoom = async (roomId: string, playerId: string, credentials: string): Promise<void> => {
-  console.log({ playerID: playerId, credentials });
   try {
     await axios.post(`/${roomId}/leave`, { playerID: playerId, credentials });
   } catch (err) {
