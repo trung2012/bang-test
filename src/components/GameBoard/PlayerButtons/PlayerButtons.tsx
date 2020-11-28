@@ -8,7 +8,7 @@ import './PlayerButtons.scss';
 import { delayBetweenActions, IGamePlayer, stageNames } from '../../../game';
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
-  const { G, moves, playerID, isActive } = useGameContext();
+  const { G, moves, playerID } = useGameContext();
   const { setError } = useErrorContext();
   const isCurrentPlayer = playerID === player.id;
   const isReactingToBullets =
@@ -66,11 +66,9 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
               <PowerIcon className='player-button-icon' />
             </PlayerButton>
           )}
-          {player.id === playerID && isActive && (
-            <PlayerButton tooltipTitle='End turn' onClick={onPassClick}>
-              <PassIcon className='player-button-icon' />
-            </PlayerButton>
-          )}
+          <PlayerButton tooltipTitle='End turn' onClick={onPassClick}>
+            <PassIcon className='player-button-icon' />
+          </PlayerButton>
           {isReactingToBullets && (
             <PlayerButton tooltipTitle='Take damage' onClick={onTakeDamageClick}>
               <DamageIcon className='player-button-icon damage-icon' />

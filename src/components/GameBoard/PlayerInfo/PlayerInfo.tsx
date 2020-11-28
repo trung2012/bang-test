@@ -43,11 +43,13 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
             'player-character-image-container--active': isActivePlayer,
           })}
         >
-          <img
-            className='player-character-image'
-            src={player.character.imageUrl}
-            alt={player.character.name}
-          />
+          <Tippy content={player.character.description}>
+            <img
+              className='player-character-image'
+              src={player.character.imageUrl}
+              alt={player.character.name}
+            />
+          </Tippy>
         </div>
         {isClientPlayer && <div className='player-role'>{player.role}</div>}
       </div>

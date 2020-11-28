@@ -94,7 +94,8 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         } else {
           if (
             card.name === reactionRequired.cardNeeded ||
-            (['bang', 'missed'].includes(card.name) &&
+            (currentPlayer.character.name === 'calamity janet' &&
+              ['bang', 'missed'].includes(card.name) &&
               ['bang', 'missed'].includes(reactionRequired.cardNeeded))
           ) {
             setSelectedCards(cards => [...cards, index]);
