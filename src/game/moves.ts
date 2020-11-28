@@ -346,6 +346,10 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   if (equipmentCard.name === 'mustang') {
     ctx.effects.horse(equipmentCard.id);
   }
+
+  if (equipmentCard.name === 'barrel') {
+    ctx.effects.barrel();
+  }
 };
 
 const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: number) => {
@@ -620,6 +624,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 };
 
 const indians = (G: IGameState, ctx: Ctx) => {
+  ctx.effects.indians();
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       currentPlayer: {
@@ -643,6 +648,7 @@ const panic = (
 ) => {
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
+  ctx.effects.panic();
   let cardToTake: ICard;
   switch (type) {
     case 'hand':

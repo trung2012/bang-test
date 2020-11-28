@@ -13,17 +13,23 @@ const swoosh = require('../assets/sounds/swoosh.mp3');
 const gatling = require('../assets/sounds/gatling.mp3');
 const jail = require('../assets/sounds/jail.mp3');
 const drinking = require('../assets/sounds/drinking.mp3');
+const barrel = require('../assets/sounds/barrel.mp3');
+const indians = require('../assets/sounds/indians.mp3');
+const panic = require('../assets/sounds/panic.mp3');
 
 export const useBgioEffects = () => {
-  const [playGunShot] = useSound(gunShot, { volume: 0.5 });
+  const [playGunShot] = useSound(gunShot, { volume: 0.3 });
   const [playExplosion] = useSound(explosion, { volume: 0.7 });
-  const [playGunCock] = useSound(gunCock, { volume: 0.5 });
-  const [playGrunt] = useSound(grunt, { volume: 0.5 });
-  const [playHorse] = useSound(horse, { volume: 0.5 });
-  const [playSwoosh] = useSound(swoosh, { volume: 0.2 });
-  const [playGatling] = useSound(gatling, { volume: 0.5 });
-  const [playJail] = useSound(jail, { volume: 0.5 });
-  const [playDrinking] = useSound(drinking, { volume: 0.5 });
+  const [playGunCock] = useSound(gunCock, { volume: 0.3 });
+  const [playGrunt] = useSound(grunt, { volume: 0.3 });
+  const [playHorse] = useSound(horse, { volume: 0.3 });
+  const [playSwoosh] = useSound(swoosh, { volume: 0.15 });
+  const [playGatling] = useSound(gatling, { volume: 0.3 });
+  const [playJail] = useSound(jail, { volume: 0.3 });
+  const [playDrinking] = useSound(drinking, { volume: 0.3 });
+  const [playBarrel] = useSound(barrel, { volume: 0.3 });
+  const [playIndians] = useSound(indians, { volume: 0.3 });
+  const [playPanic] = useSound(panic, { volume: 0.3 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -183,6 +189,36 @@ export const useBgioEffects = () => {
       }, animationDelayMilliseconds);
     },
     [playJail]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'barrel',
+    () => {
+      setTimeout(() => {
+        playBarrel();
+      }, animationDelayMilliseconds);
+    },
+    [playBarrel]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'indians',
+    () => {
+      setTimeout(() => {
+        playIndians();
+      }, animationDelayMilliseconds);
+    },
+    [playIndians]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'panic',
+    () => {
+      setTimeout(() => {
+        playPanic();
+      }, animationDelayMilliseconds);
+    },
+    [playPanic]
   );
 
   useEffectListener<BangEffectsConfig>(

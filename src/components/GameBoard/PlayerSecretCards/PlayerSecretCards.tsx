@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Tippy from '@tippyjs/react';
 import React from 'react';
 import { useGameContext } from '../../../context';
 import { stageNames } from '../../../game/constants';
@@ -13,8 +14,6 @@ interface IPlayerSecretCards {
 export const SecretCard = styled(Card)<{ index: number; isCurrentPlayer: boolean }>`
   position: absolute;
   left: ${props => `${props.index * 100}px`};
-  top: ${props => (props.isCurrentPlayer ? '-100%' : '100%')};
-  transform: ${props => `translate(${props.isCurrentPlayer ? '5rem, -10rem' : '0, 30rem'})`};
 `;
 
 export const PlayerSecretCards: React.FC<IPlayerSecretCards> = ({ cards, playerId }) => {
@@ -31,17 +30,19 @@ export const PlayerSecretCards: React.FC<IPlayerSecretCards> = ({ cards, playerI
   };
 
   return (
-    <div className='player-cards-in-play'>
-      {cards.map((card, index) => (
-        <SecretCard
-          key={card.id}
-          card={card}
-          index={index}
-          isCurrentPlayer={playerId === playerID}
-          isFacedUp={playerId === playerID}
-          onClick={() => onSecretCardClick(index)}
-        />
-      ))}
-    </div>
+    <Tippy content='Click a card to put back to the deck'>
+      <div className='player-cards-in-play'>
+        {cards.map((card, index) => (
+          <SecretCard
+            key={card.id}
+            card={card}
+            index={index}
+            isCurrentPlayer={playerId === playerID}
+            isFacedUp={playerId === playerID}
+            onClick={() => onSecretCardClick(index)}
+          />
+        ))}
+      </div>
+    </Tippy>
   );
 };

@@ -19,6 +19,9 @@ export const config = {
     beer: {
       create: (cardId: string) => cardId,
     },
+    barrel: {},
+    indians: {},
+    panic: {},
   },
 };
 

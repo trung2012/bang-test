@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { useErrorContext, useGameContext } from '../../../context';
 import { Deck, Discarded } from '../Deck';
@@ -25,7 +25,16 @@ export const GameTable = () => {
         ]
       : playersInfo;
 
+  const currentPlayerName = playersInfo ? playersInfo[Number(ctx.currentPlayer)] : null;
+  const currentPlayerNameRef = useRef(currentPlayerName);
+
   useBgioEffects();
+
+  useEffect(() => {
+    if (currentPlayerName && currentPlayerNameRef.current !== currentPlayerName) {
+      toast.info(`${currentPlayerName}'s turn`);
+    }
+  }, [currentPlayerName]);
 
   useEffect(() => {
     if (error) {
