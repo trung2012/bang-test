@@ -22,6 +22,10 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (targetPlayer.hp <= 0) {
     const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
+    if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+      resetGameStage(G, ctx);
+    }
+
     if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
       while (targetPlayer.hand.length > 0) {
