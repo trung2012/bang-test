@@ -16,7 +16,9 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
   const { ctx } = useGameContext();
   const isActivePlayer =
     player.id === ctx.currentPlayer ||
-    (ctx.activePlayers && ctx.activePlayers[player.id] !== stageNames.sidKetchum);
+    (ctx.activePlayers &&
+      ctx.activePlayers[player.id] &&
+      ctx.activePlayers[player.id] !== stageNames.sidKetchum);
 
   if (player.hp <= 0) {
     return <PlayerDead player={player} />;
@@ -46,6 +48,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
             alt={player.character.name}
           />
         </div>
+        <div>{isActivePlayer}</div>
       </div>
       <PlayerHp hp={player.hp} maxHp={player.maxHp} />
     </>
