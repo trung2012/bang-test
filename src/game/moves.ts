@@ -22,10 +22,11 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (targetPlayer.hp <= 0) {
     const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
+    if (ctx.events?.endStage) {
+      ctx.events.endStage();
+    }
+
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
-      if (ctx.events?.endStage) {
-        ctx.events.endStage();
-      }
       resetGameStage(G, ctx);
     }
 

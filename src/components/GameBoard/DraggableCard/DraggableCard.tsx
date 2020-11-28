@@ -115,7 +115,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
         if (card.name !== reactionRequired.cardNeeded) return;
 
-        moves.playCardToReact(index, playerId);
+        moves.playCardToReact([index], playerId);
         return;
       }
     }
