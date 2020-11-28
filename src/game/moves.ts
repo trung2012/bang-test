@@ -96,6 +96,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       G.activeStage = stageNames.takeCardFromHand;
     }
   }
+
+  clearCardsInPlay(G, ctx, targetPlayerId);
 };
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -725,9 +727,15 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
     G.generalStore.push(...newCards);
   }
 
+  const playersAlive = ctx.playOrder.map(id => G.players[id]).filter(player => player.hp > 0);
+  const activePlayers = playersAlive.reduce((players, player) => {
+    players[player.id] = stageNames.pickFromGeneralStore;
+    return players;
+  }, {} as { [key: string]: any });
+
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
-      all: stageNames.pickFromGeneralStore,
+      value: activePlayers,
     });
   }
   G.activeStage = stageNames.pickFromGeneralStore;

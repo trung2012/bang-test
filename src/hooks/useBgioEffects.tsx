@@ -15,15 +15,15 @@ const jail = require('../assets/sounds/jail.mp3');
 const drinking = require('../assets/sounds/drinking.mp3');
 
 export const useBgioEffects = () => {
-  const [playGunShot] = useSound(gunShot);
-  const [playExplosion] = useSound(explosion);
-  const [playGunCock] = useSound(gunCock);
-  const [playGrunt] = useSound(grunt);
-  const [playHorse] = useSound(horse);
+  const [playGunShot] = useSound(gunShot, { volume: 0.5 });
+  const [playExplosion] = useSound(explosion, { volume: 0.7 });
+  const [playGunCock] = useSound(gunCock, { volume: 0.5 });
+  const [playGrunt] = useSound(grunt, { volume: 0.5 });
+  const [playHorse] = useSound(horse, { volume: 0.5 });
   const [playSwoosh] = useSound(swoosh, { volume: 0.2 });
-  const [playGatling] = useSound(gatling);
-  const [playJail] = useSound(jail);
-  const [playDrinking] = useSound(drinking);
+  const [playGatling] = useSound(gatling, { volume: 0.5 });
+  const [playJail] = useSound(jail, { volume: 0.5 });
+  const [playDrinking] = useSound(drinking, { volume: 0.5 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
