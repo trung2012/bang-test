@@ -25,14 +25,20 @@ export const GameTable = () => {
         ]
       : playersInfo;
 
-  const currentPlayerName = playersInfo ? playersInfo[Number(ctx.currentPlayer)] : null;
-  const currentPlayerNameRef = useRef(currentPlayerName);
+  const currentPlayerNameRef = useRef<string | null>(null);
+  const currentPlayerName = playersInfo ? playersInfo[Number(ctx.currentPlayer)]?.name : null;
 
   useBgioEffects();
 
   useEffect(() => {
-    if (currentPlayerName && currentPlayerNameRef.current !== currentPlayerName) {
-      toast.info(`${currentPlayerName}'s turn`);
+    if (currentPlayerName) {
+      if (currentPlayerNameRef.current && currentPlayerNameRef.current !== currentPlayerName) {
+        toast.info(`${currentPlayerName}'s turn`, {
+          autoClose: 3000,
+        });
+      } else {
+        currentPlayerNameRef.current = currentPlayerName;
+      }
     }
   }, [currentPlayerName]);
 
