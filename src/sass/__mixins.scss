@@ -74,7 +74,7 @@
 
   @if $numPlayers == 4 {
     .player1 {
-      grid-column: 4 / span 2;
+      grid-column: 1 / span 2;
       grid-row: 5;
       flex-direction: row;
       align-self: flex-start;
@@ -97,7 +97,7 @@
 
   @if $numPlayers == 5 {
     .player1 {
-      grid-column: 4 / span 2;
+      grid-column: 1 / span 2;
       grid-row: 5;
       flex-direction: row;
       align-self: flex-start;
