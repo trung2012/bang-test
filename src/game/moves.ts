@@ -57,10 +57,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       discardHand(G, ctx, playerCausingDeathId);
       discardEquipments(G, ctx, playerCausingDeathId);
     }
-
-    if (ctx.events?.endTurn) {
-      ctx.events.endTurn();
-    }
   } else {
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
       resetGameStage(G, ctx);
