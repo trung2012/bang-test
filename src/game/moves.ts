@@ -326,7 +326,9 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
     if (equipmentCard.name === 'volcanic') {
       currentPlayer.numBangsLeft = 9999;
     } else {
-      currentPlayer.numBangsLeft = 1;
+      if (currentPlayer.character.name !== 'willy the kid') {
+        currentPlayer.numBangsLeft = 1;
+      }
     }
     currentPlayer.gunRange =
       currentPlayer.character.name === 'rose doolan' ? newGunRange + 1 : newGunRange;
@@ -336,6 +338,7 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
 
   if (equipmentCard.name === 'scope') {
     currentPlayer.actionRange += 1;
+    currentPlayer.gunRange += 1;
   }
 
   if (equipmentCard.name === 'mustang') {
@@ -580,11 +583,14 @@ const catbalou = (
       if (gunWithRange) {
         targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
         if (cardToDiscard.name === 'volcanic') {
-          targetPlayer.numBangsLeft = 1;
+          if (targetPlayer.character.name !== 'willy the kid') {
+            targetPlayer.numBangsLeft = 1;
+          }
         }
       }
       if (cardToDiscard.name === 'scope') {
         targetPlayer.actionRange -= 1;
+        targetPlayer.gunRange -= 1;
       }
       break;
   }
@@ -647,12 +653,15 @@ const panic = (
         targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
         currentPlayer.gunRange = gunWithRange;
         if (cardToTake.name === 'volcanic') {
-          targetPlayer.numBangsLeft = 1;
+          if (targetPlayer.character.name !== 'willy the kid') {
+            targetPlayer.numBangsLeft = 1;
+          }
           currentPlayer.numBangsLeft = 9999;
         }
       }
       if (cardToTake.name === 'scope') {
         targetPlayer.actionRange -= 1;
+        targetPlayer.gunRange -= 1;
         currentPlayer.actionRange += 1;
       }
       break;

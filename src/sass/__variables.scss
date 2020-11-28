@@ -20,8 +20,9 @@ $color-gray-light: #acacac;
 
 $box-shadow-primary: 0px 2px 8px $color-gray-dark;
 $box-shadow-secondary: 0px 2px 8px $color-gray-medium-light;
+$box-shadow-large: 0px 4px 12px $color-gray-medium;
 $box-shadow-light: 0px 2px 8px $color-gray-light;
-$box-shadow-player: 5px 10px 20px #b6b6b6, -5px -10px 20px #e9e9e9;
+$box-shadow-player: 8px 8px 14px #8e8e8e, -8px -8px 14px #e9e9e9;
 $box-shadow-card-active: 0px 2px 8px 6px $color-secondary;
 $box-shadow-deck-active: 0px 0px 4px 10px $color-primary;
 $box-shadow-deck-card: 0px 1px 3px rgb(119, 119, 119);
