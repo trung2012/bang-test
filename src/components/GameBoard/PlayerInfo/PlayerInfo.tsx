@@ -13,7 +13,8 @@ interface IPlayerInfoProps {
 }
 
 export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
-  const { ctx } = useGameContext();
+  const { ctx, playerID } = useGameContext();
+  const isClientPlayer = player.id === playerID;
   const isActivePlayer =
     player.id === ctx.currentPlayer ||
     (ctx.activePlayers &&
@@ -48,7 +49,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
             alt={player.character.name}
           />
         </div>
-        <div>{isActivePlayer}</div>
+        {isClientPlayer && <div>{player.role}</div>}
       </div>
       <PlayerHp hp={player.hp} maxHp={player.maxHp} />
     </>
