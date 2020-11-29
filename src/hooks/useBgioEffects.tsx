@@ -21,15 +21,15 @@ export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot, { volume: 0.3 });
   const [playExplosion] = useSound(explosion, { volume: 0.7 });
   const [playGunCock] = useSound(gunCock, { volume: 0.3 });
-  const [playGrunt] = useSound(grunt, { volume: 0.3 });
+  const [playGrunt] = useSound(grunt, { volume: 0.6 });
   const [playHorse] = useSound(horse, { volume: 0.3 });
-  const [playSwoosh] = useSound(swoosh, { volume: 0.15 });
+  const [playSwoosh] = useSound(swoosh, { volume: 0.25 });
   const [playGatling] = useSound(gatling, { volume: 0.3 });
   const [playJail] = useSound(jail, { volume: 0.3 });
-  const [playDrinking] = useSound(drinking, { volume: 0.3 });
+  const [playDrinking] = useSound(drinking, { volume: 0.4 });
   const [playBarrel] = useSound(barrel, { volume: 0.3 });
-  const [playIndians] = useSound(indians, { volume: 0.3 });
-  const [playPanic] = useSound(panic, { volume: 0.3 });
+  const [playIndians] = useSound(indians, { volume: 0.25 });
+  const [playPanic] = useSound(panic, { volume: 0.15 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
