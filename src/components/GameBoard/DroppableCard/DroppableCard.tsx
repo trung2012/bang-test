@@ -35,7 +35,6 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
-    if (sourcePlayerId === playerId) return;
     if (
       sourcePlayerId !== ctx.currentPlayer &&
       players[sourcePlayerId].character.name === 'sid ketchum'

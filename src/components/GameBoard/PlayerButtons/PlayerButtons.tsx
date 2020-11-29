@@ -8,7 +8,7 @@ import './PlayerButtons.scss';
 import { delayBetweenActions, IGamePlayer, stageNames } from '../../../game';
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
-  const { G, moves, playerID } = useGameContext();
+  const { G, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const isCurrentPlayer = playerID === player.id;
   const isReactingToBullets =
@@ -18,7 +18,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     G.activeStage === stageNames.duel;
 
   const onPassClick = () => {
-    if (!isCurrentPlayer) return;
+    if (!isCurrentPlayer || !isActive) return;
 
     const numCardsToDiscard = player.hand.length - player.hp;
     if (numCardsToDiscard > 0) {

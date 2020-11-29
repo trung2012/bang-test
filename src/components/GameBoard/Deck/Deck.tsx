@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import './Deck.scss';
 
 export const Deck = () => {
-  const { G, isActive, playerID, moves } = useGameContext();
+  const { G, ctx, isActive, playerID, moves } = useGameContext();
   const { setError } = useErrorContext();
   const { deck } = G;
   const clientPlayer = G.players[playerID!];
@@ -15,7 +15,7 @@ export const Deck = () => {
   const onDeckClick = () => {
     if (!isActive || clientPlayer.cardDrawnAtStartLeft === 0) return;
 
-    if (hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
+    if (playerID === ctx.currentPlayer && hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
       moves.drawToReact(playerID);
 
       setTimeout(() => {
@@ -24,7 +24,7 @@ export const Deck = () => {
       return;
     }
 
-    if (isJailed(clientPlayer)) {
+    if (playerID === ctx.currentPlayer && isJailed(clientPlayer)) {
       moves.drawToReact(playerID);
 
       setTimeout(() => {

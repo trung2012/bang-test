@@ -34,7 +34,7 @@ const DroppableCardContainer = styled.div<
 `;
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
-  const { G, playerID, ctx, moves } = useGameContext();
+  const { G, playerID, ctx, moves, isActive } = useGameContext();
   const targetPlayer = G.players[playerId];
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
@@ -42,26 +42,10 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const maxCardRotationAngle = Math.min(hand.length * 25, 140);
 
   useEffect(() => {
-    if (
-      G.activeStage &&
-      G.reactionRequired.cardNeeded &&
-      selectedCards.length === G.reactionRequired.quantity
-    ) {
-      moves.playCardToReact(selectedCards, playerID);
+    if (!isActive && selectedCards.length > 0) {
       setSelectedCards([]);
     }
-
-    if (!G.activeStage) {
-      setSelectedCards([]);
-    }
-  }, [
-    G.activeStage,
-    G.reactionRequired.cardNeeded,
-    G.reactionRequired.quantity,
-    moves,
-    playerID,
-    selectedCards,
-  ]);
+  }, [isActive, selectedCards.length]);
 
   const onPlayerHandCardClick = (index: number) => {
     const currentPlayer = G.players[playerID!];

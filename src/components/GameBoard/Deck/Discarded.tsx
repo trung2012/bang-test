@@ -26,7 +26,10 @@ export const Discarded = () => {
   return (
     <CardPile
       className={classnames('discarded', {
-        'discarded--active': isActive && clientPlayer.character.name === 'pedro ramirez',
+        'discarded--active':
+          isActive &&
+          clientPlayer.character.name === 'pedro ramirez' &&
+          clientPlayer.cardDrawnAtStartLeft > 0,
       })}
       cards={discarded}
       isFacedUp={true}

@@ -88,6 +88,19 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     if (activeStage && reactionRequired.cardNeeded && selectedCards && setSelectedCards) {
+      if (
+        !isSelected &&
+        selectedCards.length === reactionRequired.quantity - 1 &&
+        (card.name === reactionRequired.cardNeeded ||
+          (currentPlayer.character.name === 'calamity janet' &&
+            ['bang', 'missed'].includes(card.name) &&
+            ['bang', 'missed'].includes(reactionRequired.cardNeeded)))
+      ) {
+        moves.playCardToReact([...selectedCards, index], playerID);
+        setSelectedCards([]);
+        return;
+      }
+
       if (selectedCards.length < reactionRequired.quantity) {
         if (isSelected) {
           setSelectedCards(cards => cards.filter(cardIndex => cardIndex !== index));
