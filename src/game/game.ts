@@ -9,7 +9,7 @@ import stages from './stages';
 import { ICard, IGameResult, IGameState } from './types';
 // import { drawCardToReact, dynamiteResult, jailResult } from './utils';
 import { config } from './effects';
-import { setSidKetchumState } from './utils';
+// import { setSidKetchumState } from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {
@@ -33,12 +33,12 @@ const game: Game<IGameState> = {
     if (sheriffPlayer.hp <= 0) {
       if (playersAlive.length === 1 && playersAlive[0].role === 'renegade') {
         return {
-          winners: playersAlive,
+          winners: playersAlive.filter(player => player.role === 'renegade'),
           team: teamLookUp.renegade,
         };
       } else {
         return {
-          winners: playersAlive,
+          winners: playersAlive.filter(player => player.role === 'outlaw'),
           team: teamLookUp.outlaw,
         };
       }
@@ -92,9 +92,6 @@ const game: Game<IGameState> = {
           }
         }
       }
-    },
-    onBegin: (G, ctx) => {
-      setSidKetchumState(G, ctx);
     },
     onEnd: (G, ctx) => {
       for (const playerId in G.players) {

@@ -116,23 +116,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     }
   }
 
-  if (G.sidKetchumId) {
-    if (ctx.events?.setActivePlayers) {
-      if (ctx.activePlayers) {
-        ctx.events.setActivePlayers({
-          ...ctx.activePlayers,
-          currentPlayer: stageNames.play,
-          [G.sidKetchumId]: stageNames.sidKetchum
-        })
-      } else {
-        ctx.events.setActivePlayers({
-          currentPlayer: stageNames.play,
-          [G.sidKetchumId]: stageNames.sidKetchum
-        })
-      }
-    }
-  }
-
   clearCardsInPlay(G, ctx, targetPlayerId);
 };
 
@@ -309,24 +292,7 @@ export const playCardToReact = (
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
       return;
     }
-  }
-  
-  if (G.sidKetchumId) {
-    if (ctx.events?.setActivePlayers) {
-      if (ctx.activePlayers) {
-        ctx.events.setActivePlayers({
-          ...ctx.activePlayers,
-          currentPlayer: stageNames.play,
-          [G.sidKetchumId]: stageNames.sidKetchum
-        })
-      } else {
-        ctx.events.setActivePlayers({
-          currentPlayer: stageNames.play,
-          [G.sidKetchumId]: stageNames.sidKetchum
-        })
-      }
-    } 
-  }
+  }  
 };
 
 const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
