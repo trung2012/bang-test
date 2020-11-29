@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import { useGameContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { stageNames } from '../../../game/constants';
 import { ICard } from '../../../game/types';
+import { hasDynamite, isJailed } from '../../../game/utils';
 import { DraggableCard } from '../DraggableCard';
 import { CardContainerProps, DroppableCard } from '../DroppableCard';
 import './PlayerHand.scss';
@@ -35,6 +36,8 @@ const DroppableCardContainer = styled.div<
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const { G, playerID, ctx, moves, isActive } = useGameContext();
+  const { setError } = useErrorContext();
+  const clientPlayer = G.players[playerID!];
   const targetPlayer = G.players[playerId];
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
@@ -48,6 +51,16 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   }, [isActive, selectedCards.length]);
 
   const onPlayerHandCardClick = (index: number) => {
+    if (hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isJailed(clientPlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
+
     const currentPlayer = G.players[playerID!];
     if (currentPlayer.character.name === 'jesse jones' && currentPlayer.cardDrawnAtStartLeft >= 2) {
       moves.drawFromPlayerHand(playerID, playerId, index);
