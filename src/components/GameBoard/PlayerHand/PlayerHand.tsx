@@ -47,9 +47,9 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
       G.reactionRequired.cardNeeded &&
       selectedCards.length === G.reactionRequired.quantity
     ) {
-      moves.playCardToReact(selectedCards, playerID);
-      setSelectedCards([]);
+      moves.playCardToReact(selectedCards, playerID);      
     }
+    setSelectedCards([]);
   }, [
     G.activeStage,
     G.reactionRequired.cardNeeded,

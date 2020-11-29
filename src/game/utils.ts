@@ -162,3 +162,13 @@ export const processEquipmentRemoval = (
       break;
   }
 };
+
+export const getPlayersAlive = (G: IGameState,ctx: Ctx, stageName: string) => {
+  const playersAlive = ctx.playOrder.map(id => G.players[id]).filter(player => player.hp > 0);
+  const activePlayers = playersAlive.reduce((players, player) => {
+    players[player.id] = stageName;
+    return players;
+  }, {} as { [key: string]: any });
+
+  return activePlayers
+}

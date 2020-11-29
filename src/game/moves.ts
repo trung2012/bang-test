@@ -2,7 +2,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { isCharacterInGame, hasDynamite, setSidKetchumStateAfterEndingStage } from './utils';
+import { isCharacterInGame, hasDynamite, setSidKetchumStateAfterEndingStage, getPlayersAlive } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -614,13 +614,15 @@ const gatling = (G: IGameState, ctx: Ctx) => {
     ctx.effects.gatling(gatlingCard.id);
   }
 
+  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
+
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       currentPlayer: {
         stage: stageNames.clearCardsInPlay,
         moveLimit: 1,
       },
-      others: stageNames.reactToGatling,
+      value: activePlayers
     });
   }
   G.reactionRequired.cardNeeded = 'missed';
@@ -629,14 +631,16 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 
 const indians = (G: IGameState, ctx: Ctx) => {
   ctx.effects.indians();
+  
+  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
+  
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       currentPlayer: {
         stage: stageNames.clearCardsInPlay,
         moveLimit: 1,
       },
-      others: stageNames.reactToIndians,
-      moveLimit: 1,
+      value: activePlayers,
     });
   }
   G.reactionRequired.cardNeeded = 'bang';
@@ -737,14 +741,11 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
     G.generalStore.push(...newCards);
   }
 
-  const playersAlive = ctx.playOrder.map(id => G.players[id]).filter(player => player.hp > 0);
-  const activePlayers = playersAlive.reduce((players, player) => {
-    players[player.id] = stageNames.pickFromGeneralStore;
-    return players;
-  }, {} as { [key: string]: any });
-
+  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
+  
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
+      currentPlayer: stageNames.pickFromGeneralStore,
       value: activePlayers,
     });
   }
