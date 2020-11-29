@@ -10,6 +10,11 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   targetPlayer.hp -= 1;
   ctx.effects.takeDamage();
 
+  targetPlayer.barrelUseLeft = 1;
+  if (targetPlayer.character.name === 'jourdonnais') {
+    targetPlayer.jourdonnaisPowerUseLeft = 1;
+  }
+
   const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
   if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
     const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
@@ -55,8 +60,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     const playerCausingDeath = playerCausingDeathId ? G.players[playerCausingDeathId] : null;
 
-    if (targetPlayer.role === 'outlaw' && ctx.currentPlayer !== targetPlayerId) {
-      drawBounty(G, ctx, ctx.currentPlayer);
+    if (playerCausingDeathId && targetPlayer.role === 'outlaw') {
+      drawBounty(G, ctx, playerCausingDeathId);
     }
 
     if (playerCausingDeathId && playerCausingDeath) {
@@ -72,7 +77,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     if (ctx.events?.endStage) {
       ctx.events.endStage();
-      targetPlayer.barrelUseLeft = 1;
     }
 
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -258,6 +262,8 @@ export const playCardToReact = (
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
+
+    // If you can play card to react, you passed the stage and can now be attacked again
     reactingPlayer.barrelUseLeft = 1;
     if (reactingPlayer.character.name === 'jourdonnais') {
       reactingPlayer.jourdonnaisPowerUseLeft = 1;
