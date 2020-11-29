@@ -37,6 +37,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
+      if (targetPlayer.equipments.some(card => card.name === 'dynamite')) {
+        G.dynamiteTimer = 1;
+      }
       while (targetPlayer.hand.length > 0) {
         const cardToTake = targetPlayer.hand.pop();
         if (cardToTake) {
