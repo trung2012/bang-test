@@ -2,7 +2,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { isCharacterInGame, hasDynamite, setSidKetchumStateAfterEndingStage, getPlayersAlive } from './utils';
+import { isCharacterInGame, hasDynamite, getOtherPlayersAlive } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -51,19 +51,19 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     // if taking damage on own turn, it must be Duel. So take sourcePlayerId from the duel stage info
     // The playing causing death must be different from the target player
-    let playerCausingDeathId =
-      ctx.currentPlayer === targetPlayer.id
-        ? G.reactionRequired.sourcePlayerId!
-        : ctx.currentPlayer;
-    const playerCausingDeath = G.players[playerCausingDeathId];
+    let playerCausingDeathId = ctx.currentPlayer === targetPlayer.id ? null : ctx.currentPlayer;
+
+    const playerCausingDeath = playerCausingDeathId ? G.players[playerCausingDeathId] : null;
 
     if (targetPlayer.role === 'outlaw' && ctx.currentPlayer !== targetPlayerId) {
       drawBounty(G, ctx, ctx.currentPlayer);
     }
 
-    if (targetPlayer.role === 'deputy' && playerCausingDeath.role === 'sheriff') {
-      discardHand(G, ctx, playerCausingDeathId);
-      discardEquipments(G, ctx, playerCausingDeathId);
+    if (playerCausingDeathId && playerCausingDeath) {
+      if (targetPlayer.role === 'deputy' && playerCausingDeath.role === 'sheriff') {
+        discardHand(G, ctx, playerCausingDeathId);
+        discardEquipments(G, ctx, playerCausingDeathId);
+      }
     }
   } else {
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
@@ -73,8 +73,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (ctx.events?.endStage) {
       ctx.events.endStage();
       targetPlayer.barrelUseLeft = 1;
-
-      setSidKetchumStateAfterEndingStage(G, ctx);
     }
 
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -105,8 +103,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 };
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
-  ctx.effects.explosion();
   if (!targetPlayerId) return INVALID_MOVE;
+  ctx.effects.explosion();
   const targetPlayer = G.players[targetPlayerId];
   targetPlayer.hp -= 3;
 
@@ -264,8 +262,6 @@ export const playCardToReact = (
     if (reactingPlayer.character.name === 'jourdonnais') {
       reactingPlayer.jourdonnaisPowerUseLeft = 1;
     }
-
-    setSidKetchumStateAfterEndingStage(G, ctx);
   }
 
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
@@ -528,8 +524,6 @@ export const barrelResult = (
         if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
           resetGameStage(G, ctx);
         }
-
-        setSidKetchumStateAfterEndingStage(G, ctx);
       }
     } else {
       G.reactionRequired.quantity -= 1;
@@ -614,7 +608,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
     ctx.effects.gatling(gatlingCard.id);
   }
 
-  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
+  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.reactToGatling);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
@@ -622,7 +616,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
         stage: stageNames.clearCardsInPlay,
         moveLimit: 1,
       },
-      value: activePlayers
+      value: activePlayers,
     });
   }
   G.reactionRequired.cardNeeded = 'missed';
@@ -631,9 +625,9 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 
 const indians = (G: IGameState, ctx: Ctx) => {
   ctx.effects.indians();
-  
-  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
-  
+
+  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.reactToIndians);
+
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       currentPlayer: {
@@ -741,8 +735,8 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
     G.generalStore.push(...newCards);
   }
 
-  const activePlayers = getPlayersAlive(G,ctx, stageNames.pickFromGeneralStore);
-  
+  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.pickFromGeneralStore);
+
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       currentPlayer: stageNames.pickFromGeneralStore,
@@ -774,7 +768,6 @@ const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: s
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
-    setSidKetchumStateAfterEndingStage(G, ctx);
   }
 
   if (ctx.events?.setActivePlayers) {

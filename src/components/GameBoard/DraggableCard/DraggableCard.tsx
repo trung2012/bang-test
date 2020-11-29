@@ -102,21 +102,6 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
           }
         }
         return;
-      } else {
-        if (currentPlayer.character.name === 'calamity janet') {
-          if (
-            ['bang', 'missed'].includes(card.name) &&
-            ['bang', 'missed'].includes(reactionRequired.cardNeeded)
-          ) {
-            moves.playCardToReact([index], playerId);
-            return;
-          }
-        }
-
-        if (card.name !== reactionRequired.cardNeeded) return;
-
-        moves.playCardToReact([index], playerId);
-        return;
       }
     }
 

@@ -124,15 +124,31 @@ export const setSidKetchumState = (G: IGameState, ctx: Ctx) => {
   }
 };
 
-export const setSidKetchumStateAfterEndingStage = (G: IGameState, ctx: Ctx) => {
+export const setSidKetchumStateAfterEndingStage = (
+  G: IGameState,
+  ctx: Ctx,
+  previousStage: string | null = null
+) => {
   if (G.sidKetchumId && G.sidKetchumId !== ctx.currentPlayer && G.players[G.sidKetchumId].hp > 0) {
     if (ctx.events?.setActivePlayers) {
-      ctx.events.setActivePlayers({
+      const activePlayers: { [key: string]: any } = {
         currentPlayer: 'play',
         value: {
           [G.sidKetchumId]: stageNames.sidKetchum,
         },
-      });
+      };
+
+      const otherActivePlayersAlive = G.playOrder.filter(
+        playerId => playerId !== ctx.currentPlayer && playerId !== G.sidKetchumId
+      );
+
+      if (previousStage) {
+        for (const playerId of otherActivePlayersAlive) {
+          activePlayers[Number(playerId)] = previousStage;
+        }
+      }
+
+      ctx.events.setActivePlayers(activePlayers);
     }
   }
 };
@@ -163,12 +179,15 @@ export const processEquipmentRemoval = (
   }
 };
 
-export const getPlayersAlive = (G: IGameState,ctx: Ctx, stageName: string) => {
-  const playersAlive = ctx.playOrder.map(id => G.players[id]).filter(player => player.hp > 0);
+export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx, stageName: string) => {
+  const playersAlive = ctx.playOrder
+    .map(id => G.players[id])
+    .filter(player => player.hp > 0)
+    .filter(player => player.id !== ctx.currentPlayer);
   const activePlayers = playersAlive.reduce((players, player) => {
     players[player.id] = stageName;
     return players;
   }, {} as { [key: string]: any });
 
-  return activePlayers
-}
+  return activePlayers;
+};
