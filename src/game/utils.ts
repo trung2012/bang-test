@@ -100,7 +100,7 @@ export const isCharacterInGame = (G: IGameState, characterName: CharacterName) =
   let matchingPlayerId: string | undefined = undefined;
   for (const playerId in G.players) {
     const player = G.players[playerId];
-    if (player.character.name === characterName) {
+    if (player.character.name === characterName && player.hp > 0) {
       matchingPlayerId = playerId;
       break;
     }
@@ -114,7 +114,7 @@ export const setSidKetchumState = (G: IGameState, ctx: Ctx) => {
     if (G.sidKetchumId !== ctx.currentPlayer && G.players[G.sidKetchumId].hp > 0) {
       if (ctx.events?.setActivePlayers) {
         ctx.events.setActivePlayers({
-          currentPlayer: 'play',
+          currentPlayer: stageNames.play,
           value: {
             [G.sidKetchumId]: 'sidKetchum',
           },

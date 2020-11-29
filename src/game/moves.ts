@@ -93,13 +93,40 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       targetPlayer.hp > 0 &&
       ctx.events?.setActivePlayers
     ) {
-      ctx.events.setActivePlayers({
-        value: {
-          [targetPlayerId]: stageNames.takeCardFromHand,
-        },
-        moveLimit: 1,
-      });
+      if (ctx.activePlayers) {
+        ctx.events.setActivePlayers({
+          ...ctx.activePlayers,
+          value: {
+            [targetPlayerId]: stageNames.takeCardFromHand,
+          },
+          moveLimit: 1,
+        });
+      } else {
+        ctx.events.setActivePlayers({
+          value: {
+            [targetPlayerId]: stageNames.takeCardFromHand,
+          },
+          moveLimit: 1,
+        });
+      }
       G.activeStage = stageNames.takeCardFromHand;
+    }
+  }
+
+  if (G.sidKetchumId) {
+    if (ctx.events?.setActivePlayers) {
+      if (ctx.activePlayers) {
+        ctx.events.setActivePlayers({
+          ...ctx.activePlayers,
+          currentPlayer: stageNames.play,
+          [G.sidKetchumId]: stageNames.sidKetchum
+        })
+      } else {
+        ctx.events.setActivePlayers({
+          currentPlayer: stageNames.play,
+          [G.sidKetchumId]: stageNames.sidKetchum
+        })
+      }
     }
   }
 
@@ -279,6 +306,23 @@ export const playCardToReact = (
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
       return;
     }
+  }
+  
+  if (G.sidKetchumId) {
+    if (ctx.events?.setActivePlayers) {
+      if (ctx.activePlayers) {
+        ctx.events.setActivePlayers({
+          ...ctx.activePlayers,
+          currentPlayer: stageNames.play,
+          [G.sidKetchumId]: stageNames.sidKetchum
+        })
+      } else {
+        ctx.events.setActivePlayers({
+          currentPlayer: stageNames.play,
+          [G.sidKetchumId]: stageNames.sidKetchum
+        })
+      }
+    } 
   }
 };
 

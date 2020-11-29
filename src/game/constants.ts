@@ -176,6 +176,7 @@ export const stageNames = {
   takeCardFromHand: 'takeCardFromHand',
   kitCarlsonDiscard: 'kitCarlsonDiscard',
   sidKetchum: 'sidKetchum',
+  play: 'play'
 };
 
 export const gunRange: { [gunName: string]: number } = {
