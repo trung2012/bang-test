@@ -27,6 +27,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
           numCardsToDiscard > 1 ? 's' : ''
         } before ending your turn`
       );
+      moves.makePlayerDiscard(numCardsToDiscard);
       return;
     }
 

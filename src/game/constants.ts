@@ -175,8 +175,8 @@ export const stageNames = {
   reactToBang: 'reactToBang',
   takeCardFromHand: 'takeCardFromHand',
   kitCarlsonDiscard: 'kitCarlsonDiscard',
-  sidKetchum: 'sidKetchum',
-  play: 'play'
+  discard: 'discard',
+  play: 'play',
 };
 
 export const gunRange: { [gunName: string]: number } = {

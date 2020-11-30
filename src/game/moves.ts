@@ -292,7 +292,7 @@ export const playCardToReact = (
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
       return;
     }
-  }  
+  }
 };
 
 const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
@@ -631,10 +631,6 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
-      currentPlayer: {
-        stage: stageNames.clearCardsInPlay,
-        moveLimit: 1,
-      },
       value: activePlayers,
     });
   }
@@ -649,10 +645,6 @@ const indians = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
-      currentPlayer: {
-        stage: stageNames.clearCardsInPlay,
-        moveLimit: 1,
-      },
       value: activePlayers,
     });
   }
@@ -834,12 +826,22 @@ export const doNothing = (G: IGameState, ctx: Ctx) => {
 
 export const endTurn = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
+
   if (G.dynamiteTimer > 0 && hasDynamite(currentPlayer)) {
     G.dynamiteTimer = 0;
   }
 
   if (ctx.events?.endTurn) {
     ctx.events.endTurn();
+  }
+};
+
+export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: number) => {
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      currentPlayer: stageNames.discard,
+      moveLimit: numCardsToDiscard,
+    });
   }
 };
 
@@ -879,6 +881,7 @@ const moves: MoveMap<IGameState> = {
   drawToReact,
   drawBounty,
   discardEquipments,
+  makePlayerDiscard,
   endTurn,
 };
 

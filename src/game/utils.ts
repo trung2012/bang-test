@@ -134,7 +134,7 @@ export const setSidKetchumStateAfterEndingStage = (
       const activePlayers: { [key: string]: any } = {
         currentPlayer: 'play',
         value: {
-          [G.sidKetchumId]: stageNames.sidKetchum,
+          [G.sidKetchumId]: stageNames.discard,
         },
       };
 

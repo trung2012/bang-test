@@ -19,7 +19,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
     player.id === ctx.currentPlayer ||
     (ctx.activePlayers &&
       ctx.activePlayers[player.id] &&
-      ctx.activePlayers[player.id] !== stageNames.sidKetchum);
+      ctx.activePlayers[player.id] !== stageNames.discard);
 
   if (player.hp <= 0) {
     return <PlayerDead player={player} />;
