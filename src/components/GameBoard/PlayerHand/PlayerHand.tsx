@@ -1,3 +1,4 @@
+import { keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
@@ -13,15 +14,31 @@ interface IPlayerCardsProps {
   hand: ICard[];
 }
 
+export const cardShuffleAnimation = (destinationTransform: string) =>
+  keyframes`
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: ${destinationTransform};
+  }
+`;
+
 const DroppableCardContainer = styled.div<
-  CardContainerProps & { numCards: number; maxCardRotationAngle: number }
+  CardContainerProps & { numCards: number; maxCardRotationAngle: number; shouldAnimate: boolean }
 >`
   position: absolute;
-  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-  transform: ${props =>
-    `rotate(${
-      -props.maxCardRotationAngle / 2 + props.index * (props.maxCardRotationAngle / props.numCards)
-    }deg)`};
+  animation: ${props =>
+      props.shouldAnimate
+        ? cardShuffleAnimation(
+            `rotate(${
+              -props.maxCardRotationAngle / 2 +
+              props.index * (props.maxCardRotationAngle / props.numCards)
+            }deg)`
+          )
+        : 'none'}
+    0.3s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
   transform-origin: center top;
 
   &:hover {
@@ -42,6 +59,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
   const [selectedCards, setSelectedCards] = useState<number[]>([]);
+  const [shouldAnimate, setShouldAnimate] = useState(true);
   const maxCardRotationAngle = Math.min(hand.length * 25, 140);
 
   useEffect(() => {
@@ -49,6 +67,18 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
       setSelectedCards([]);
     }
   }, [isActive, selectedCards.length]);
+
+  useEffect(() => {
+    setShouldAnimate(false);
+
+    let animationTimeout = setTimeout(() => {
+      setShouldAnimate(true);
+    }, 500);
+
+    return () => {
+      clearTimeout(animationTimeout);
+    };
+  }, [hand.length]);
 
   const onPlayerHandCardClick = (index: number) => {
     if (hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
@@ -100,6 +130,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
           isCurrentPlayer={playerId === playerID}
           numCards={hand.length}
           maxCardRotationAngle={maxCardRotationAngle}
+          shouldAnimate={shouldAnimate}
           key={card.id}
         >
           <DroppableCard

@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { gunRange, stageNames } from './constants';
-import { IGameState, ICard, IGamePlayer, CharacterName, RobbingType } from './types';
+import { stageNames } from './constants';
+import { IGameState, ICard, IGamePlayer, CharacterName } from './types';
 
 export const drawCardToReact = (G: IGameState, ctx: Ctx, currentPlayer: IGamePlayer) => {
   let cards: ICard[] = [];
@@ -153,41 +153,19 @@ export const setSidKetchumStateAfterEndingStage = (
   }
 };
 
-export const processEquipmentRemoval = (
-  currentPlayer: IGamePlayer,
-  targetPlayer: IGamePlayer,
-  targetCardIndex: number,
-  cardToTake: ICard,
-  type: RobbingType
-) => {
-  switch (type) {
-    case 'hand':
-      cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-      break;
-    case 'equipment':
-      cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
-      let gunWithRange = gunRange[cardToTake.name];
-      if (gunWithRange) {
-        targetPlayer.gunRange = 1;
-        currentPlayer.gunRange = gunWithRange;
-        if (cardToTake.name === 'volcanic') {
-          targetPlayer.numBangsLeft = 1;
-          currentPlayer.numBangsLeft = 9999;
-        }
-      }
-      break;
-  }
-};
-
 export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx, stageName: string) => {
   const playersAlive = ctx.playOrder
     .map(id => G.players[id])
-    .filter(player => player.hp > 0)
-    .filter(player => player.id !== ctx.currentPlayer);
+    .filter(player => player.hp > 0 && player.id !== ctx.currentPlayer);
+
   const activePlayers = playersAlive.reduce((players, player) => {
     players[player.id] = stageName;
     return players;
   }, {} as { [key: string]: any });
 
   return activePlayers;
+};
+
+export const shuffle = (ctx: Ctx, array: any[]) => {
+  return (array = ctx.random?.Shuffle ? ctx.random.Shuffle(array) : array);
 };

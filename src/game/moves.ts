@@ -2,7 +2,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { isCharacterInGame, hasDynamite, getOtherPlayersAlive } from './utils';
+import { isCharacterInGame, hasDynamite, getOtherPlayersAlive, shuffle } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -392,6 +392,7 @@ const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
     currentPlayer.hand.push(newCard);
   }
   currentPlayer.cardDrawnAtStartLeft -= 1;
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
 const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
@@ -400,6 +401,7 @@ const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
   G.deck = G.deck.slice(0, G.deck.length - 2);
   currentPlayer.hand.push(...newCards);
   currentPlayer.cardDrawnAtStartLeft -= 2;
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
 const drawBounty = (G: IGameState, ctx: Ctx, playerId: string) => {
@@ -441,6 +443,8 @@ const kitCarlsonDiscard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
       currentPlayer.hand.push(card);
     }
   }
+
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
@@ -510,6 +514,8 @@ const blackJackResult = (G: IGameState, ctx: Ctx) => {
   if (cardFlipped) {
     currentPlayer.hand.push(cardFlipped);
   }
+
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
 export const barrelResult = (
@@ -688,6 +694,7 @@ const panic = (
       break;
   }
   currentPlayer.hand.push(cardToTake);
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
 const saloon = (G: IGameState, ctx: Ctx) => {
@@ -767,6 +774,8 @@ const pickCardFromGeneralStore = (
   const selectedCard = G.generalStore.splice(generalStoreCardIndex, 1)[0];
 
   currentPlayer.hand.push(selectedCard);
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+
   if (ctx.events?.endStage) {
     ctx.events.endStage();
   }
