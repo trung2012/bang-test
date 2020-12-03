@@ -1,7 +1,7 @@
 import { Ctx, FilteredMetadata } from 'boardgame.io';
 import { EventsAPI } from 'boardgame.io/dist/types/src/plugins/events/events';
 import React, { useContext } from 'react';
-import { IGameState } from '../../game/types';
+import { IGameState } from '../../game';
 
 export interface IGameContext {
   G: IGameState;

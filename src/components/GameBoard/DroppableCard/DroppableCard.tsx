@@ -1,10 +1,10 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
-import { ICard, RobbingType } from '../../../game/types';
+import { ICard, RobbingType } from '../../../game';
 import { Card } from '../Card';
 import './DroppableCard.scss';
 import { useErrorContext, useGameContext } from '../../../context';
-import { cardsWhichTargetCards, delayBetweenActions } from '../../../game/constants';
+import { cardsWhichTargetCards, delayBetweenActions } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 interface IDroppableCardProps {
   card: ICard;
@@ -28,20 +28,13 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   cardLocation,
   onClick,
 }) => {
-  const { G, ctx, playersInfo, moves } = useGameContext();
+  const { G, playersInfo, moves } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
-    if (
-      sourcePlayerId !== ctx.currentPlayer &&
-      players[sourcePlayerId].character.name === 'sid ketchum'
-    ) {
-      setError('You can only discard if it is not your turn');
-      return;
-    }
 
     if (players[playerId].hp <= 0) return;
 

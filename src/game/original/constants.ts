@@ -1,3 +1,4 @@
+import { ExpansionName } from './config';
 import { CardName, ICharacter, ILookup } from './types';
 
 export const cardVal = {
@@ -152,6 +153,7 @@ export const gameRolesByNumPlayers: ILookup = {
   5: [1, 1, 2, 1],
   6: [1, 1, 3, 1],
   7: [1, 1, 3, 2],
+  8: [1, 2, 3, 2],
 };
 
 export const roleLookup: ILookup = {
@@ -210,3 +212,7 @@ export const roleImageSrcLookup = {
   renegade:
     'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/rinnegato_snqmce.png',
 };
+
+export const bangExpansions: ExpansionName[] = ['valley of shadows'];
+
+export const bangNumPlayers = [2, 4, 5, 6, 7, 8];

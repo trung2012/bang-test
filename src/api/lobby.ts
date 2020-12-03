@@ -1,13 +1,22 @@
 import axios from 'axios';
 import { SERVER_URL } from '../config';
+import { ISetupData } from '../game/config';
 import { IPlayerJoinData, IRoomData } from './types';
 
 const gameName = 'bang';
 axios.defaults.baseURL = `${SERVER_URL}/games/${gameName}`;
 
-const createGame = async (numPlayers: number) => {
+const createGame = async (numPlayers: number, setupData?: ISetupData) => {
   try {
-    const { data } = await axios.post('/create', { numPlayers });
+    const requestBody: { numPlayers: number; setupData?: ISetupData } = {
+      numPlayers,
+    };
+
+    if (setupData) {
+      requestBody.setupData = setupData;
+    }
+
+    const { data } = await axios.post('/create', requestBody);
 
     return data.matchID;
   } catch (err) {

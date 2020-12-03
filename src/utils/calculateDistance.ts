@@ -1,5 +1,5 @@
 import { FilteredMetadata } from 'boardgame.io';
-import { IGamePlayerMap } from '../game/types';
+import { IGamePlayerMap } from '../game';
 
 export const calculateDistanceFromTarget = (
   players: IGamePlayerMap,

@@ -1,11 +1,12 @@
 import { Ctx } from 'boardgame.io/dist/types/src/types';
-import { randomRotationValue } from '../utils';
-import { generateRoles } from '../utils/generateRoles';
+import { randomRotationValue } from '../../utils';
+import { generateRoles } from '../../utils/generateRoles';
 import { cards } from './cards';
+import { ISetupData } from './config';
 import { characters, gameRolesByNumPlayers } from './constants';
 import { ICard, ICharacter, IGamePlayer, IGamePlayerMap, IGameState, Role } from './types';
 
-const setup = (ctx: Ctx) => {
+const setup = (ctx: Ctx, setupData: ISetupData) => {
   const roles = generateRoles(gameRolesByNumPlayers[ctx.numPlayers]);
   const cardsShuffled = ctx.random!.Shuffle(cards);
   const deck: ICard[] = cardsShuffled.map(card => ({
@@ -26,6 +27,7 @@ const setup = (ctx: Ctx) => {
   const activeStage = null;
   const dynamiteTimer = 1;
   let sidKetchumId: string | null = null;
+  const expansions = setupData?.expansions ?? [];
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -77,6 +79,7 @@ const setup = (ctx: Ctx) => {
     playOrder,
     dynamiteTimer,
     sidKetchumId,
+    expansions,
   } as IGameState;
 };
 

@@ -1,4 +1,4 @@
-import { roleLookup } from '../game/constants';
+import { roleLookup } from '../game';
 
 export const generateRoles = (roleCount: number[]) => {
   const roles: string[] = [];

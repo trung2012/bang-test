@@ -1,0 +1,47 @@
+@import '../../sass/_variables';
+
+.toggle-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    margin-right: 1rem;
+    text-transform: capitalize;
+  }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 4rem;
+  height: 2rem;
+  background-color: $color-gray-dark;
+  border-radius: 2rem;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background-color: white;
+    top: 1px;
+    left: 1px;
+    transition: all 0.2s;
+  }
+}
+
+.checkbox:checked + .switch {
+  background-color: $color-tertiary;
+
+  &::after {
+    left: 2rem;
+  }
+}
+
+.checkbox {
+  display: none;
+}

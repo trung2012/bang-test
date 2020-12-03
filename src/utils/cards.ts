@@ -1,4 +1,4 @@
-import { ICard } from '../game/types';
+import { ICard } from '../game';
 
 export const cardsOriginal: ICard[] = [
   {

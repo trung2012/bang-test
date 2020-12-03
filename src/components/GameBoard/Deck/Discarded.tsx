@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useGameContext } from '../../../context';
 import { CardPile } from './CardPile';
 import './Discarded.scss';
-import { hasDynamite, isJailed } from '../../../game/utils';
+import { hasDynamite, isJailed } from '../../../game';
 
 export const Discarded = () => {
   const { G, isActive, playerID, moves } = useGameContext();

@@ -4,8 +4,8 @@ import classnames from 'classnames';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Draggable, DragComponent } from 'react-dragtastic';
 import { useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions, stageNames } from '../../../game/constants';
-import { ICard } from '../../../game/types';
+import { delayBetweenActions, stageNames } from '../../../game';
+import { ICard } from '../../../game';
 import { MoreOptions } from '../../shared';
 import { Card } from '../Card';
 import './DraggableCard.scss';
@@ -64,17 +64,13 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
   const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    if (playerID !== playerId) return;
     const currentPlayer = players[playerId];
-    if (!ctx.activePlayers || ctx.activePlayers[playerId] !== stageNames.discard) {
+    if (playerID !== playerId) return;
+    if (
+      currentPlayer.character.name !== 'sid ketchum' &&
+      (!ctx.activePlayers || ctx.activePlayers[playerId] !== stageNames.discard)
+    ) {
       setError('You can only discard cards at the end of your turn');
-      return;
-    }
-
-    if (!isActive) {
-      if (currentPlayer.character.name === 'sid ketchum') {
-        moves.discardFromHand(playerId, index);
-      }
       return;
     }
 

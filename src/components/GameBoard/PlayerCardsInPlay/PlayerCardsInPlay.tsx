@@ -14,6 +14,7 @@ export const CardInPlay = styled(Card)<{ index: number; isCurrentPlayer: boolean
   position: absolute;
   left: ${props => `${props.index * 90}px`};
   top: ${props => (props.isCurrentPlayer ? '-100%' : '100%')};
+  z-index: ${props => (props.isCurrentPlayer ? 0 : 10)};
 `;
 
 export const PlayerCardsInPlay: React.FC<IPlayerCardsInPlay> = ({ cards, playerId }) => {

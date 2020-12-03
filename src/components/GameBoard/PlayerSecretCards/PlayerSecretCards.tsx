@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import Tippy from '@tippyjs/react';
 import React from 'react';
 import { useGameContext } from '../../../context';
-import { stageNames } from '../../../game/constants';
-import { ICard } from '../../../game/types';
+import { stageNames } from '../../../game';
+import { ICard } from '../../../game';
 import { Card } from '../Card';
 
 interface IPlayerSecretCards {

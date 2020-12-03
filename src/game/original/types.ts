@@ -1,3 +1,5 @@
+import { ExpansionName } from './config';
+
 export interface IGameState {
   deck: ICard[];
   discarded: ICard[];
@@ -14,6 +16,7 @@ export interface IGameState {
   };
   dynamiteTimer: number;
   sidKetchumId: string | null;
+  expansions: ExpansionName[];
 }
 
 export interface IGamePlayerMap {

@@ -507,7 +507,6 @@ const blackJackResult = (G: IGameState, ctx: Ctx) => {
     currentPlayer.cardsInPlay[0].suit === 'diamond'
   ) {
     drawOneFromDeck(G, ctx);
-    currentPlayer.cardDrawnAtStartLeft -= 1;
   }
 
   let cardFlipped = currentPlayer.cardsInPlay.pop();
@@ -637,6 +636,10 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
+      currentPlayer: {
+        stage: stageNames.play,
+        moveLimit: 1,
+      },
       value: activePlayers,
     });
   }
@@ -651,6 +654,10 @@ const indians = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
+      currentPlayer: {
+        stage: stageNames.play,
+        moveLimit: 1,
+      },
       value: activePlayers,
     });
   }

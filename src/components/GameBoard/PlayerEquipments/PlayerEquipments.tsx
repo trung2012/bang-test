@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGameContext } from '../../../context';
-import { delayBetweenActions, stageNames } from '../../../game/constants';
-import { ICard } from '../../../game/types';
+import { delayBetweenActions, stageNames } from '../../../game';
+import { ICard } from '../../../game';
 import { DroppableCard } from '../DroppableCard';
 import './PlayerEquipments.scss';
 
