@@ -2,7 +2,13 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
 import { ICard, IGameState, RobbingType } from './types';
-import { isCharacterInGame, hasDynamite, getOtherPlayersAlive, shuffle } from './utils';
+import {
+  isCharacterInGame,
+  hasDynamite,
+  getOtherPlayersAlive,
+  shuffle,
+  processEquipmentRemoval,
+} from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -600,28 +606,7 @@ const catbalou = (
   type: RobbingType
 ) => {
   const targetPlayer = G.players[targetPlayerId];
-  let cardToDiscard: ICard;
-  switch (type) {
-    case 'hand':
-      cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-      break;
-    case 'equipment':
-      cardToDiscard = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
-      let gunWithRange = gunRange[cardToDiscard.name];
-      if (gunWithRange) {
-        targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
-        if (cardToDiscard.name === 'volcanic') {
-          if (targetPlayer.character.name !== 'willy the kid') {
-            targetPlayer.numBangsLeft = 1;
-          }
-        }
-      }
-      if (cardToDiscard.name === 'scope') {
-        targetPlayer.actionRange -= 1;
-        targetPlayer.gunRange -= 1;
-      }
-      break;
-  }
+  const cardToDiscard = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
   G.discarded.push(cardToDiscard);
 };
 
@@ -675,31 +660,7 @@ const panic = (
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
   ctx.effects.panic();
-  let cardToTake: ICard;
-  switch (type) {
-    case 'hand':
-      cardToTake = targetPlayer.hand.splice(targetCardIndex, 1)[0];
-      break;
-    case 'equipment':
-      cardToTake = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
-      let gunWithRange = gunRange[cardToTake.name];
-      if (gunWithRange) {
-        targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
-        currentPlayer.gunRange = gunWithRange;
-        if (cardToTake.name === 'volcanic') {
-          if (targetPlayer.character.name !== 'willy the kid') {
-            targetPlayer.numBangsLeft = 1;
-          }
-          currentPlayer.numBangsLeft = 9999;
-        }
-      }
-      if (cardToTake.name === 'scope') {
-        targetPlayer.actionRange -= 1;
-        targetPlayer.gunRange -= 1;
-        currentPlayer.actionRange += 1;
-      }
-      break;
-  }
+  const cardToTake = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
   currentPlayer.hand.push(cardToTake);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };

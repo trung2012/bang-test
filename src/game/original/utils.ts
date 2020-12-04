@@ -1,6 +1,6 @@
 import { Ctx } from 'boardgame.io';
-import { stageNames } from './constants';
-import { IGameState, IGamePlayer, CharacterName } from './types';
+import { gunRange, stageNames } from './constants';
+import { IGameState, IGamePlayer, CharacterName, ICard, RobbingType } from './types';
 
 export const hasDynamite = (player: IGamePlayer) =>
   player.equipments.find(card => card.name === 'dynamite');
@@ -79,4 +79,34 @@ export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx, stageName: string)
 
 export const shuffle = (ctx: Ctx, array: any[]) => {
   return (array = ctx.random?.Shuffle ? ctx.random.Shuffle(array) : array);
+};
+
+export const processEquipmentRemoval = (
+  targetPlayer: IGamePlayer,
+  targetCardIndex: number,
+  type: RobbingType
+) => {
+  let cardToDiscard: ICard;
+  switch (type) {
+    case 'hand':
+      cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      break;
+    case 'equipment':
+      cardToDiscard = targetPlayer.equipments.splice(targetCardIndex, 1)[0];
+      let gunWithRange = gunRange[cardToDiscard.name];
+      if (gunWithRange) {
+        targetPlayer.gunRange = targetPlayer.character.name === 'rose doolan' ? 2 : 1;
+        if (cardToDiscard.name === 'volcanic') {
+          if (targetPlayer.character.name !== 'willy the kid') {
+            targetPlayer.numBangsLeft = Math.min(1, targetPlayer.numBangsLeft);
+          }
+        }
+      }
+      if (cardToDiscard.name === 'scope') {
+        targetPlayer.actionRange -= 1;
+        targetPlayer.gunRange -= 1;
+      }
+      break;
+  }
+  return cardToDiscard;
 };
