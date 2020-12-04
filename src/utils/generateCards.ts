@@ -1,3 +1,6 @@
+import { CardName, CardSuit, CardType, ICard } from '../game';
+import { CardNameVOS } from '../game/expansions/types';
+
 const { nanoid } = require('nanoid');
 const fs = require('fs');
 
@@ -196,20 +199,168 @@ const cardsToGenerateOriginal = {
   ],
 };
 
-const cardNamesWithReaction = ['bang', 'duel', 'gatling', 'general store', 'indians'];
-const targetedCardNames = ['bang', 'duel', 'panic', 'cat balou', 'jail', 'missed'];
+const cardsToGenerate_VOS = {
+  equipment: [
+    {
+      name: 'bounty',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_taglia_fqzwvn.png',
+      values: {
+        clubs: [9],
+      },
+    },
+    {
+      name: 'ghost',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888440/bang/valley%20of%20shadows/07_fantasma_vbgxxt.png',
+      values: {
+        spades: [9, 10],
+      },
+    },
+    {
+      name: 'lemat',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_lemat_fmlaxe.png',
+      values: {
+        diamond: [4],
+      },
+    },
+    {
+      name: 'rattlesnake',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_serpenteasonagli_hzqbw9.png',
+      values: {
+        hearts: [7],
+      },
+    },
+    {
+      name: 'shotgun',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_shotgun_egcipc.png',
+      values: {
+        spades: [13],
+      },
+    },
+  ],
+  action: [
+    {
+      name: 'aim',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_mira_mwmfi5.png',
+      values: {
+        clubs: [6],
+      },
+    },
+    {
+      name: 'backfire',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_ritornodifiamma_sjiyga.png',
+      values: {
+        clubs: [12],
+      },
+    },
+    {
+      name: 'bandidos',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_bandidos_tn7pge.png',
+      values: {
+        diamond: [12],
+      },
+    },
+    {
+      name: 'escape',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_fuga_jca9rd.png',
+      values: {
+        hearts: [3],
+      },
+    },
+    {
+      name: 'fanning',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_sventagliata_be5tbq.png',
+      values: {
+        spades: [2],
+      },
+    },
+    {
+      name: 'last call',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_ultimogiro_njn4jx.png',
+      values: {
+        diamond: [8],
+      },
+    },
+    {
+      name: 'poker',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_poker_crcfaq.png',
+      values: {
+        hearts: [11],
+      },
+    },
+    {
+      name: 'saved',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888441/bang/valley%20of%20shadows/07_salvo_ee8b1m.png',
+      values: {
+        hearts: [5],
+      },
+    },
+    {
+      name: 'tomahawk',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_tomahawk_vz2nzo.png',
+      values: {
+        diamond: [14],
+      },
+    },
+    {
+      name: 'tornado',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888442/bang/valley%20of%20shadows/07_tornado_g2xesa.png',
+      values: {
+        clubs: [14],
+      },
+    },
+  ],
+};
 
-const generateCards = cardsToGenerate => {
-  const cards = [];
+const cardNamesWithReaction: (CardName | CardNameVOS)[] = [
+  'bang',
+  'duel',
+  'gatling',
+  'general store',
+  'indians',
+  'tornado',
+  'fanning',
+];
+
+const targetedCardNames: (CardName | CardNameVOS)[] = [
+  'bang',
+  'duel',
+  'panic',
+  'cat balou',
+  'jail',
+  'missed',
+  'fanning',
+  'tomahawk',
+  'aim',
+  'backfire',
+  'saved',
+];
+
+const generateCards = (cardsToGenerate: any) => {
+  const cards: ICard[] = [];
   for (const type in cardsToGenerate) {
     const cardsInType = cardsToGenerate[type];
 
-    cardsInType.forEach(card => {
+    cardsInType.forEach((card: any) => {
       const { values } = card;
       for (const suit in values) {
         const range = values[suit];
         if (range.length <= 1) {
-          const cardsToPush = range.map(value => ({
+          const cardsToPush = range.map((value: number) => ({
             id: nanoid(),
             value,
             name: card.name,
@@ -224,13 +375,13 @@ const generateCards = cardsToGenerate => {
           const min = range[0];
           const max = range[1];
           for (let v = min; v <= max; v++) {
-            const newCard = {
+            const newCard: ICard = {
               id: nanoid(),
               value: v,
               name: card.name,
               imageUrl: card.imageUrl,
-              suit,
-              type,
+              suit: suit as CardSuit,
+              type: type as CardType,
               needsReaction: cardNamesWithReaction.includes(card.name),
               isTargeted: targetedCardNames.includes(card.name),
             };
@@ -241,11 +392,11 @@ const generateCards = cardsToGenerate => {
     });
   }
 
-  fs.appendFile(`./cards.ts`, JSON.stringify(cards, null, 4), err => {
+  fs.appendFile(`./cards_VOS.ts`, JSON.stringify(cards, null, 4), (err: Error) => {
     if (err) {
       console.log(err);
     }
   });
 };
 
-generateCards(cardsToGenerateOriginal);
+generateCards(cardsToGenerate_VOS);
