@@ -2,7 +2,7 @@ import gsap, { Power3 } from 'gsap';
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import cardBackImg from '../../../assets/card_back.png';
 import { AnimationContext } from '../../../context';
-import { ICard } from '../../../game/types';
+import { ICard } from '../../../game';
 import classnames from 'classnames';
 import { cardDisplayValue } from './Card.constants';
 import './Card.scss';

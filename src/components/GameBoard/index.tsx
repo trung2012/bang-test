@@ -1,7 +1,7 @@
 import { BoardProps } from 'boardgame.io/react';
 import React from 'react';
 import { AnimationProvider, ErrorProvider, GameContext } from '../../context';
-import { IGameState } from '../../game/types';
+import { IGameState } from '../../game';
 import { GameTable } from './GameTable.tsx';
 import 'tippy.js/dist/tippy.css';
 

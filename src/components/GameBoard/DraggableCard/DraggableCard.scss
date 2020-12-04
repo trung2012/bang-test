@@ -1,7 +1,7 @@
 .draggable-card,
 .draggable-card-selected {
   position: relative;
-  transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 10;
   margin-right: -1.5rem;
 }

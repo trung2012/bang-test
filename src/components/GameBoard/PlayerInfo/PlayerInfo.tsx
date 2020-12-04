@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { useGameContext } from '../../../context';
-import { IGamePlayer } from '../../../game/types';
+import { IGamePlayer } from '../../../game';
 import { PlayerHp } from '../PlayerHp';
 import { PlayerDead } from '../PlayerDead';
 import { ReactComponent as SheriffBadge } from '../../../assets/sheriff.svg';

@@ -3,7 +3,7 @@ import gsap, { Expo, Power3 } from 'gsap';
 import { Power2, RoughEase, Sine } from 'gsap/all';
 import useSound from 'use-sound';
 import { animationDelayMilliseconds, animationDelaySeconds } from '../game';
-import { BangEffectsConfig } from '../game/effects';
+import { BangEffectsConfig } from '../game';
 const gunShot = require('../assets/sounds/gunshot.mp3');
 const explosion = require('../assets/sounds/bomb.mp3');
 const gunCock = require('../assets/sounds/guncock.mp3');

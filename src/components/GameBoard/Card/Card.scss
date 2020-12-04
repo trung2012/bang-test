@@ -55,6 +55,7 @@
 
 .card-dragging {
   pointer-events: none;
+  cursor: grab;
 
   &:active {
     box-shadow: $box-shadow-card-active;

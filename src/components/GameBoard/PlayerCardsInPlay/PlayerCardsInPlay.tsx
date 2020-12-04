@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { useGameContext } from '../../../context';
-import { ICard } from '../../../game/types';
+import { ICard } from '../../../game';
 import { Card } from '../Card';
 import './PlayerCardsInPlay.scss';
 

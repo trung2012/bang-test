@@ -2,7 +2,7 @@ import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
 import { useErrorContext, useGameContext } from '../../../context';
-import { ICard, IGamePlayer } from '../../../game/types';
+import { ICard, IGamePlayer } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';

@@ -17,8 +17,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     G.activeStage === stageNames.reactToIndians ||
     G.activeStage === stageNames.duel;
 
-  const onPassClick = () => {
-    if (!isCurrentPlayer || !isActive) return;
+  const onEndTurnClick = () => {
+    if (!isCurrentPlayer || !isActive) {
+      setError('You cannot perform this action right now');
+      return;
+    }
 
     const numCardsToDiscard = player.hand.length - player.hp;
     if (numCardsToDiscard > 0) {
@@ -67,9 +70,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
               <PowerIcon className='player-button-icon' />
             </PlayerButton>
           )}
-          <PlayerButton tooltipTitle='End turn' onClick={onPassClick}>
-            <PassIcon className='player-button-icon' />
-          </PlayerButton>
+          {isCurrentPlayer && (
+            <PlayerButton tooltipTitle='End turn' onClick={onEndTurnClick}>
+              <PassIcon className='player-button-icon' />
+            </PlayerButton>
+          )}
           {isReactingToBullets && (
             <PlayerButton tooltipTitle='Take damage' onClick={onTakeDamageClick}>
               <DamageIcon className='player-button-icon damage-icon' />

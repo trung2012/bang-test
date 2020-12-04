@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { SERVER_URL } from '../config';
-import { ISetupData } from '../game/config';
+import { ISetupData } from '../game';
 import { IPlayerJoinData, IRoomData } from './types';
 
 const gameName = 'bang';

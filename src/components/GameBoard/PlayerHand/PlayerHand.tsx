@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
 import { stageNames } from '../../../game';
 import { ICard } from '../../../game';
-import { hasDynamite, isJailed } from '../../../game/original/utils';
+import { hasDynamite, isJailed } from '../../../game';
 import { DraggableCard } from '../DraggableCard';
 import { CardContainerProps, DroppableCard } from '../DroppableCard';
 import './PlayerHand.scss';
@@ -29,6 +29,7 @@ const DroppableCardContainer = styled.div<
   CardContainerProps & { numCards: number; maxCardRotationAngle: number; shouldAnimate: boolean }
 >`
   position: absolute;
+  transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   animation: ${props =>
       props.shouldAnimate
         ? cardShuffleAnimation(
@@ -38,17 +39,8 @@ const DroppableCardContainer = styled.div<
             }deg)`
           )
         : 'none'}
-    0.3s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+    0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   transform-origin: center top;
-
-  &:hover {
-    transform: ${props =>
-      `rotate(${
-        -props.maxCardRotationAngle / 2 +
-        props.index * (props.maxCardRotationAngle / props.numCards)
-      }deg)
-      ${props.isCurrentPlayer ? 'translateY(-40px)' : 'translateY(40px)'} `};
-  }
 `;
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {

@@ -66,3 +66,14 @@
   @include player5(7);
   @include player6(7);
 }
+
+.game-table--8-players {
+  @include player0;
+  @include player1(8);
+  @include player2(8);
+  @include player3(8);
+  @include player4(8);
+  @include player5(8);
+  @include player6(8);
+  @include player7(8);
+}

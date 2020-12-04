@@ -6,6 +6,7 @@ import './DroppableCard.scss';
 import { useErrorContext, useGameContext } from '../../../context';
 import { cardsWhichTargetCards, delayBetweenActions } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
+import styled from '@emotion/styled';
 interface IDroppableCardProps {
   card: ICard;
   index: number;
@@ -20,6 +21,13 @@ export type CardContainerProps = {
   isCurrentPlayer: boolean;
 };
 
+const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  &:hover {
+    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-40px)' : 'translateY(40px)'} `};
+  }
+`;
+
 export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   card,
   index,
@@ -28,7 +36,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   cardLocation,
   onClick,
 }) => {
-  const { G, playersInfo, moves } = useGameContext();
+  const { G, playersInfo, moves, playerID } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
@@ -65,9 +73,13 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   return (
     <Droppable accepts='card' onDrop={onDrop}>
       {droppableDragState => (
-        <div className='droppable-card' {...droppableDragState.events}>
+        <DroppableCardContainer
+          isCurrentPlayer={playerID === playerId}
+          className='droppable-card'
+          {...droppableDragState.events}
+        >
           <Card card={card} isFacedUp={isFacedUp} onClick={onClick} />
-        </div>
+        </DroppableCardContainer>
       )}
     </Droppable>
   );

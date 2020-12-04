@@ -1,7 +1,7 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions } from '../../../game/';
-import { hasDynamite, isJailed } from '../../../game/';
+import { delayBetweenActions } from '../../../game';
+import { hasDynamite, isJailed } from '../../../game';
 import { CardPile } from './CardPile';
 import classnames from 'classnames';
 import './Deck.scss';
