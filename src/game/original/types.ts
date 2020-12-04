@@ -12,7 +12,7 @@ export interface IGameState {
   activeStage: string | null;
   reactionRequired: {
     sourcePlayerId: string | null;
-    cardNeeded: CardName | null;
+    cardNeeded: CardName | CardNameVOS | null;
     quantity: number;
   };
   dynamiteTimer: number;

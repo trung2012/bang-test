@@ -1,3 +1,4 @@
+import { CardNameVOS } from '../expansions';
 import { ExpansionName } from './config';
 import { CardName, ICharacter, ILookup } from './types';
 
@@ -193,7 +194,7 @@ export const delayBetweenActions = 2000;
 export const animationDelayMilliseconds = 900;
 export const animationDelaySeconds = animationDelayMilliseconds / 1000;
 
-export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic'];
+export const cardsWhichTargetCards: (CardName | CardNameVOS)[] = ['cat balou', 'panic'];
 
 export const teamLookUp = {
   sheriff: 'The Lawful',
