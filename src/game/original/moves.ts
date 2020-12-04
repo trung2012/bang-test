@@ -861,6 +861,8 @@ export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: nu
   }
 };
 
+export const moves_VOS = {};
+
 const moves: MoveMap<IGameState> = {
   takeDamage,
   drawOneFromDeck,

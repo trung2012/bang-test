@@ -1,10 +1,10 @@
-import { CardName, CardSuit, CardType, ICard } from '../game';
+import { CardName, CardSuit, CardType, ICard, ICardsToGenerate } from '../game';
 import { CardNameVOS } from '../game/expansions/types';
 
 const { nanoid } = require('nanoid');
 const fs = require('fs');
 
-const cardsToGenerateOriginal = {
+const cardsToGenerateOriginal: ICardsToGenerate = {
   equipment: [
     {
       name: 'barrel',
@@ -199,7 +199,7 @@ const cardsToGenerateOriginal = {
   ],
 };
 
-const cardsToGenerate_VOS = {
+const cardsToGenerate_VOS: ICardsToGenerate = {
   equipment: [
     {
       name: 'bounty',
@@ -326,7 +326,7 @@ const cardsToGenerate_VOS = {
   ],
 };
 
-const cardNamesWithReaction: (CardName | CardNameVOS)[] = [
+const cardsWithReaction: (CardName | CardNameVOS)[] = [
   'bang',
   'duel',
   'gatling',
@@ -336,7 +336,7 @@ const cardNamesWithReaction: (CardName | CardNameVOS)[] = [
   'fanning',
 ];
 
-const targetedCardNames: (CardName | CardNameVOS)[] = [
+const targetedCards: (CardName | CardNameVOS)[] = [
   'bang',
   'duel',
   'panic',
@@ -345,10 +345,14 @@ const targetedCardNames: (CardName | CardNameVOS)[] = [
   'missed',
   'fanning',
   'tomahawk',
-  'aim',
   'backfire',
   'saved',
+  'bounty',
+  'ghost',
+  'rattlesnake',
 ];
+
+const playWithBangCards: (CardName | CardNameVOS)[] = ['aim'];
 
 const generateCards = (cardsToGenerate: any) => {
   const cards: ICard[] = [];
@@ -367,8 +371,9 @@ const generateCards = (cardsToGenerate: any) => {
             imageUrl: card.imageUrl,
             suit,
             type,
-            needsReaction: cardNamesWithReaction.includes(card.name),
-            isTargeted: targetedCardNames.includes(card.name),
+            needsReaction: cardsWithReaction.includes(card.name),
+            isTargeted: targetedCards.includes(card.name),
+            playWithBang: playWithBangCards.includes(card.name),
           }));
           cards.push(...cardsToPush);
         } else {
@@ -382,8 +387,9 @@ const generateCards = (cardsToGenerate: any) => {
               imageUrl: card.imageUrl,
               suit: suit as CardSuit,
               type: type as CardType,
-              needsReaction: cardNamesWithReaction.includes(card.name),
-              isTargeted: targetedCardNames.includes(card.name),
+              needsReaction: cardsWithReaction.includes(card.name),
+              isTargeted: targetedCards.includes(card.name),
+              playWithBang: playWithBangCards.includes(card.name),
             };
             cards.push(newCard);
           }

@@ -1,3 +1,4 @@
+import { CardNameVOS } from '../expansions';
 import { ExpansionName } from './config';
 
 export interface IGameState {
@@ -45,7 +46,7 @@ export interface IGamePlayer {
 
 export interface ICard {
   id: string;
-  name: CardName;
+  name: CardName | CardNameVOS;
   value: number;
   suit: CardSuit;
   type: CardType;
@@ -54,6 +55,7 @@ export interface ICard {
   needsReaction?: boolean;
   isTargeted?: boolean;
   rotationValue?: number;
+  playWithBang?: boolean;
 }
 
 export type CardSuit = 'hearts' | 'spades' | 'diamond' | 'clubs';
@@ -84,7 +86,15 @@ export type CharacterName =
   | 'slab the killer'
   | 'suzy lafayette'
   | 'vulture sam'
-  | 'willy the kid';
+  | 'willy the kid'
+  | 'black flower'
+  | 'colorado bill'
+  | 'der spot - burst ringer'
+  | 'evelyn shebang'
+  | 'henry block'
+  | 'lemonade jim'
+  | 'mick defender'
+  | 'tuco franziskaner';
 
 export type CardName =
   | 'barrel'
@@ -115,7 +125,7 @@ export interface ICardsToGenerate {
 }
 
 export interface ICardGenerationInfo {
-  name: CardName;
+  name: CardName | CardNameVOS;
   imageUrl: string;
   values: {
     [suit: string]: number[];
