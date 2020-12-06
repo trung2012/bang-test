@@ -166,6 +166,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
       }
     } else {
       discardHand(G, ctx, targetPlayerId);
+      discardEquipments(G, ctx, targetPlayerId);
     }
 
     if (ctx.events?.endTurn) {
