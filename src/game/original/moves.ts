@@ -104,8 +104,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     ) {
       if (ctx.activePlayers) {
         ctx.events.setActivePlayers({
-          ...ctx.activePlayers,
           value: {
+            ...ctx.activePlayers,
             [targetPlayerId]: stageNames.takeCardFromHand,
           },
           moveLimit: 1,
