@@ -7,9 +7,7 @@ import phases from './phases';
 import setup from './setup';
 import stages from './stages';
 import { ICard, IGameResult, IGameState } from './types';
-// import { drawCardToReact, dynamiteResult, jailResult } from './utils';
 import { config } from './effects';
-// import { setSidKetchumState } from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {

@@ -35,7 +35,7 @@
     "eject": "react-scripts eject",
     "server": "ts-node-dev --ignore-watch \"src\" ./server.ts",
     "client": "react-scripts start",
-    "dev": "concurrently \"yarn run client\" \"yarn run server\" ",
+    "dev": "concurrently \"yarn run server\" \"yarn run client\" ",
     "start": "ts-node -T -O '{\"module\": \"commonjs\"}' ./server.ts",
     "generate": "ts-node-dev --ignore-watch \"src\" ./src/utils/generateCards.ts"
   },

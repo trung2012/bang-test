@@ -823,6 +823,20 @@ export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: nu
   }
 };
 
+export const equipOtherPlayer = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  equipmentIndex: number
+) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const targetPlayer = G.players[targetPlayerId];
+  const equipmentCard = currentPlayer.hand.splice(equipmentIndex, 1)[0];
+  targetPlayer.equipments.push(equipmentCard);
+
+  //TODO: equipment effects
+};
+
 export const moves_VOS = {};
 
 const moves: MoveMap<IGameState> = {
