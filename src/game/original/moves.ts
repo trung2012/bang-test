@@ -423,7 +423,7 @@ const kitCarlsonDraw = (G: IGameState, ctx: Ctx) => {
   const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
   G.deck = G.deck.slice(0, G.deck.length - 3);
   currentPlayer.secretCards.push(...newCards);
-  currentPlayer.cardDrawnAtStartLeft -= 3;
+  currentPlayer.cardDrawnAtStartLeft -= 2;
 
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({

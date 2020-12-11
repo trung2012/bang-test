@@ -51,8 +51,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       numBangsLeft: playerCharacter.name === 'willy the kid' ? 9999 : 1,
       barrelUseLeft: 1,
       cardDiscardedThisTurn: 0,
-      cardDrawnAtStartLeft:
-        playerCharacter.name === 'black jack' || playerCharacter.name === 'kit carlson' ? 3 : 2,
+      cardDrawnAtStartLeft: 2,
       jourdonnaisPowerUseLeft: playerCharacter.name === 'jourdonnais' ? 1 : 0,
     };
 
