@@ -19,12 +19,12 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
   useEffect(() => {
     gsap.from('.game-result-winner', {
       duration: 0.75,
-      x: -1000,
+      x: -2000,
       ease: Back.easeOut,
       stagger: {
         from: 'start',
         axis: 'x',
-        amount: 1.5,
+        amount: 0.8,
       },
     });
   }, []);

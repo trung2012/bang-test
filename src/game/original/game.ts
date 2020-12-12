@@ -36,7 +36,9 @@ const game: Game<IGameState> = {
         };
       } else {
         return {
-          winners: playersAlive.filter(player => player.role === 'outlaw'),
+          winners: ctx.playOrder
+            .map(id => G.players[id])
+            .filter(player => player.role === 'outlaw'),
           team: teamLookUp.outlaw,
         };
       }
@@ -48,7 +50,9 @@ const game: Game<IGameState> = {
 
     if (!areOutlawsOrRenegadeAlive) {
       return {
-        winners: playersAlive,
+        winners: ctx.playOrder
+          .map(id => G.players[id])
+          .filter(player => player.role === 'sheriff' || player.role === 'deputy'),
         team: teamLookUp.sheriff,
       };
     }
