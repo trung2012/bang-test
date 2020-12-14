@@ -1,32 +1,35 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 
 export interface IAnimationContext {
   cardPositions: ICardPositions;
-  setCardPositions: Dispatch<SetStateAction<ICardPositions>>;
+  setCardPositions: (cardId: string, cardPosition: ICardPosition) => void;
 }
 
 interface ICardPositions {
-  [cardId: string]: ICardPosition;
+  [cardId: string]: ICardPosition | undefined;
 }
 interface ICardPosition {
   left: number;
   top: number;
 }
 
-export const AnimationContext = React.createContext<IAnimationContext>({
-  cardPositions: {},
-  setCardPositions: () => {},
-});
+export const AnimationContext = React.createContext<IAnimationContext | undefined>(undefined);
 
 interface IAnimationProviderProps {
   children: React.ReactNode;
 }
 
 export const AnimationProvider: React.FC<IAnimationProviderProps> = ({ children }) => {
-  const [cardPositions, setCardPositions] = useState<ICardPositions>({});
+  const cardPositionsRef = useRef<ICardPositions>({});
+
+  const setCardPositions = (cardId: string, cardPosition: ICardPosition) => {
+    cardPositionsRef.current[cardId] = cardPosition;
+  };
 
   return (
-    <AnimationContext.Provider value={{ cardPositions, setCardPositions }}>
+    <AnimationContext.Provider
+      value={{ cardPositions: cardPositionsRef.current, setCardPositions }}
+    >
       {children}
     </AnimationContext.Provider>
   );

@@ -5,9 +5,10 @@ import { IGamePlayer } from '../../../game';
 import { PlayerHp } from '../PlayerHp';
 import { PlayerDead } from '../PlayerDead';
 import { ReactComponent as SheriffBadge } from '../../../assets/sheriff.svg';
-import './PlayerInfo.scss';
+import explosionImg from '../../../assets/explosion.png';
 import Tippy from '@tippyjs/react';
 import { stageNames } from '../../../game';
+import './PlayerInfo.scss';
 interface IPlayerInfoProps {
   player: IGamePlayer;
 }
@@ -52,6 +53,11 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           </Tippy>
         </div>
         {isClientPlayer && <div className='player-role'>{player.role}</div>}
+        <img
+          className={classnames('dynamite-explosion', `dynamite-explosion-${player.id}`)}
+          src={explosionImg}
+          alt='explosion'
+        />
       </div>
       <PlayerHp hp={player.hp} maxHp={player.maxHp} />
     </>

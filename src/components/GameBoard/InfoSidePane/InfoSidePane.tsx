@@ -3,7 +3,14 @@ import classnames from 'classnames';
 import { useGameContext } from '../../../context';
 import { PlayerButton } from '../PlayerButtons/PlayerButton';
 import { ReactComponent as InfoIcon } from '../../../assets/info.svg';
+import { ReactComponent as ChevronRightIcon } from '../../../assets/chevron_right.svg';
 import './InfoSidePane.scss';
+
+const root = 'info-side-pane';
+const InfoSidePaneClassnames = {
+  root,
+  active: `${root}--active`,
+};
 
 export const InfoSidePane = () => {
   const { G, playerID, playersInfo } = useGameContext();
@@ -32,21 +39,33 @@ export const InfoSidePane = () => {
       )}
       <div
         className={classnames({
-          'info-side-pane': !isSidePaneOpened,
-          'info-side-pane--active': isSidePaneOpened,
+          [InfoSidePaneClassnames.root]: !isSidePaneOpened,
+          [InfoSidePaneClassnames.active]: isSidePaneOpened,
         })}
         onKeyDown={e => onKeyPress(e)}
       >
-        <span className='side-pane-close' onClick={() => setIsSidePaneOpened(false)}>
-          &times;
-        </span>
-        <h2>{clientPlayer.name}</h2>
-        <img
-          className='character-image-info'
-          src={gamePlayer.character.imageUrl}
-          alt={gamePlayer.character.name}
+        <div
+          className={classnames({
+            [`${InfoSidePaneClassnames.root}-main`]: !isSidePaneOpened,
+            [`${InfoSidePaneClassnames.active}-main`]: isSidePaneOpened,
+          })}
+        >
+          <h2>{clientPlayer.name}</h2>
+          <img
+            className='character-image-info'
+            src={gamePlayer.character.imageUrl}
+            alt={gamePlayer.character.name}
+          />
+          <p>{gamePlayer.character.description}</p>
+        </div>
+        <ChevronRightIcon
+          className={classnames({
+            [`${InfoSidePaneClassnames.root}-close`]: !isSidePaneOpened,
+            [`${InfoSidePaneClassnames.active}-close`]: isSidePaneOpened,
+          })}
+          title='Close'
+          onClick={() => setIsSidePaneOpened(false)}
         />
-        <p>{gamePlayer.character.description}</p>
       </div>
     </>
   );

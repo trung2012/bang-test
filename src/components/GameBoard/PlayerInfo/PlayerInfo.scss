@@ -54,3 +54,13 @@
 .player-name {
   font-weight: bold;
 }
+
+.dynamite-explosion {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 400%;
+  opacity: 0;
+  z-index: -100;
+}

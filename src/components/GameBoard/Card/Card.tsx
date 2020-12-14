@@ -1,7 +1,7 @@
 import gsap, { Power3 } from 'gsap';
-import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import cardBackImg from '../../../assets/card_back.png';
-import { AnimationContext } from '../../../context';
+import { useAnimationContext } from '../../../context';
 import { ICard } from '../../../game';
 import classnames from 'classnames';
 import { cardDisplayValue } from './Card.constants';
@@ -26,7 +26,7 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   onClick,
   disabled,
 }) => {
-  const { cardPositions, setCardPositions } = useContext(AnimationContext);
+  const { cardPositions, setCardPositions } = useAnimationContext();
   const cardValue = cardDisplayValue[card.value];
   const cardRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,21 +37,17 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
       if (oldPosition) {
         if (oldPosition.left !== newPosition.left && oldPosition.top !== newPosition.top) {
           gsap.from(`#${CSS.escape(card.id)}`, {
-            duration: 0.8,
             x: oldPosition.left - newPosition.left,
             y: oldPosition.top - newPosition.top,
-            rotate: 0,
+            duration: 0.8,
             ease: Power3.easeOut,
           });
         }
 
-        setCardPositions(prevPositions => ({
-          ...prevPositions,
-          [card.id]: {
-            left: newPosition.left,
-            top: newPosition.top,
-          },
-        }));
+        setCardPositions(card.id, {
+          left: newPosition.left,
+          top: newPosition.top,
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,15 +55,11 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
 
   useEffect(() => {
     if (!cardPositions[card.id] && cardRef.current) {
-      const bodyPosition = document.body.getBoundingClientRect();
       const newPosition = cardRef.current.getBoundingClientRect();
-      setCardPositions(prevPositions => ({
-        ...prevPositions,
-        [card.id]: {
-          left: newPosition.left - bodyPosition.left,
-          top: newPosition.top - bodyPosition.top,
-        },
-      }));
+      setCardPositions(card.id, {
+        left: newPosition.left,
+        top: newPosition.top,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

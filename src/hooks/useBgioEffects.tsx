@@ -1,5 +1,5 @@
 import { useEffectListener } from 'bgio-effects/react';
-import gsap, { Expo, Power3 } from 'gsap';
+import gsap, { Expo, Power3, Power4 } from 'gsap';
 import { Power2, RoughEase, Sine } from 'gsap/all';
 import useSound from 'use-sound';
 import { animationDelayMilliseconds, animationDelaySeconds } from '../game';
@@ -63,21 +63,32 @@ export const useBgioEffects = () => {
 
   useEffectListener<BangEffectsConfig>(
     'explosion',
-    () => {
+    (playerId: string) => {
       playExplosion();
-      gsap.fromTo(
-        document.body,
-        {
-          x: -100,
-          opacity: 0.3,
+
+      const playerExplosionElement = document.getElementsByClassName(
+        `dynamite-explosion-${playerId}`
+      )[0];
+
+      gsap.to(playerExplosionElement, {
+        scale: 1,
+        opacity: 1,
+        zIndex: 1,
+        duration: 0.25,
+        ease: Power4.easeOut,
+        onComplete: () => {
+          gsap.to(playerExplosionElement, {
+            duration: 1.25,
+            opacity: 0,
+            zIndex: -100,
+            ease: Expo.easeIn,
+          });
+          gsap.to(playerExplosionElement, {
+            scale: 0,
+            delay: 1.4,
+          });
         },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.2,
-          ease: RoughEase,
-        }
-      );
+      });
     },
     [playExplosion]
   );

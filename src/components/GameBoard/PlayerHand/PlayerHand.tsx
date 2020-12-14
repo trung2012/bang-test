@@ -6,13 +6,20 @@ import { stageNames } from '../../../game';
 import { ICard } from '../../../game';
 import { hasDynamite, isJailed } from '../../../game';
 import { DraggableCard } from '../DraggableCard';
-import { CardContainerProps, DroppableCard } from '../DroppableCard';
+import { DroppableCard } from '../DroppableCard';
 import './PlayerHand.scss';
 
 interface IPlayerCardsProps {
   playerId: string;
   hand: ICard[];
 }
+
+export type CardContainerProps = {
+  index: number;
+  numCards: number;
+  maxCardRotationAngle: number;
+  shouldAnimate: boolean;
+};
 
 export const cardShuffleAnimation = (destinationTransform: string) =>
   keyframes`
@@ -25,11 +32,14 @@ export const cardShuffleAnimation = (destinationTransform: string) =>
   }
 `;
 
-const DroppableCardContainer = styled.div<
-  CardContainerProps & { numCards: number; maxCardRotationAngle: number; shouldAnimate: boolean }
->`
+const PlayerHandContainer = styled.div<{ shouldAnimate: boolean }>`
+  ${props => !props.shouldAnimate && 'transform: rotate(0) !important'}
+`;
+
+const PlayerHandDroppableCardContainer = styled.div<CardContainerProps>`
   position: absolute;
-  transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: none;
   animation: ${props =>
       props.shouldAnimate
         ? cardShuffleAnimation(
@@ -41,6 +51,10 @@ const DroppableCardContainer = styled.div<
         : 'none'}
     0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   transform-origin: center top;
+
+  &:hover {
+    transform: translateY(-40px);
+  }
 `;
 
 export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
@@ -115,11 +129,10 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   }
 
   return (
-    <div className='player-hand'>
+    <PlayerHandContainer shouldAnimate={shouldAnimate} className='player-hand'>
       {hand.map((card, index) => (
-        <DroppableCardContainer
+        <PlayerHandDroppableCardContainer
           index={index}
-          isCurrentPlayer={playerId === playerID}
           numCards={hand.length}
           maxCardRotationAngle={maxCardRotationAngle}
           shouldAnimate={shouldAnimate}
@@ -133,9 +146,9 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
             cardLocation='hand'
             onClick={() => onPlayerHandCardClick(index)}
           />
-        </DroppableCardContainer>
+        </PlayerHandDroppableCardContainer>
       ))}
-    </div>
+    </PlayerHandContainer>
   );
 };
 

@@ -3,7 +3,9 @@ export const config = {
     gunshot: {
       create: (cardId: string) => cardId,
     },
-    explosion: {},
+    explosion: {
+      create: (playerId: string) => playerId,
+    },
     gunCock: {
       create: (cardId: string) => cardId,
     },

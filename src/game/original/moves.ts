@@ -127,13 +127,13 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
-  ctx.effects.explosion();
+  ctx.effects.explosion(targetPlayerId);
   const targetPlayer = G.players[targetPlayerId];
   targetPlayer.hp -= 3;
 
   const dynamiteCardIndex = targetPlayer.equipments.findIndex(card => card.name === 'dynamite');
-  const dynamiteCard = targetPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
-  if (dynamiteCard) {
+  if (dynamiteCardIndex !== -1) {
+    const dynamiteCard = targetPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
     G.discarded.push(dynamiteCard);
   }
 

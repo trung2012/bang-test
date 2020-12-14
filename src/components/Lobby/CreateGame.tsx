@@ -20,7 +20,11 @@ export const CreateGame = () => {
       <h3>How many players?</h3>
       <div className='create-game-buttons'>
         {bangNumPlayers.map(numPlayers => (
-          <CreateGameButton numPlayers={numPlayers} onClick={() => createGame(numPlayers)} />
+          <CreateGameButton
+            key={numPlayers}
+            numPlayers={numPlayers}
+            onClick={() => createGame(numPlayers)}
+          />
         ))}
       </div>
       <h3>Include Expansions:</h3>
