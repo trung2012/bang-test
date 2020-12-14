@@ -104,8 +104,7 @@ const game: Game<IGameState> = {
         }
 
         player.cardDiscardedThisTurn = 0;
-        player.cardDrawnAtStartLeft =
-          player.character.name === 'black jack' || player.character.name === 'kit carlson' ? 3 : 2;
+        player.cardDrawnAtStartLeft = 2;
         player.barrelUseLeft = 1;
       }
     },

@@ -5,13 +5,15 @@ import { Deck, Discarded } from '../Deck';
 import { GameOver } from '../GameOver';
 import { GeneralStore } from '../GeneralStore';
 import { Player } from '../Player';
-import './GameTable.scss';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { useBgioEffects } from '../../../hooks';
 import { InfoSidePane } from '../InfoSidePane';
+import Modal from '../../shared/Modal';
+import './GameTable.scss';
+import 'react-toastify/dist/ReactToastify.min.css';
+import { CustomButton } from '../../shared';
 
 export const GameTable = () => {
-  const { G, ctx, playersInfo, playerID } = useGameContext();
+  const { G, ctx, moves, playersInfo, playerID, isActive } = useGameContext();
   const { error, setError } = useErrorContext();
   const { players } = G;
 
@@ -32,13 +34,13 @@ export const GameTable = () => {
 
   useEffect(() => {
     if (currentPlayerName) {
-      if (currentPlayerNameRef.current && currentPlayerNameRef.current !== currentPlayerName) {
-        toast.info(`${currentPlayerName}'s turn`, {
-          autoClose: 3000,
-        });
-      } else {
+      if (currentPlayerName && !currentPlayerNameRef.current) {
         currentPlayerNameRef.current = currentPlayerName;
       }
+
+      toast.info(`${currentPlayerName}'s turn`, {
+        autoClose: 3000,
+      });
     }
   }, [currentPlayerName]);
 
@@ -82,6 +84,15 @@ export const GameTable = () => {
           pauseOnHover
         />
         <InfoSidePane />
+        {ctx.phase === 'reselectCharacter' && isActive && (
+          <Modal title='Choose a different character'>
+            <span>Do you want to play with another character?</span>
+            <div className='reselect-character-buttons'>
+              <CustomButton text='Yes' onClick={() => moves.reselectCharacter()} />
+              <CustomButton text='No' onClick={() => moves.endTurn()} />
+            </div>
+          </Modal>
+        )}
       </div>
     );
   }

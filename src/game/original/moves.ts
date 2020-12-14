@@ -5,6 +5,7 @@ import { ICard, IGameState, RobbingType } from './types';
 import {
   isCharacterInGame,
   hasDynamite,
+  getOtherPlayersAliveStages,
   getOtherPlayersAlive,
   shuffle,
   processEquipmentRemoval,
@@ -86,6 +87,10 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
     if (ctx.events?.endStage) {
       ctx.events.endStage();
+    }
+
+    if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+      resetGameStage(G, ctx);
     }
 
     clearCardsInPlay(G, ctx, targetPlayerId);
@@ -300,6 +305,8 @@ export const playCardToReact = (
       return;
     }
   }
+
+  ctx.effects.missed();
 };
 
 const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
@@ -489,6 +496,10 @@ const drawFromPlayerHand = (
   if (ctx.events?.endStage) {
     ctx.events.endStage();
   }
+
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
+  }
 };
 
 const blackJackDraw = (G: IGameState, ctx: Ctx) => {
@@ -559,6 +570,8 @@ export const barrelResult = (
     } else {
       G.reactionRequired.quantity -= 1;
     }
+
+    ctx.effects.missed();
   }
 };
 
@@ -587,16 +600,15 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 };
 
 const beer = (G: IGameState, ctx: Ctx) => {
-  if (ctx.phase === 'suddenDeath') {
-    return INVALID_MOVE;
-  }
-
   const currentPlayer = G.players[ctx.currentPlayer];
   const beerCard = currentPlayer.cardsInPlay[0];
-  if (beerCard) {
-    ctx.effects.beer(beerCard.id);
+
+  if (ctx.phase !== 'suddenDeath') {
+    if (beerCard) {
+      ctx.effects.beer(beerCard.id);
+    }
+    currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
   }
-  currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
 };
 
 const catbalou = (
@@ -618,7 +630,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
     ctx.effects.gatling(gatlingCard.id);
   }
 
-  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.reactToGatling);
+  const activePlayers = getOtherPlayersAliveStages(G, ctx, stageNames.reactToGatling);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
@@ -636,7 +648,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
 const indians = (G: IGameState, ctx: Ctx) => {
   ctx.effects.indians();
 
-  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.reactToIndians);
+  const activePlayers = getOtherPlayersAliveStages(G, ctx, stageNames.reactToIndians);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
@@ -667,10 +679,6 @@ const panic = (
 };
 
 const saloon = (G: IGameState, ctx: Ctx) => {
-  if (G.isSuddenDeathOn) {
-    return INVALID_MOVE;
-  }
-
   for (const playerId of ctx.playOrder) {
     const player = G.players[playerId];
     if (player.hp > 0) {
@@ -705,24 +713,17 @@ const wellsfargo = (G: IGameState, ctx: Ctx) => {
 
 const generalstore = (G: IGameState, ctx: Ctx) => {
   // Take cards equal to the number of players alive
-  const numPlayers = ctx.playOrder.reduce((count, id) => {
-    const player = G.players[id];
+  const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
+  const numGeneralStoreCards = otherPlayersAlive.length + 1;
 
-    if (player.hp > 0) {
-      return count + 1;
-    }
-
-    return count;
-  }, 0);
-
-  const newCards = G.deck.slice(0, numPlayers);
-  G.deck = G.deck.slice(numPlayers);
+  const newCards = G.deck.slice(0, numGeneralStoreCards);
+  G.deck = G.deck.slice(numGeneralStoreCards);
 
   if (newCards) {
     G.generalStore.push(...newCards);
   }
 
-  const activePlayers = getOtherPlayersAlive(G, ctx, stageNames.pickFromGeneralStore);
+  const activePlayers = getOtherPlayersAliveStages(G, ctx, stageNames.pickFromGeneralStore);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
@@ -747,6 +748,10 @@ const pickCardFromGeneralStore = (
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
+  }
+
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
   }
 };
 
@@ -809,6 +814,10 @@ export const endTurn = (G: IGameState, ctx: Ctx) => {
     G.dynamiteTimer = 0;
   }
 
+  if (ctx.phase === 'reselectCharacter' && currentPlayer.hand.length === 0) {
+    initialCardDeal(G, ctx);
+  }
+
   if (ctx.events?.endTurn) {
     ctx.events.endTurn();
   }
@@ -820,6 +829,43 @@ export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: nu
       currentPlayer: stageNames.discard,
       moveLimit: numCardsToDiscard,
     });
+  }
+};
+
+export const initialCardDeal = (G: IGameState, ctx: Ctx) => {
+  let currentPlayer = G.players[ctx.currentPlayer];
+  for (let hp = 1; hp <= currentPlayer.hp; hp++) {
+    const card = G.deck.pop();
+    if (card) {
+      currentPlayer.hand.push(card);
+    }
+  }
+};
+
+export const reselectCharacter = (G: IGameState, ctx: Ctx) => {
+  let currentPlayer = G.players[ctx.currentPlayer];
+  const randomIndex = Math.floor(Math.random() * G.characters.length);
+  const newCharacter = G.characters.splice(randomIndex, 1)[0];
+
+  if (newCharacter) {
+    const newPlayer = {
+      ...currentPlayer,
+      character: newCharacter,
+      gunRange: newCharacter.name === 'rose doolan' ? 2 : 1,
+      actionRange: newCharacter.name === 'rose doolan' ? 2 : 1,
+      numBangsLeft: newCharacter.name === 'willy the kid' ? 9999 : 1,
+      jourdonnaisPowerUseLeft: newCharacter.name === 'jourdonnais' ? 1 : 0,
+      hp: currentPlayer.role === 'sheriff' ? newCharacter.hp + 1 : newCharacter.hp,
+      maxHp: currentPlayer.role === 'sheriff' ? newCharacter.hp + 1 : newCharacter.hp,
+    };
+
+    if (newCharacter.name === 'sid ketchum') {
+      G.sidKetchumId = newPlayer.id;
+    }
+
+    G.players[ctx.currentPlayer] = newPlayer;
+
+    initialCardDeal(G, ctx);
   }
 };
 
@@ -877,6 +923,7 @@ const moves: MoveMap<IGameState> = {
   discardEquipments,
   makePlayerDiscard,
   endTurn,
+  reselectCharacter,
 };
 
 export default moves;

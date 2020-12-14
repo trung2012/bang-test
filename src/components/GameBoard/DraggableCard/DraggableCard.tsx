@@ -82,11 +82,6 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (!isActive || playerID !== playerId) return;
 
-    if (ctx.phase === 'suddenDeath' && card.name === 'beer') {
-      setError('Beer cannot be played when there are 2 players left');
-      return;
-    }
-
     if (activeStage && reactionRequired.cardNeeded && selectedCards && setSelectedCards) {
       if (
         !isSelected &&

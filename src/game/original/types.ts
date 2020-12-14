@@ -8,7 +8,6 @@ export interface IGameState {
   players: IGamePlayerMap;
   playOrder: string[];
   characters: ICharacter[];
-  isSuddenDeathOn: boolean;
   activeStage: string | null;
   reactionRequired: {
     sourcePlayerId: string | null;

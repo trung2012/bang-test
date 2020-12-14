@@ -24,6 +24,7 @@ export const config = {
     barrel: {},
     indians: {},
     panic: {},
+    missed: {},
   },
 };
 

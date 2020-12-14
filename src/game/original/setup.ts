@@ -55,10 +55,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       jourdonnaisPowerUseLeft: playerCharacter.name === 'jourdonnais' ? 1 : 0,
     };
 
-    for (let hp = 1; hp <= player.hp; hp++) {
-      player.hand.push(deck.pop() as ICard);
-    }
-
     if (playerCharacter.name === 'sid ketchum') {
       sidKetchumId = playerId;
     }
@@ -72,13 +68,13 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     discarded,
     players,
     generalStore,
-    isSuddenDeathOn: false,
     activeStage,
     reactionRequired,
     playOrder,
     dynamiteTimer,
     sidKetchumId,
     expansions,
+    characters: charactersShuffled,
   } as IGameState;
 };
 

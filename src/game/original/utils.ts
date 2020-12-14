@@ -64,10 +64,8 @@ export const setSidKetchumStateAfterEndingStage = (
   }
 };
 
-export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx, stageName: string) => {
-  const playersAlive = ctx.playOrder
-    .map(id => G.players[id])
-    .filter(player => player.hp > 0 && player.id !== ctx.currentPlayer);
+export const getOtherPlayersAliveStages = (G: IGameState, ctx: Ctx, stageName: string) => {
+  const playersAlive = getOtherPlayersAlive(G, ctx);
 
   const activePlayers = playersAlive.reduce((players, player) => {
     players[player.id] = stageName;
@@ -75,6 +73,12 @@ export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx, stageName: string)
   }, {} as { [key: string]: any });
 
   return activePlayers;
+};
+
+export const getOtherPlayersAlive = (G: IGameState, ctx: Ctx) => {
+  return ctx.playOrder
+    .map(id => G.players[id])
+    .filter(player => player.hp > 0 && player.id !== ctx.currentPlayer);
 };
 
 export const shuffle = (ctx: Ctx, array: any[]) => {

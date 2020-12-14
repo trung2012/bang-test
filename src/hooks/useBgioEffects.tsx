@@ -16,6 +16,7 @@ const drinking = require('../assets/sounds/drinking.mp3');
 const barrel = require('../assets/sounds/barrel.mp3');
 const indians = require('../assets/sounds/indians.mp3');
 const panic = require('../assets/sounds/panic.mp3');
+const missed = require('../assets/sounds/miss.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot, { volume: 0.3 });
@@ -25,11 +26,12 @@ export const useBgioEffects = () => {
   const [playHorse] = useSound(horse, { volume: 0.3 });
   const [playSwoosh] = useSound(swoosh, { volume: 0.25 });
   const [playGatling] = useSound(gatling, { volume: 0.3 });
-  const [playJail] = useSound(jail, { volume: 0.3 });
+  const [playJail] = useSound(jail, { volume: 0.5 });
   const [playDrinking] = useSound(drinking, { volume: 0.4 });
   const [playBarrel] = useSound(barrel, { volume: 0.3 });
   const [playIndians] = useSound(indians, { volume: 0.25 });
   const [playPanic] = useSound(panic, { volume: 0.15 });
+  const [playMissed] = useSound(missed, { volume: 0.55 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -183,7 +185,7 @@ export const useBgioEffects = () => {
             gsap.to(`#${CSS.escape(cardId)}`, {
               x: 0,
               y: 0,
-              ease: RoughEase,
+              ease: Power3.easeOut,
             });
           },
         }
@@ -251,5 +253,13 @@ export const useBgioEffects = () => {
       });
     },
     [playDrinking]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'missed',
+    () => {
+      playMissed();
+    },
+    [playMissed]
   );
 };
