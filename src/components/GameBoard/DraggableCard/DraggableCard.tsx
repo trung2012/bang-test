@@ -39,6 +39,7 @@ const DragComponentContainer = styled.div<{
     position: 'fixed',
     zIndex: 100,
     transform: 'translate(-50%, -50%)',
+    cursor: 'grabbing',
   },
   ({ draggableDragState }) => ({
     left: draggableDragState.isDragging ? draggableDragState.x : draggableDragState.startingX,

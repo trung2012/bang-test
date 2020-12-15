@@ -57,7 +57,7 @@ const PlayerHandDroppableCardContainer = styled.div<CardContainerProps>`
   }
 `;
 
-export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
+export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   const { G, playerID, ctx, moves, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const clientPlayer = G.players[playerID!];
@@ -115,7 +115,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
       <div className='player-hand'>
         {hand.map((card, index) => (
           <DraggableCard
-            key={card.id}
+            key={`${card.id}-${index}`}
             card={card}
             index={index}
             isFacedUp={isFacedUp}
@@ -136,7 +136,7 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
           numCards={hand.length}
           maxCardRotationAngle={maxCardRotationAngle}
           shouldAnimate={shouldAnimate}
-          key={card.id}
+          key={`${card.id}-${index}`}
         >
           <DroppableCard
             card={card}
@@ -152,4 +152,4 @@ export const PlayerHand: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
   );
 };
 
-export const PlayerHandMemo = React.memo(PlayerHand);
+export const PlayerHand = React.memo(PlayerHandComponent);

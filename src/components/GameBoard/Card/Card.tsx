@@ -33,21 +33,20 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   useLayoutEffect(() => {
     if (cardPositions && cardRef.current) {
       const oldPosition = cardPositions[card.id];
-      const bodyPosition = document.body.getBoundingClientRect();
       const newPosition = cardRef.current.getBoundingClientRect();
       if (oldPosition) {
         if (oldPosition.left !== newPosition.left && oldPosition.top !== newPosition.top) {
           gsap.from(`#${CSS.escape(card.id)}`, {
-            x: oldPosition.left - newPosition.left + 2 * bodyPosition.left,
-            y: oldPosition.top - newPosition.top + 2 * bodyPosition.top,
+            x: oldPosition.left - newPosition.left,
+            y: oldPosition.top - newPosition.top,
             duration: 0.8,
             ease: Power3.easeOut,
           });
         }
 
         setCardPositions(card.id, {
-          left: newPosition.left - bodyPosition.left,
-          top: newPosition.top - bodyPosition.top,
+          left: newPosition.left,
+          top: newPosition.top,
         });
       }
     }
@@ -56,11 +55,10 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
 
   useEffect(() => {
     if (!cardPositions[card.id] && cardRef.current) {
-      const bodyPosition = document.body.getBoundingClientRect();
       const newPosition = cardRef.current.getBoundingClientRect();
       setCardPositions(card.id, {
-        left: newPosition.left - bodyPosition.left,
-        top: newPosition.top - bodyPosition.top,
+        left: newPosition.left,
+        top: newPosition.top,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

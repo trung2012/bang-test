@@ -295,6 +295,10 @@ export const playCardToReact = (
     }
   }
 
+  if (G.reactionRequired.cardNeeded === 'missed') {
+    ctx.effects.missed();
+  }
+
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
     resetGameStage(G, ctx);
   }
@@ -305,8 +309,6 @@ export const playCardToReact = (
       return;
     }
   }
-
-  ctx.effects.missed();
 };
 
 const moveToDiscard = (G: IGameState, ctx: Ctx, card: ICard) => {
