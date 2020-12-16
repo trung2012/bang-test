@@ -46,8 +46,8 @@ export const InfoSidePane = () => {
       >
         <div
           className={classnames({
-            [`${InfoSidePaneClassnames.root}-main`]: !isSidePaneOpened,
-            [`${InfoSidePaneClassnames.active}-main`]: isSidePaneOpened,
+            [`${InfoSidePaneClassnames.root}-section`]: !isSidePaneOpened,
+            [`${InfoSidePaneClassnames.active}-section`]: isSidePaneOpened,
           })}
         >
           <h2>{clientPlayer.name}</h2>

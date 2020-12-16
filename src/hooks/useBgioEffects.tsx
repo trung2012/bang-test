@@ -1,6 +1,6 @@
 import { useEffectListener } from 'bgio-effects/react';
 import gsap, { Expo, Power3, Power4 } from 'gsap';
-import { Power2, RoughEase, Sine } from 'gsap/all';
+import { Bounce, Power2, RoughEase, Sine } from 'gsap/all';
 import useSound from 'use-sound';
 import { animationDelayMilliseconds, animationDelaySeconds } from '../game';
 import { BangEffectsConfig } from '../game';
@@ -17,6 +17,7 @@ const barrel = require('../assets/sounds/barrel.mp3');
 const indians = require('../assets/sounds/indians.mp3');
 const panic = require('../assets/sounds/panic.mp3');
 const missed = require('../assets/sounds/miss.mp3');
+const fanfare = require('../assets/sounds/tada.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot, { volume: 0.3 });
@@ -32,6 +33,7 @@ export const useBgioEffects = () => {
   const [playIndians] = useSound(indians, { volume: 0.25 });
   const [playPanic] = useSound(panic, { volume: 0.15 });
   const [playMissed] = useSound(missed, { volume: 0.55 });
+  const [playFanfare] = useSound(fanfare, { volume: 0.5 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -196,12 +198,48 @@ export const useBgioEffects = () => {
 
   useEffectListener<BangEffectsConfig>(
     'jail',
-    () => {
+    (playerId: string) => {
       setTimeout(() => {
+        const playerJailElement = document.getElementsByClassName(`jail-bars-${playerId}`)[0];
+
+        gsap.fromTo(
+          playerJailElement,
+          {
+            zIndex: 2,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.25,
+            ease: Bounce.easeOut,
+          }
+        );
+
         playJail();
       }, animationDelayMilliseconds);
     },
     [playJail]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'clearJail',
+    (payload: { playerId: string; isFailure: boolean }) => {
+      const { playerId, isFailure } = payload;
+      if (!isFailure) {
+        playFanfare();
+      }
+
+      const playerJailElement = document.getElementsByClassName(`jail-bars-${playerId}`)[0];
+
+      gsap.to(playerJailElement, {
+        opacity: 0,
+        zIndex: -100,
+        y: -100,
+        duration: 0.5,
+        ease: Power3.easeIn,
+      });
+    },
+    [playFanfare]
   );
 
   useEffectListener<BangEffectsConfig>(

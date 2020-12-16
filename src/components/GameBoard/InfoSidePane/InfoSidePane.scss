@@ -6,7 +6,7 @@
   right: 0;
   height: 100vh;
   overflow: auto;
-  max-width: 30rem;
+  max-width: 35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@
     padding: 0 2rem;
   }
 
-  &-main {
+  &-section {
     padding: 1rem;
     padding-top: 2rem;
   }
@@ -48,8 +48,10 @@
 }
 
 .character-image-info {
-  width: 70%;
+  width: 50%;
   margin-bottom: 1rem;
+  box-shadow: $box-shadow-secondary;
+  border-radius: $card-border-radius;
 }
 
 .info-side-pane {

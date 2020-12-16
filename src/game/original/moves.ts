@@ -32,8 +32,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   }
 
   if (targetPlayer.hp <= 0) {
-    const vultureSamId = isCharacterInGame(G, 'vulture sam');
-
     if (ctx.events?.endStage) {
       ctx.events.endStage();
     }
@@ -41,6 +39,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
       resetGameStage(G, ctx);
     }
+
+    const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
     if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
@@ -62,6 +62,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       }
     } else {
       discardHand(G, ctx, targetPlayerId);
+      discardEquipments(G, ctx, targetPlayerId);
     }
 
     // if taking damage on own turn, it must be Duel. So take sourcePlayerId from the duel stage info
@@ -217,6 +218,8 @@ export const jailResult = (G: IGameState, ctx: Ctx) => {
   if (isFailure && ctx.events?.endTurn) {
     ctx.events.endTurn();
   }
+
+  ctx.effects.clearJail({ playerId: ctx.currentPlayer, isFailure });
 };
 
 export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
@@ -398,7 +401,7 @@ const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: nu
   if (targetPlayer.role === 'sheriff') return INVALID_MOVE;
 
   targetPlayer.equipments.push(jailCard);
-  ctx.effects.jail();
+  ctx.effects.jail(targetPlayerId);
 };
 
 const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {

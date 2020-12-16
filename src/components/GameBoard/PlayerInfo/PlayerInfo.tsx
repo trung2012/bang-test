@@ -5,9 +5,10 @@ import { IGamePlayer } from '../../../game';
 import { PlayerHp } from '../PlayerHp';
 import { PlayerDead } from '../PlayerDead';
 import { ReactComponent as SheriffBadge } from '../../../assets/sheriff.svg';
-import explosionImg from '../../../assets/explosion.png';
 import Tippy from '@tippyjs/react';
 import { stageNames } from '../../../game';
+import explosionImg from '../../../assets/explosion.png';
+import jailImg from '../../../assets/jail.png';
 import './PlayerInfo.scss';
 interface IPlayerInfoProps {
   player: IGamePlayer;
@@ -45,11 +46,18 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           })}
         >
           <Tippy content={player.character.description}>
-            <img
-              className='player-character-image'
-              src={player.character.imageUrl}
-              alt={player.character.name}
-            />
+            <>
+              <img
+                className='player-character-image'
+                src={player.character.imageUrl}
+                alt={player.character.name}
+              />
+              <img
+                className={classnames('jail-bars', `jail-bars-${player.id}`)}
+                src={jailImg}
+                alt='jail bars'
+              />
+            </>
           </Tippy>
         </div>
         {isClientPlayer && <div className='player-role'>{player.role}</div>}

@@ -17,7 +17,15 @@ export const config = {
       create: (cardId: string) => cardId,
     },
     swoosh: {},
-    jail: {},
+    jail: {
+      create: (playerId: string) => playerId,
+    },
+    clearJail: {
+      create: (payload: { playerId: string; isFailure: boolean }) => ({
+        playerId: payload.playerId,
+        isFailure: payload.isFailure,
+      }),
+    },
     beer: {
       create: (cardId: string) => cardId,
     },
