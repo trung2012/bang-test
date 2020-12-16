@@ -51,6 +51,26 @@
   //     background-color: rgba(0, 0, 0, 0.2);
   //   }
   // }
+
+  &-enlarged {
+    width: $card-width * 2;
+    height: $card-height * 2;
+
+    .card-value-container {
+      align-items: center;
+      font-size: 2.5rem;
+      left: 1.2rem;
+      bottom: 0.5rem;
+    }
+
+    .card-suit {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+
+    .card-image {
+    }
+  }
 }
 
 .card-dragging {

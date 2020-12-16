@@ -1,11 +1,12 @@
 import gsap, { Power3 } from 'gsap';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import cardBackImg from '../../../assets/card_back.png';
 import { useAnimationContext } from '../../../context';
 import { ICard } from '../../../game';
-import classnames from 'classnames';
-import { cardDisplayValue } from './Card.constants';
+import { CardFront } from './CardFront';
 import './Card.scss';
+import { CardBack } from './CardBack';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/themes/light.css';
 
 interface ICardProps {
   isFacedUp: boolean;
@@ -27,7 +28,6 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   disabled,
 }) => {
   const { cardPositions, setCardPositions } = useAnimationContext();
-  const cardValue = cardDisplayValue[card.value];
   const cardRef = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
@@ -66,52 +66,29 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
 
   if (isFacedUp) {
     return (
-      <div
-        id={card.id}
-        className={classnames('card', className && className, {
-          'card-disabled': disabled,
-        })}
-        style={style}
-        title={card.description ?? ''}
-        onContextMenu={onContextMenu}
-        onClick={onClick}
-        ref={node => {
-          if (node) {
-            cardRef.current = node;
-          }
-        }}
+      <Tippy
+        theme='light'
+        delay={[800, 0]}
+        offset={[0, 100]}
+        arrow={false}
+        content={
+          <CardFront className='card-enlarged' card={card} style={style} disabled={disabled} />
+        }
       >
-        <img className='card-image' src={card.imageUrl} alt='card' />
-        <div className='card-value-container'>
-          <span className='card-value'>{cardValue ?? card.value}</span>
-          <img
-            className='card-suit'
-            src={require(`../../../assets/suit_${card.suit}.png`)}
-            alt='card-suit'
-          />
-        </div>
-      </div>
+        <CardFront
+          className={className}
+          ref={cardRef}
+          card={card}
+          onContextMenu={onContextMenu}
+          onClick={onClick}
+          style={style}
+          disabled={disabled}
+        />
+      </Tippy>
     );
   }
 
-  return (
-    <div
-      id={card.id}
-      className={classnames('card', className && className, {
-        'card-disabled': disabled,
-      })}
-      style={style}
-      title={card.description ?? ''}
-      ref={node => {
-        if (node) {
-          cardRef.current = node;
-        }
-      }}
-      onClick={onClick}
-    >
-      <img className='card-image' src={cardBackImg} alt='card back' />
-    </div>
-  );
+  return <CardBack className={className} ref={cardRef} card={card} onClick={onClick} />;
 };
 
 export const Card = React.memo(CardBaseComponent);

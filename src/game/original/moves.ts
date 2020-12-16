@@ -625,6 +625,9 @@ const catbalou = (
 ) => {
   const targetPlayer = G.players[targetPlayerId];
   const cardToDiscard = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  if (cardToDiscard.name === 'dynamite') {
+    G.dynamiteTimer = 1;
+  }
   G.discarded.push(cardToDiscard);
 };
 
@@ -679,6 +682,9 @@ const panic = (
   const currentPlayer = G.players[ctx.currentPlayer];
   ctx.effects.panic();
   const cardToTake = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  if (cardToTake.name === 'dynamite') {
+    G.dynamiteTimer = 1;
+  }
   currentPlayer.hand.push(cardToTake);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };

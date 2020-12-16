@@ -7,6 +7,7 @@
   width: 10rem;
   height: 15rem;
   border-radius: $card-border-radius;
+  position: relative;
 
   &:hover {
     box-shadow: $box-shadow-deck-active-hover;
