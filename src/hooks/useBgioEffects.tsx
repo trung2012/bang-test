@@ -206,6 +206,7 @@ export const useBgioEffects = () => {
           playerJailElement,
           {
             zIndex: 2,
+            y: '-100%',
           },
           {
             opacity: 1,
@@ -234,7 +235,7 @@ export const useBgioEffects = () => {
       gsap.to(playerJailElement, {
         opacity: 0,
         zIndex: -100,
-        y: -100,
+        y: -2000,
         duration: 0.5,
         ease: Power3.easeIn,
       });

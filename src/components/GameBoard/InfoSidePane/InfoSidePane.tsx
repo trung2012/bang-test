@@ -5,9 +5,10 @@ import { PlayerButton } from '../PlayerButtons/PlayerButton';
 import { ReactComponent as InfoIcon } from '../../../assets/info.svg';
 import { ReactComponent as ChevronRightIcon } from '../../../assets/chevron_right.svg';
 import './InfoSidePane.scss';
+import { RoleCount } from './RoleCount';
 
 const root = 'info-side-pane';
-const InfoSidePaneClassnames = {
+export const InfoSidePaneClassnames = {
   root,
   active: `${root}--active`,
 };
@@ -58,6 +59,7 @@ export const InfoSidePane = () => {
           />
           <p>{gamePlayer.character.description}</p>
         </div>
+        <RoleCount isSidePaneOpened={isSidePaneOpened} />
         <ChevronRightIcon
           className={classnames({
             [`${InfoSidePaneClassnames.root}-close`]: !isSidePaneOpened,

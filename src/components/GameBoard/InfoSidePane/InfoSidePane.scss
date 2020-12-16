@@ -24,7 +24,17 @@
 
   &-section {
     padding: 1rem;
-    padding-top: 2rem;
+
+    span {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-right: 0.75rem;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &-close {

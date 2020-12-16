@@ -147,6 +147,13 @@ export const characters: ICharacter[] = [
   },
 ];
 
+export enum RoleOrder {
+  sheriff,
+  renegade,
+  outlaws,
+  deputy,
+}
+
 export const gameRolesByNumPlayers: ILookup = {
   // number of [sheriff, renegade, outlaws, deputy]
   2: [1, 1, 0, 0],

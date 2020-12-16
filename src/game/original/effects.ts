@@ -33,6 +33,7 @@ export const config = {
     indians: {},
     panic: {},
     missed: {},
+    gameOver: {},
   },
 };
 
