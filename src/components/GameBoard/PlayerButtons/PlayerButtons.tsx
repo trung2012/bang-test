@@ -8,14 +8,16 @@ import './PlayerButtons.scss';
 import { delayBetweenActions, hasDynamite, IGamePlayer, isJailed, stageNames } from '../../../game';
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
-  const { G, moves, playerID, isActive } = useGameContext();
+  const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const isCurrentPlayer = playerID === player.id;
   const isReactingToBullets =
-    G.activeStage === stageNames.reactToBang ||
-    G.activeStage === stageNames.reactToGatling ||
-    G.activeStage === stageNames.reactToIndians ||
-    G.activeStage === stageNames.duel;
+    (G.activeStage === stageNames.reactToBang ||
+      G.activeStage === stageNames.reactToGatling ||
+      G.activeStage === stageNames.reactToIndians ||
+      G.activeStage === stageNames.duel) &&
+    !!ctx.activePlayers &&
+    ctx.activePlayers[player.id];
 
   const onEndTurnClick = () => {
     if (!isCurrentPlayer || !isActive) {
