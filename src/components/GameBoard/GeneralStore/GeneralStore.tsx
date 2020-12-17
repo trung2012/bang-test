@@ -1,12 +1,18 @@
 import React from 'react';
-import { useGameContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { Card } from '../Card';
 
 export const GeneralStore = () => {
   const { G, moves, playerID } = useGameContext();
+  const { setError } = useErrorContext();
   const { generalStore } = G;
 
   const pickFromGeneralStore = (index: number) => {
+    if (playerID !== G.generalStoreOrder[0]) {
+      setError('It is not your turn yet');
+      return;
+    }
+
     moves.pickCardFromGeneralStore(index, playerID);
   };
 

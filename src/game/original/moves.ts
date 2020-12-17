@@ -743,6 +743,12 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
     });
   }
   G.activeStage = stageNames.pickFromGeneralStore;
+
+  // Order to pick from general store starting from the current player
+  G.generalStoreOrder = [
+    ...ctx.playOrder.slice(ctx.playOrderPos),
+    ...ctx.playOrder.slice(0, ctx.playOrderPos),
+  ];
 };
 
 const pickCardFromGeneralStore = (
@@ -759,6 +765,7 @@ const pickCardFromGeneralStore = (
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
+    G.generalStoreOrder.shift();
   }
 
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {

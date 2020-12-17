@@ -5,6 +5,7 @@ export interface IGameState {
   deck: ICard[];
   discarded: ICard[];
   generalStore: ICard[];
+  generalStoreOrder: string[];
   players: IGamePlayerMap;
   playOrder: string[];
   characters: ICharacter[];

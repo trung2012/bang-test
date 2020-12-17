@@ -32,7 +32,7 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
       stagger: {
         from: 'start',
         axis: 'x',
-        amount: 0.8,
+        amount: 0.5,
       },
     });
   }, []);
