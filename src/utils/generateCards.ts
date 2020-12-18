@@ -1,5 +1,5 @@
 import { CardName, CardSuit, CardType, ICard, ICardsToGenerate } from '../game';
-import { CardNameVOS } from '../game/expansions/types';
+import { CardNameExpansion } from '../game/expansions/types';
 
 const { nanoid } = require('nanoid');
 const fs = require('fs');
@@ -18,6 +18,7 @@ const cardsToGenerateOriginal: ICardsToGenerate = {
       name: 'dynamite',
       imageUrl:
         'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/dynamite_gq525m.png',
+      timer: 1,
       values: {
         hearts: [2],
       },
@@ -326,17 +327,316 @@ const cardsToGenerate_VOS: ICardsToGenerate = {
   ],
 };
 
-const cardsWithReaction: (CardName | CardNameVOS)[] = [
-  'bang',
-  'duel',
-  'gatling',
-  'general store',
-  'indians',
-  'tornado',
-  'fanning',
-];
+const cardsToGenerate_DodgeCity: ICardsToGenerate = {
+  equipment: [
+    {
+      name: 'barrel',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/barile_z8ibbs.png',
+      values: {
+        clubs: [14],
+      },
+    },
+    {
+      name: 'binocular',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_binocolo_laikrj.png',
+      values: {
+        diamond: [10],
+      },
+    },
+    {
+      name: 'dynamite',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/dynamite_gq525m.png',
+      timer: 1,
+      values: {
+        clubs: [10],
+      },
+    },
+    {
+      name: 'hideout',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_riparo_pmkcax.png',
+      values: {
+        clubs: [10],
+      },
+    },
+    {
+      name: 'mustang',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mustang_pht7ms.png',
+      values: {
+        hearts: [5],
+      },
+    },
+    {
+      name: 'remington',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/remington_dtsgzi.png',
+      values: {
+        diamond: [6],
+      },
+    },
+    {
+      name: 'rev carabine',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/carabine_czyogt.png',
+      values: {
+        spades: [5],
+      },
+    },
+  ],
+  action: [
+    {
+      name: 'bang',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888948/bang/original/bang_elk9mw.png',
+      values: {
+        spades: [8],
+        clubs: [5, 7],
+      },
+    },
+    {
+      name: 'beer',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/birra_hjgptv.png',
+      values: {
+        hearts: [6],
+        spades: [6],
+      },
+    },
+    {
+      name: 'cat balou',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/catbalou_fihyoi.png',
+      values: {
+        clubs: [8],
+      },
+    },
+    {
+      name: 'general store',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/emporio_ldjfxn.png',
+      values: {
+        spades: [14],
+      },
+    },
+    {
+      name: 'indians',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/indiani_mlfftz.png',
+      values: {
+        diamond: [5],
+      },
+    },
+    {
+      name: 'missed',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/mancato_r2oh5w.png',
+      values: {
+        diamond: [8],
+      },
+    },
+    {
+      name: 'panic',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/panico_fdczgp.png',
+      values: {
+        hearts: [11],
+      },
+    },
+    {
+      name: 'punch',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_pugno_oapgw5.png',
+      values: {
+        spades: [10],
+      },
+    },
+    {
+      name: 'brawl',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_rissa_jwvmtm.png',
+      values: {
+        spades: [11],
+      },
+    },
+    {
+      name: 'dodge',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_schivata_gwbp7a.png',
+      values: {
+        hearts: [13],
+        diamond: [7],
+      },
+    },
+    {
+      name: 'rag time',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_rag_time_i4vvik.png',
+      values: {
+        hearts: [9],
+      },
+    },
+    {
+      name: 'springfield',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_springfield_wqihck.png',
+      values: {
+        spades: [13],
+      },
+    },
+    {
+      name: 'tequila',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_tequila_oirtpx.png',
+      values: {
+        clubs: [9],
+      },
+    },
+    {
+      name: 'whisky',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888458/bang/dodge%20city/03_whisky_a7xeu5.png',
+      values: {
+        hearts: [12],
+      },
+    },
+  ],
+  green: [
+    {
+      name: 'bible',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bibbia_wybqkm.png',
+      values: {
+        hearts: [10],
+      },
+      timer: 1,
+    },
+    {
+      name: 'buffalo rifle',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888455/bang/dodge%20city/03_fucile_da_caccia_bvuddx.png',
+      values: {
+        clubs: [12],
+      },
+      timer: 1,
+    },
+    {
+      name: 'can can',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_can_can_g9g1fs.png',
+      values: {
+        clubs: [11],
+      },
+      timer: 1,
+    },
+    {
+      name: 'canteen',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_borraccia_goxxde.png',
+      values: {
+        hearts: [7],
+      },
+      timer: 1,
+    },
+    {
+      name: 'conestoga',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_conestoga_w6xgyd.png',
+      values: {
+        diamond: [9],
+      },
+      timer: 1,
+    },
+    {
+      name: 'derringer',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_derringer_l0piyc.png',
+      values: {
+        spades: [7],
+      },
+      timer: 1,
+    },
+    {
+      name: 'howitzer',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888455/bang/dodge%20city/03_howitzer_ffzq2g.png',
+      values: {
+        spades: [9],
+      },
+      timer: 1,
+    },
+    {
+      name: 'iron plate',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_placca_di_ferro_gyceky.png',
+      values: {
+        diamond: [14],
+        spades: [12],
+      },
+      timer: 1,
+    },
+    {
+      name: 'knife',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_pugnale_kidolt.png',
+      values: {
+        hearts: [8],
+      },
+      timer: 1,
+    },
+    {
+      name: 'pepperbox',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_pepperbox_hder4s.png',
+      values: {
+        hearts: [14],
+      },
+      timer: 1,
+    },
+    {
+      name: 'pony express',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_pony_express_ymswhj.png',
+      values: {
+        diamond: [12],
+      },
+      timer: 1,
+    },
+    {
+      name: 'sombrero',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_sombrero_qeq9ow.png',
+      values: {
+        clubs: [7],
+      },
+      timer: 1,
+    },
+    {
+      name: 'ten gallon hat',
+      imageUrl:
+        'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_cappello_uqibi7.png',
+      values: {
+        diamond: [11],
+      },
+      timer: 1,
+    },
+  ],
+};
 
-const targetedCards: (CardName | CardNameVOS)[] = [
+// const cardsWithReaction: (CardName | CardNameExpansion)[] = [
+//   'bang',
+//   'duel',
+//   'gatling',
+//   'general store',
+//   'indians',
+//   'tornado',
+//   'fanning',
+// ];
+
+const targetedCards: (CardName | CardNameExpansion)[] = [
   'bang',
   'duel',
   'panic',
@@ -350,19 +650,43 @@ const targetedCards: (CardName | CardNameVOS)[] = [
   'bounty',
   'ghost',
   'rattlesnake',
+  'punch',
+  'rag time',
+  'springfield',
+  'buffalo rifle',
+  'can can',
+  'conestoga',
+  'derringer',
+  'knife',
+  'pepperbox',
 ];
 
-const playWithBangCards: (CardName | CardNameVOS)[] = ['aim'];
+const cardsThatNeedDiscard: (CardName | CardNameExpansion)[] = [
+  'rag time',
+  'springfield',
+  'tequila',
+  'whisky',
+];
 
-const generateCards = (cardsToGenerate: any) => {
+const playWithBangCards: (CardName | CardNameExpansion)[] = ['aim'];
+
+const generateCards = (cardsToGenerate: ICardsToGenerate, type: string) => {
+  fs.appendFileSync(
+    `./cards${type ? `_${type}` : ''}.ts`,
+    `import { ICard } from '../original';\n
+    export const cards${type ? `_${type}` : ''}: ICard[] = `
+  );
+
   const cards: ICard[] = [];
   for (const type in cardsToGenerate) {
     const cardsInType = cardsToGenerate[type];
 
     cardsInType.forEach((card: any) => {
       const { values } = card;
+
       for (const suit in values) {
         const range = values[suit];
+
         if (range.length <= 1) {
           const cardsToPush = range.map((value: number) => ({
             id: nanoid(),
@@ -371,10 +695,20 @@ const generateCards = (cardsToGenerate: any) => {
             imageUrl: card.imageUrl,
             suit,
             type,
-            needsReaction: cardsWithReaction.includes(card.name),
             isTargeted: targetedCards.includes(card.name),
-            playWithBang: playWithBangCards.includes(card.name),
           }));
+
+          if (playWithBangCards.includes(card.name)) {
+            cardsToPush[0].playWithBang = true;
+          }
+
+          if (cardsThatNeedDiscard.includes(card.name)) {
+            cardsToPush[0].needsDiscard = true;
+          }
+
+          if (card.timer !== undefined) {
+            cardsToPush[0].timer = 1;
+          }
           cards.push(...cardsToPush);
         } else {
           const min = range[0];
@@ -387,10 +721,21 @@ const generateCards = (cardsToGenerate: any) => {
               imageUrl: card.imageUrl,
               suit: suit as CardSuit,
               type: type as CardType,
-              needsReaction: cardsWithReaction.includes(card.name),
               isTargeted: targetedCards.includes(card.name),
-              playWithBang: playWithBangCards.includes(card.name),
             };
+
+            if (playWithBangCards.includes(card.name)) {
+              card.playWithBang = true;
+            }
+
+            if (cardsThatNeedDiscard.includes(card.name)) {
+              card.needsDiscard = true;
+            }
+
+            if (card.timer !== undefined) {
+              newCard.timer = 1;
+            }
+
             cards.push(newCard);
           }
         }
@@ -398,11 +743,9 @@ const generateCards = (cardsToGenerate: any) => {
     });
   }
 
-  fs.appendFile(`./cards_VOS.ts`, JSON.stringify(cards, null, 4), (err: Error) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+  fs.appendFileSync(`./cards${type ? `_${type}` : ''}.ts`, JSON.stringify(cards, null, 4));
 };
 
-generateCards(cardsToGenerate_VOS);
+generateCards(cardsToGenerateOriginal, '');
+generateCards(cardsToGenerate_VOS, 'VOS');
+generateCards(cardsToGenerate_DodgeCity, 'DodgeCity');

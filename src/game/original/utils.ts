@@ -3,8 +3,15 @@ import { gunRange, stageNames } from './constants';
 import { clearCardsInPlay } from './moves';
 import { IGameState, IGamePlayer, CharacterName, ICard, RobbingType } from './types';
 
-export const hasDynamite = (player: IGamePlayer) =>
-  player.equipments.find(card => card.name === 'dynamite');
+export const hasDynamite = (player: IGamePlayer) => {
+  return player.equipments.find(card => card.name === 'dynamite');
+};
+
+export const hasActiveDynamite = (player: IGamePlayer) => {
+  const dynamiteCard = hasDynamite(player);
+  return dynamiteCard && dynamiteCard.timer === 0;
+};
+
 export const isJailed = (player: IGamePlayer) =>
   player.equipments.find(card => card.name === 'jail');
 
@@ -107,12 +114,16 @@ export const processEquipmentRemoval = (
           }
         }
       }
-      if (cardToDiscard.name === 'scope') {
+      if (cardToDiscard.name === 'scope' || cardToDiscard.name === 'binocular') {
         targetPlayer.actionRange -= 1;
         targetPlayer.gunRange -= 1;
       }
       break;
+    case 'green':
+      cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      break;
   }
+
   return cardToDiscard;
 };
 

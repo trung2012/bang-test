@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
-import { useErrorContext, useGameContext } from '../../../context';
+import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
 import { ICard, IGamePlayer } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
 import { PlayerEquipments } from '../PlayerEquipments';
+import { PlayerGreenEquipments } from '../PlayerGreenEquipments';
 import { PlayerHand } from '../PlayerHand';
 import { PlayerInfo } from '../PlayerInfo';
 import { PlayerSecretCards } from '../PlayerSecretCards';
@@ -18,8 +19,9 @@ interface IPlayerProps {
 }
 
 export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
-  const { G, ctx, playersInfo, moves } = useGameContext();
+  const { G, ctx, playersInfo, moves, isActive } = useGameContext();
   const { setError } = useErrorContext();
+  const { selectedCards, setSelectedCards } = useCardsContext();
   const { players } = G;
 
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
@@ -96,6 +98,16 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
     }
   };
 
+  useEffect(() => {
+    if (!isActive && (selectedCards.hand?.length || selectedCards.green?.length)) {
+      setSelectedCards({
+        hand: [],
+        green: [],
+        equipment: [],
+      });
+    }
+  }, [isActive, selectedCards, setSelectedCards]);
+
   return (
     <div className={`player player${playerIndex}`}>
       <Droppable accepts='card' onDrop={onDrop}>
@@ -107,6 +119,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         )}
       </Droppable>
       <PlayerEquipments equipments={player.equipments} playerId={player.id} />
+      <PlayerGreenEquipments equipments={player.equipmentsGreen} playerId={player.id} />
       <PlayerHand hand={player.hand} playerId={player.id} />
       <PlayerCardsInPlay cards={player.cardsInPlay} playerId={player.id} />
       <PlayerSecretCards cards={player.secretCards} playerId={player.id} />

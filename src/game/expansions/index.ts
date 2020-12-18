@@ -1,3 +1,3 @@
-export * from './cards_VOS';
+export * from './cards';
 export * from './constants';
 export * from './types';

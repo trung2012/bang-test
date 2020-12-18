@@ -22,6 +22,10 @@ export const calculateDistanceFromTarget = (
     trueDistance += 1;
   }
 
+  if (targetPlayer.equipments.find(card => card.name === 'hideout')) {
+    trueDistance += 1;
+  }
+
   if (targetPlayer.character.name === 'paul regret') {
     trueDistance += 1;
   }

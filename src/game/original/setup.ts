@@ -1,14 +1,30 @@
 import { Ctx } from 'boardgame.io/dist/types/src/types';
 import { randomRotationValue } from '../../utils';
 import { generateRoles } from '../../utils/generateRoles';
-import { cards } from './cards';
+import { CardNameExpansion } from '../expansions';
+import { cards, cardsFor8 } from './cards';
 import { ISetupData } from './config';
 import { characters, gameRolesByNumPlayers } from './constants';
-import { ICard, ICharacter, IGamePlayer, IGamePlayerMap, IGameState, Role } from './types';
+import {
+  CardName,
+  ICard,
+  ICharacter,
+  IGamePlayer,
+  IGamePlayerMap,
+  IGameState,
+  Role,
+} from './types';
 
 const setup = (ctx: Ctx, setupData: ISetupData) => {
+  const expansions = setupData?.expansions ?? [];
   const roles = generateRoles(gameRolesByNumPlayers[ctx.numPlayers]);
-  const cardsShuffled = ctx.random!.Shuffle(cards);
+
+  let gameCards = [...cards];
+  if (expansions.length === 0 && ctx.playOrder.length === 8) {
+    gameCards.push(...cardsFor8);
+  }
+
+  const cardsShuffled = ctx.random!.Shuffle(gameCards);
   const deck: ICard[] = cardsShuffled.map(card => ({
     ...card,
     rotationValue: randomRotationValue(),
@@ -18,16 +34,15 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const charactersShuffled = ctx.random!.Shuffle(characters);
   const discarded: ICard[] = [];
   const generalStore: ICard[] = [];
+  const generalStoreOrder: string[] = [];
   const players: IGamePlayerMap = {};
   const playOrder: string[] = [];
   const reactionRequired = {
-    cardNeeded: null,
+    cardNeeded: [] as (CardName | CardNameExpansion)[],
     quantity: 1,
   };
   const activeStage = null;
-  const dynamiteTimer = 1;
   let sidKetchumId: string | null = null;
-  const expansions = setupData?.expansions ?? [];
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -42,6 +57,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       maxHp: playerRole === 'sheriff' ? playerCharacter.hp + 1 : playerCharacter.hp,
       hand,
       equipments,
+      equipmentsGreen: [],
       character: playerCharacter,
       role: playerRole,
       gunRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
@@ -68,10 +84,10 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     discarded,
     players,
     generalStore,
+    generalStoreOrder,
     activeStage,
     reactionRequired,
     playOrder,
-    dynamiteTimer,
     sidKetchumId,
     expansions,
     characters: charactersShuffled,

@@ -1,7 +1,7 @@
 import { Game } from 'boardgame.io';
 import { TurnOrder } from 'boardgame.io/core';
 import { EffectsPlugin } from 'bgio-effects/plugin';
-import { gameNames, teamLookUp } from './constants';
+import { gameNames, stageNames, teamLookUp } from './constants';
 import moves from './moves';
 import phases from './phases';
 import setup from './setup';
@@ -87,7 +87,11 @@ const game: Game<IGameState> = {
       );
       if (suzyPlayerId !== undefined) {
         const suzyPlayer = G.players[suzyPlayerId];
-        if (suzyPlayer.hp > 0 && suzyPlayer.hand.length === 0) {
+        if (
+          suzyPlayer.hp > 0 &&
+          suzyPlayer.hand.length === 0 &&
+          G.activeStage !== stageNames.duel
+        ) {
           const newCard = G.deck.pop();
           if (newCard) {
             suzyPlayer.hand.push(newCard);

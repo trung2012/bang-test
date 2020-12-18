@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ExpansionName } from '../../game';
-import { setSetupData } from '../../store';
+import { selectSetUpData, setSetupData } from '../../store';
 import './Toggle.scss';
 
 interface IToggleProps {
@@ -10,6 +10,7 @@ interface IToggleProps {
 
 export const Toggle: React.FC<IToggleProps> = ({ option }) => {
   const dispatch = useDispatch();
+  const setupData = useSelector(selectSetUpData);
 
   return (
     <div className='toggle-option'>
@@ -18,9 +19,9 @@ export const Toggle: React.FC<IToggleProps> = ({ option }) => {
         type='checkbox'
         id='toggle'
         className='checkbox'
-        onChange={() => dispatch(setSetupData(option))}
+        checked={setupData?.expansions.includes(option)}
       />
-      <label htmlFor='toggle' className='switch' />
+      <label htmlFor='toggle' className='switch' onClick={() => dispatch(setSetupData(option))} />
     </div>
   );
 };

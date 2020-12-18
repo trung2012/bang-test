@@ -14,3 +14,29 @@ export type CardNameVOS =
   | 'rattlesnake'
   | 'lemat'
   | 'ghost';
+
+export type CardNameDodgeCity =
+  | 'binocular'
+  | 'hideout'
+  | 'brawl'
+  | 'dodge'
+  | 'punch'
+  | 'rag time'
+  | 'springfield'
+  | 'tequila'
+  | 'whisky'
+  | 'bible'
+  | 'buffalo rifle'
+  | 'can can'
+  | 'canteen'
+  | 'conestoga'
+  | 'derringer'
+  | 'howitzer'
+  | 'iron plate'
+  | 'knife'
+  | 'pepperbox'
+  | 'pony express'
+  | 'sombrero'
+  | 'ten gallon hat';
+
+export type CardNameExpansion = CardNameVOS | CardNameDodgeCity;

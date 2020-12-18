@@ -37,7 +37,7 @@
     "client": "react-scripts start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\" ",
     "start": "ts-node -T -O '{\"module\": \"commonjs\"}' ./server.ts",
-    "generate": "ts-node-dev --ignore-watch \"src\" ./src/utils/generateCards.ts"
+    "generate": "ts-node-dev ./src/utils/generateCards.ts"
   },
   "eslintConfig": {
     "extends": "react-app"

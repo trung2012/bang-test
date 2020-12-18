@@ -2,11 +2,16 @@
 
 .toggle-option {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   cursor: pointer;
 
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+
   span {
-    margin-right: 1rem;
+    margin-right: 2rem;
     text-transform: capitalize;
   }
 }

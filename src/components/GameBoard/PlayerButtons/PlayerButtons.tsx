@@ -5,7 +5,13 @@ import { ReactComponent as PassIcon } from '../../../assets/pass.svg';
 import { ReactComponent as PowerIcon } from '../../../assets/power.svg';
 import { ReactComponent as DamageIcon } from '../../../assets/damage.svg';
 import './PlayerButtons.scss';
-import { delayBetweenActions, hasDynamite, IGamePlayer, isJailed, stageNames } from '../../../game';
+import {
+  delayBetweenActions,
+  hasActiveDynamite,
+  IGamePlayer,
+  isJailed,
+  stageNames,
+} from '../../../game';
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
   const { G, ctx, moves, playerID, isActive } = useGameContext();
@@ -36,7 +42,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       return;
     }
 
-    if (hasDynamite(player) && G.dynamiteTimer === 0) {
+    if (hasActiveDynamite(player)) {
       setError('Please draw for dynamite');
       return;
     }

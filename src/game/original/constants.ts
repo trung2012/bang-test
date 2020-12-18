@@ -1,4 +1,4 @@
-import { CardNameVOS } from '../expansions';
+import { CardNameExpansion } from '../expansions';
 import { ExpansionName } from './config';
 import { CardName, ICharacter, ILookup } from './types';
 
@@ -201,7 +201,7 @@ export const delayBetweenActions = 2000;
 export const animationDelayMilliseconds = 900;
 export const animationDelaySeconds = animationDelayMilliseconds / 1000;
 
-export const cardsWhichTargetCards: (CardName | CardNameVOS)[] = ['cat balou', 'panic'];
+export const cardsWhichTargetCards: (CardName | CardNameExpansion)[] = ['cat balou', 'panic'];
 
 export const teamLookUp = {
   sheriff: 'The Lawful',
@@ -221,6 +221,6 @@ export const roleImageSrcLookup = {
     'https://res.cloudinary.com/trungpham/image/upload/v1602888950/bang/original/rinnegato_snqmce.png',
 };
 
-export const bangExpansions: ExpansionName[] = ['valley of shadows'];
+export const bangExpansions: ExpansionName[] = ['valley of shadows', 'dodge city'];
 
 export const bangNumPlayers = [2, 4, 5, 6, 7, 8];
