@@ -1,5 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
+import { clearCardsInPlay } from './moves';
 import { IGameState, IGamePlayer, CharacterName, ICard, RobbingType } from './types';
 
 export const hasDynamite = (player: IGamePlayer) =>
@@ -113,4 +114,24 @@ export const processEquipmentRemoval = (
       break;
   }
   return cardToDiscard;
+};
+
+export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGamePlayer) => {
+  const beerCardIndexes = targetPlayer.hand
+    .map((card, index) => (card.name === 'beer' ? index : -1))
+    .filter(index => index !== -1);
+
+  const hpAfterBeers = targetPlayer.hp + beerCardIndexes.length;
+
+  if (hpAfterBeers > 0) {
+    for (const beerCardIndex of beerCardIndexes) {
+      if (beerCardIndex !== -1 && ctx.phase !== 'suddenDeath') {
+        const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
+        targetPlayer.cardsInPlay.push(cardToPlay);
+        targetPlayer.hp = hpAfterBeers;
+      }
+    }
+
+    clearCardsInPlay(G, ctx, targetPlayer.id);
+  }
 };

@@ -9,6 +9,7 @@ import {
   getOtherPlayersAlive,
   shuffle,
   processEquipmentRemoval,
+  checkIfBeersCanSave,
 } from './utils';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -22,14 +23,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     targetPlayer.jourdonnaisPowerUseLeft = 1;
   }
 
-  const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
-    const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
-    targetPlayer.cardsInPlay.push(cardToPlay);
-    targetPlayer.hp = 1;
-
-    clearCardsInPlay(G, ctx, targetPlayerId);
-  }
+  checkIfBeersCanSave(G, ctx, targetPlayer);
 
   if (targetPlayer.hp <= 0) {
     if (ctx.events?.endStage) {
@@ -143,11 +137,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
     G.discarded.push(dynamiteCard);
   }
 
-  const beerCardIndex = targetPlayer.hand.findIndex(card => card.name === 'beer');
-  if (beerCardIndex !== -1 && targetPlayer.hp === 0 && ctx.phase !== 'suddenDeath') {
-    playCard(G, ctx, beerCardIndex, targetPlayerId);
-    targetPlayer.hp = 1;
-  }
+  checkIfBeersCanSave(G, ctx, targetPlayer);
 
   clearCardsInPlay(G, ctx, targetPlayerId);
   G.dynamiteTimer = 1;
