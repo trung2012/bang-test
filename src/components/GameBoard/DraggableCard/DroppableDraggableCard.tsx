@@ -1,47 +1,27 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
-import { ICard, RobbingType } from '../../../game';
-import { Card } from '../Card';
-import './DroppableCard.scss';
-import { useErrorContext, useGameContext } from '../../../context';
-import { cardsWhichTargetCards, delayBetweenActions } from '../../../game';
+import { DraggableCard } from '.';
+import { useGameContext, useErrorContext } from '../../../context';
+import { cardsWhichTargetCards, RobbingType, delayBetweenActions, ICard } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
-import styled from '@emotion/styled';
-interface IDroppableCardProps {
+import { DroppableCardContainer } from '../DroppableCard';
+
+interface IDroppableDraggableCardProps {
+  playerId: string;
   card: ICard;
   index: number;
-  isFacedUp: boolean;
-  playerId: string;
-  cardLocation: RobbingType;
-  onClick?: () => void;
 }
 
-export type CardContainerProps = {
-  index: number;
-  isCurrentPlayer: boolean;
-};
-
-export const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  &:hover {
-    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-4rem)' : 'translateY(4rem)'} `};
-    z-index: 11;
-  }
-`;
-
-export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
+export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
   card,
   index,
-  isFacedUp,
   playerId,
-  cardLocation,
-  onClick,
 }) => {
   const { G, playersInfo, moves, playerID } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
 
-  const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
+  const onDrop = (data: any) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
 
@@ -63,7 +43,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
 
     setTimeout(() => {
       const moveName = sourceCard.name.replace(' ', '').toLowerCase();
-      const robbingType: RobbingType = cardLocation;
+      const robbingType: RobbingType = 'green';
       moves.clearCardsInPlay(playerId);
       if (moves[moveName]) {
         moves[moveName](playerId, index, robbingType);
@@ -79,11 +59,16 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
           className='droppable-card'
           {...droppableDragState.events}
         >
-          <Card card={card} isFacedUp={isFacedUp} onClick={onClick} />
+          <DraggableCard
+            key={`${card.id}-${index}`}
+            card={card}
+            index={index}
+            isFacedUp={true}
+            playerId={playerId}
+            cardLocation='green'
+          />
         </DroppableCardContainer>
       )}
     </Droppable>
   );
 };
-
-export const DroppableCard = React.memo(DroppableCardComponent);

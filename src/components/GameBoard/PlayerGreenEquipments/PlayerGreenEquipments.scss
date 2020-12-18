@@ -1,0 +1,7 @@
+.player-green-equipments {
+  display: flex;
+
+  & > * {
+    margin-right: -5%;
+  }
+}

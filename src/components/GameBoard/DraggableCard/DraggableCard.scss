@@ -5,13 +5,3 @@
   z-index: 10;
   margin-right: -4%;
 }
-
-.draggable-card {
-  &:hover {
-    transform: translateY(-24%);
-  }
-
-  &-selected {
-    transform: translateY(-8rem);
-  }
-}

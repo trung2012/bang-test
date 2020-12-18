@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useErrorContext, useGameContext } from '../../../context';
+import React from 'react';
 import { ICard } from '../../../game';
-import { DraggableCard } from '../DraggableCard';
+import { DroppableDraggableCard } from '../DraggableCard/DroppableDraggableCard';
+import './PlayerGreenEquipments.scss';
 
 interface IPlayerGreenEquipments {
   playerId: string;
@@ -12,29 +12,14 @@ export const PlayerGreenEquipments: React.FC<IPlayerGreenEquipments> = ({
   playerId,
   equipments,
 }) => {
-  const { G, playerID, ctx, moves, isActive } = useGameContext();
-  const { setError } = useErrorContext();
-  const clientPlayer = G.players[playerID!];
-  const targetPlayer = G.players[playerId];
-  const [selectedCards, setSelectedCards] = useState<number[]>([]);
-
   if (!equipments?.length) {
     return null;
   }
 
   return (
-    <div className='player-hand'>
+    <div className='player-green-equipments'>
       {equipments.map((card, index) => (
-        <DraggableCard
-          key={`${card.id}-${index}`}
-          card={card}
-          index={index}
-          isFacedUp={true}
-          playerId={playerId}
-          selectedCards={selectedCards}
-          setSelectedCards={setSelectedCards}
-          cardLocation='green'
-        />
+        <DroppableDraggableCard key={card.id} card={card} index={index} playerId={playerId} />
       ))}
     </div>
   );

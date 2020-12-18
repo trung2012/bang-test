@@ -118,8 +118,10 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           </div>
         )}
       </Droppable>
-      <PlayerEquipments equipments={player.equipments} playerId={player.id} />
-      <PlayerGreenEquipments equipments={player.equipmentsGreen} playerId={player.id} />
+      <div className='player-equipments-container'>
+        <PlayerEquipments equipments={player.equipments} playerId={player.id} />
+        <PlayerGreenEquipments equipments={player.equipmentsGreen} playerId={player.id} />
+      </div>
       <PlayerHand hand={player.hand} playerId={player.id} />
       <PlayerCardsInPlay cards={player.cardsInPlay} playerId={player.id} />
       <PlayerSecretCards cards={player.secretCards} playerId={player.id} />

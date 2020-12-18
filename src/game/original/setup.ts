@@ -14,6 +14,7 @@ import {
   IGameState,
   Role,
 } from './types';
+import { addExpansionCards } from './utils';
 
 const setup = (ctx: Ctx, setupData: ISetupData) => {
   const expansions = setupData?.expansions ?? [];
@@ -23,6 +24,8 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   if (expansions.length === 0 && ctx.playOrder.length === 8) {
     gameCards.push(...cardsFor8);
   }
+
+  gameCards = addExpansionCards(gameCards, expansions);
 
   const cardsShuffled = ctx.random!.Shuffle(gameCards);
   const deck: ICard[] = cardsShuffled.map(card => ({

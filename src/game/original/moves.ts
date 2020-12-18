@@ -945,16 +945,16 @@ export const whisky = (G: IGameState, ctx: Ctx) => {
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 2);
 };
 
-export const moves_DodgeCity = {
+export const moves_DodgeCity: MoveMap<IGameState> = {
   equipGreenCard,
   ragtime,
   tequila,
   whisky,
 };
 
-export const moves_VOS = {};
+export const moves_VOS: MoveMap<IGameState> = {};
 
-const moves: MoveMap<IGameState> = {
+export const moves: MoveMap<IGameState> = {
   takeDamage,
   drawOneFromDeck,
   drawTwoFromDeck,
@@ -995,4 +995,10 @@ const moves: MoveMap<IGameState> = {
   reselectCharacter,
 };
 
-export default moves;
+const allMoves = {
+  ...moves,
+  ...moves_DodgeCity,
+  ...moves_VOS,
+};
+
+export default allMoves;

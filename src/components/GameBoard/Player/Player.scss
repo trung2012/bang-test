@@ -1,7 +1,33 @@
+@import '../../../sass/_variables';
+
 .player {
   align-self: center;
   justify-self: center;
   position: relative;
   display: flex;
   flex-direction: column;
+
+  .player-equipments-container {
+    position: absolute;
+
+    & > * {
+      &:last-child:not(:only-child) {
+        margin-top: -$card-height / 2.5;
+      }
+    }
+  }
+
+  &.player0 {
+    .player-equipments-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &:not(.player0) {
+    .player-equipments-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }

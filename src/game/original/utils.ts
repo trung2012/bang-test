@@ -1,4 +1,6 @@
 import { Ctx } from 'boardgame.io';
+import { cards_DodgeCity, cards_VOS } from '../expansions';
+import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
 import { clearCardsInPlay } from './moves';
 import { IGameState, IGamePlayer, CharacterName, ICard, RobbingType } from './types';
@@ -120,7 +122,7 @@ export const processEquipmentRemoval = (
       }
       break;
     case 'green':
-      cardToDiscard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+      cardToDiscard = targetPlayer.equipmentsGreen.splice(targetCardIndex, 1)[0];
       break;
   }
 
@@ -145,4 +147,16 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
 
     clearCardsInPlay(G, ctx, targetPlayer.id);
   }
+};
+
+export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) => {
+  if (expansions.includes('valley of shadows')) {
+    cards.push(...cards_VOS);
+  }
+
+  if (expansions.includes('dodge city')) {
+    cards.push(...cards_DodgeCity);
+  }
+
+  return cards;
 };

@@ -33,12 +33,13 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   const [showCardOptions, setShowCardOptions] = useState(false);
   const isCardDisabled =
     !!activeStage &&
-    !!reactionRequired.cardNeeded &&
+    !reactionRequired.cardNeeded.length &&
     !reactionRequired.cardNeeded.includes(card.name);
   const isSelected =
     (cardLocation === 'hand' && selectedCards.hand.includes(index)) ||
     (cardLocation === 'green' && selectedCards.green.includes(index));
   const selectedCardsTotalLength = selectedCards.hand.length + selectedCards.green.length;
+  const isClientPlayer = playerID === playerId;
 
   const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -60,7 +61,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (!isActive || playerID !== playerId) return;
 
-    if (activeStage && reactionRequired.cardNeeded && selectedCards && setSelectedCards) {
+    if (activeStage && reactionRequired.cardNeeded.length && selectedCards && setSelectedCards) {
       if (
         !isSelected &&
         selectedCardsTotalLength === reactionRequired.quantity - 1 &&
@@ -200,6 +201,8 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
             draggableDragState={draggableDragState}
             cardId={card.id}
             index={index}
+            isClientPlayer={isClientPlayer}
+            cardLocation={cardLocation}
           >
             <Card
               card={card}
