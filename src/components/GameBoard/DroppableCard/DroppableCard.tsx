@@ -21,11 +21,11 @@ export type CardContainerProps = {
   isCurrentPlayer: boolean;
 };
 
-const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
+export const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   &:hover {
-    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-40px)' : 'translateY(40px)'} `};
-    z-index: 2;
+    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-3rem)' : 'translateY(2rem)'} `};
+    z-index: 11;
   }
 `;
 
@@ -38,7 +38,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   onClick,
 }) => {
   const { G, playersInfo, moves, playerID } = useGameContext();
-  const { setError } = useErrorContext();
+  const { setError, setNotification } = useErrorContext();
   const { players } = G;
 
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
@@ -54,11 +54,20 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
       sourcePlayerId,
       playerId
     );
-    if (sourcePlayer.actionRange < distanceBetweenPlayers && sourceCard.name !== 'cat balou') {
+
+    if (sourceCard.needsDiscard && sourceCard.isTargeted) {
+      moves.playCard(sourceCardIndex, playerId);
+      moves.makePlayerDiscardToPlay(sourceCard.name, playerId);
+      setNotification('Please click on a card to discard and continue');
+      return;
+    }
+
+    if (sourcePlayer.actionRange < distanceBetweenPlayers) {
       setError('Target player is out of range');
       return;
     }
     if (!cardsWhichTargetCards.includes(sourceCard.name)) return;
+
     moves.playCard(sourceCardIndex, playerId);
 
     setTimeout(() => {

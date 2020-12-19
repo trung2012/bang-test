@@ -68,8 +68,8 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
     return (
       <Tippy
         theme='light'
-        delay={[800, 0]}
-        offset={[0, 100]}
+        delay={[700, 0]}
+        offset={[0, 80]}
         arrow={false}
         content={
           <CardFront className='card-enlarged' card={card} style={style} disabled={disabled} />

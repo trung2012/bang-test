@@ -1,4 +1,4 @@
-import { CardNameVOS } from '../expansions';
+import { CardNameExpansion } from '../expansions';
 import { ExpansionName } from './config';
 
 export interface IGameState {
@@ -12,10 +12,11 @@ export interface IGameState {
   activeStage: string | null;
   reactionRequired: {
     sourcePlayerId: string | null;
-    cardNeeded: CardName | CardNameVOS | null;
+    cardNeeded: CardName[];
     quantity: number;
+    cardToPlayAfterDiscard?: CardName | null;
+    targetPlayerId?: string;
   };
-  dynamiteTimer: number;
   sidKetchumId: string | null;
   expansions: ExpansionName[];
 }
@@ -30,6 +31,7 @@ export interface IGamePlayer {
   name?: string;
   hand: ICard[];
   equipments: ICard[];
+  equipmentsGreen: ICard[];
   character: ICharacter;
   gunRange: number;
   actionRange: number;
@@ -46,26 +48,29 @@ export interface IGamePlayer {
 
 export interface ICard {
   id: string;
-  name: CardName | CardNameVOS;
+  name: CardName;
   value: number;
   suit: CardSuit;
   type: CardType;
   imageUrl: string;
   description?: string;
-  needsReaction?: boolean;
+  needsDiscard?: boolean;
   isTargeted?: boolean;
   rotationValue?: number;
   playWithBang?: boolean;
+  timer?: number;
 }
 
 export type CardSuit = 'hearts' | 'spades' | 'diamond' | 'clubs';
-export type CardType = 'action' | 'equipment' | 'targeted_equipment';
+export type CardType = 'action' | 'equipment' | 'green';
 export interface ICharacter {
   name: CharacterName;
+  realName?: 'vera custer';
   hp: number;
   description: string;
   imageUrl: string;
   hasActivePower?: boolean;
+  activePowerUsesLeft?: number;
 }
 
 export type Role = 'sheriff' | 'deputy' | 'outlaw' | 'renegade';
@@ -94,9 +99,26 @@ export type CharacterName =
   | 'henry block'
   | 'lemonade jim'
   | 'mick defender'
-  | 'tuco franziskaner';
+  | 'tuco franziskaner'
+  | 'belle star'
+  | 'bill noface'
+  | 'chuck wengam'
+  | 'doc holyday'
+  | 'elena fuente'
+  | 'greg digger'
+  | 'herb hunter'
+  | 'jose delgado'
+  | 'molly stark'
+  | 'pat brennan'
+  | 'pixie pete'
+  | 'sean mallory'
+  | 'tequila joe'
+  | 'vera custer'
+  | 'apache kid';
 
-export type CardName =
+export type CardName = CardNameOriginal | CardNameExpansion;
+
+export type CardNameOriginal =
   | 'barrel'
   | 'dynamite'
   | 'jail'
@@ -125,10 +147,12 @@ export interface ICardsToGenerate {
 }
 
 export interface ICardGenerationInfo {
-  name: CardName | CardNameVOS;
+  name: CardName;
   imageUrl: string;
+  timer?: number;
+  needsDiscard?: boolean;
   values: {
-    [suit: string]: number[];
+    [suit in CardSuit]?: number[];
   };
 }
 
@@ -136,7 +160,7 @@ export interface ILookup {
   [key: number]: any;
 }
 
-export type RobbingType = 'hand' | 'equipment';
+export type RobbingType = 'hand' | 'equipment' | 'green';
 
 export interface IGameResult {
   winners: IGamePlayer[];

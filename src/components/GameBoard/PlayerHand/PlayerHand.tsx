@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
 import { stageNames } from '../../../game';
 import { ICard } from '../../../game';
-import { hasDynamite, isJailed } from '../../../game';
+import { hasActiveDynamite, isJailed } from '../../../game';
 import { DraggableCard } from '../DraggableCard';
 import { DroppableCard } from '../DroppableCard';
 import './PlayerHand.scss';
@@ -58,21 +58,14 @@ const PlayerHandDroppableCardContainer = styled.div<CardContainerProps>`
 `;
 
 export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerId }) => {
-  const { G, playerID, ctx, moves, isActive } = useGameContext();
+  const { G, playerID, ctx, moves } = useGameContext();
   const { setError } = useErrorContext();
   const clientPlayer = G.players[playerID!];
   const targetPlayer = G.players[playerId];
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
-  const [selectedCards, setSelectedCards] = useState<number[]>([]);
   const [shouldAnimate, setShouldAnimate] = useState(true);
-  const maxCardRotationAngle = Math.min(hand.length * 25, 140);
-
-  useEffect(() => {
-    if (!isActive && selectedCards.length > 0) {
-      setSelectedCards([]);
-    }
-  }, [isActive, selectedCards.length]);
+  const maxCardRotationAngle = Math.min(hand.length * 25, 135);
 
   useEffect(() => {
     setShouldAnimate(false);
@@ -87,7 +80,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
   }, [hand.length]);
 
   const onPlayerHandCardClick = (index: number) => {
-    if (hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
+    if (hasActiveDynamite(clientPlayer)) {
       setError('Please draw for dynamite');
       return;
     }
@@ -103,10 +96,15 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
       return;
     }
 
-    if (G.activeStage === stageNames.takeCardFromHand) {
-      if (currentPlayer.character.name !== 'el gringo' || playerId !== ctx.currentPlayer) return;
-
+    if (G.activeStage === stageNames.ragtime) {
       moves.drawFromPlayerHand(playerID, playerId, index);
+      return;
+    }
+
+    if (G.activeStage === stageNames.takeCardFromHand) {
+      if (currentPlayer.character.name === 'el gringo' && playerId === ctx.currentPlayer) {
+        moves.drawFromPlayerHand(playerID, playerId, index);
+      }
     }
   };
 
@@ -120,8 +118,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
             index={index}
             isFacedUp={isFacedUp}
             playerId={playerId}
-            selectedCards={selectedCards}
-            setSelectedCards={setSelectedCards}
+            cardLocation='hand'
           />
         ))}
       </div>

@@ -38,19 +38,21 @@
     }
   }
 
-  // &-disabled {
-  //   &::after {
-  //     content: '';
-  //     position: absolute;
-  //     top: 0;
-  //     left: 0;
-  //     width: 100%;
-  //     height: 100%;
-  //     z-index: 1;
-  //     border-radius: $card-border-radius;
-  //     background-color: rgba(0, 0, 0, 0.2);
-  //   }
-  // }
+  &-disabled {
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      border-radius: $card-border-radius;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
 
   &-enlarged {
     width: $card-width * 2;
@@ -58,17 +60,15 @@
 
     .card-value-container {
       align-items: center;
-      font-size: 2.5rem;
+      font-size: 2.1rem;
       left: 1.2rem;
       bottom: 0.5rem;
+      padding: 0.2rem;
     }
 
     .card-suit {
-      height: 2.5rem;
-      width: 2.5rem;
-    }
-
-    .card-image {
+      height: 2.1rem;
+      width: 2.1rem;
     }
   }
 }

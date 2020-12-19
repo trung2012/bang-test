@@ -11,15 +11,19 @@ interface IPlayerEquipments {
 }
 
 export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipments }) => {
-  const { G, playerID, moves } = useGameContext();
+  const { G, ctx, playerID, moves } = useGameContext();
 
-  const onEquipmentClick = (equipmentCard: ICard) => {
-    if (
-      playerID !== playerId ||
-      equipmentCard.name !== 'barrel' ||
-      G.players[playerId].barrelUseLeft <= 0
-    )
+  const onEquipmentClick = (equipmentCard: ICard, index: number) => {
+    const player = G.players[playerId];
+    const sourcePlayer = G.players[ctx.currentPlayer];
+    if (sourcePlayer.character.name === 'pat brennan' && sourcePlayer.cardDrawnAtStartLeft >= 2) {
+      moves.patBrennanEquipmentDraw(playerId, index, 'equipment');
       return;
+    }
+
+    if (playerID !== playerId || equipmentCard.name !== 'barrel' || player.barrelUseLeft <= 0) {
+      return;
+    }
 
     if (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) {
       moves.drawToReact(playerID);
@@ -43,7 +47,7 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
           isFacedUp={true}
           playerId={playerId}
           cardLocation='equipment'
-          onClick={() => onEquipmentClick(card)}
+          onClick={() => onEquipmentClick(card, index)}
         />
       ))}
     </div>

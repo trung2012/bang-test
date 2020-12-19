@@ -46,19 +46,17 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           })}
         >
           <Tippy content={player.character.description}>
-            <>
-              <img
-                className='player-character-image'
-                src={player.character.imageUrl}
-                alt={player.character.name}
-              />
-              <img
-                className={classnames('jail-bars', `jail-bars-${player.id}`)}
-                src={jailImg}
-                alt='jail bars'
-              />
-            </>
+            <img
+              className='player-character-image'
+              src={player.character.imageUrl}
+              alt={player.character.name}
+            />
           </Tippy>
+          <img
+            className={classnames('jail-bars', `jail-bars-${player.id}`)}
+            src={jailImg}
+            alt='jail bars'
+          />
         </div>
         {isClientPlayer && <div className='player-role'>{player.role}</div>}
         <img

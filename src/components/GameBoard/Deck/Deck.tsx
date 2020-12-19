@@ -1,7 +1,7 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
 import { delayBetweenActions } from '../../../game';
-import { hasDynamite, isJailed } from '../../../game';
+import { hasActiveDynamite, isJailed } from '../../../game';
 import { CardPile } from './CardPile';
 import classnames from 'classnames';
 import './Deck.scss';
@@ -15,7 +15,7 @@ export const Deck = () => {
   const onDeckClick = () => {
     if (!isActive || clientPlayer.cardDrawnAtStartLeft <= 0) return;
 
-    if (playerID === ctx.currentPlayer && hasDynamite(clientPlayer) && G.dynamiteTimer === 0) {
+    if (playerID === ctx.currentPlayer && hasActiveDynamite(clientPlayer)) {
       moves.drawToReact(playerID);
 
       setTimeout(() => {
@@ -56,11 +56,23 @@ export const Deck = () => {
       return;
     }
 
-    if (clientPlayer.character.name === 'kit carlson') {
-      moves.kitCarlsonDraw();
-      return;
+    switch (clientPlayer.character.name) {
+      case 'kit carlson': {
+        moves.kitCarlsonDraw();
+        return;
+      }
+      case 'pixie pete': {
+        moves.drawThreeFromDeck();
+        return;
+      }
+      case 'bill noface': {
+        moves.billNoFaceDraw();
+        return;
+      }
+      default:
+        moves.drawTwoFromDeck();
+        return;
     }
-    moves.drawTwoFromDeck();
   };
 
   return (

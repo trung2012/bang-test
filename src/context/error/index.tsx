@@ -2,7 +2,9 @@ import React, { useContext, useState } from 'react';
 
 export interface IErrorContext {
   error: string;
-  setError: (error: string) => void;
+  notification: string;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  setNotification: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const ErrorContext = React.createContext<IErrorContext | null>(null);
@@ -13,8 +15,13 @@ interface IErrorProviderProps {
 
 export const ErrorProvider: React.FC<IErrorProviderProps> = ({ children }) => {
   const [error, setError] = useState('');
+  const [notification, setNotification] = useState('');
 
-  return <ErrorContext.Provider value={{ error, setError }}>{children}</ErrorContext.Provider>;
+  return (
+    <ErrorContext.Provider value={{ error, setError, notification, setNotification }}>
+      {children}
+    </ErrorContext.Provider>
+  );
 };
 
 export const useErrorContext = () => {

@@ -18,6 +18,7 @@ const indians = require('../assets/sounds/indians.mp3');
 const panic = require('../assets/sounds/panic.mp3');
 const missed = require('../assets/sounds/miss.mp3');
 const fanfare = require('../assets/sounds/tada.mp3');
+const punch = require('../assets/sounds/punch.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot, { volume: 0.3 });
@@ -34,6 +35,7 @@ export const useBgioEffects = () => {
   const [playPanic] = useSound(panic, { volume: 0.15 });
   const [playMissed] = useSound(missed, { volume: 0.55 });
   const [playFanfare] = useSound(fanfare, { volume: 0.5 });
+  const [playPunch] = useSound(punch, { volume: 0.5 });
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',
@@ -63,6 +65,36 @@ export const useBgioEffects = () => {
       );
     },
     [playGunShot]
+  );
+
+  useEffectListener<BangEffectsConfig>(
+    'punch',
+    (cardId: string) => {
+      setTimeout(() => {
+        playPunch();
+      }, animationDelayMilliseconds);
+
+      gsap.to(`#${CSS.escape(cardId)}`, {
+        rotate: -70,
+        delay: animationDelaySeconds,
+      });
+
+      gsap.fromTo(
+        `#${CSS.escape(cardId)}`,
+        {
+          x: -50,
+          delay: animationDelaySeconds,
+        },
+        {
+          x: 0,
+          rotate: 0,
+          delay: animationDelaySeconds,
+          ease: 'elastic.out(1, 0.3)',
+          duration: 1,
+        }
+      );
+    },
+    [playPunch]
   );
 
   useEffectListener<BangEffectsConfig>(

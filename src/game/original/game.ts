@@ -1,13 +1,14 @@
 import { Game } from 'boardgame.io';
 import { TurnOrder } from 'boardgame.io/core';
 import { EffectsPlugin } from 'bgio-effects/plugin';
-import { gameNames, teamLookUp } from './constants';
+import { gameNames, stageNames, teamLookUp } from './constants';
 import moves from './moves';
 import phases from './phases';
 import setup from './setup';
 import stages from './stages';
 import { ICard, IGameResult, IGameState } from './types';
 import { config } from './effects';
+import { resetCardTimer } from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {
@@ -77,7 +78,11 @@ const game: Game<IGameState> = {
     onMove: (G, ctx) => {
       if (G.deck.length <= 6) {
         while (G.discarded.length > 2) {
-          G.deck.push(G.discarded.pop() as ICard);
+          const cardToPutBackInDeck = G.discarded.pop();
+          if (cardToPutBackInDeck) {
+            resetCardTimer(cardToPutBackInDeck);
+            G.deck.push(cardToPutBackInDeck);
+          }
         }
         G.deck = ctx.random?.Shuffle ? ctx.random?.Shuffle(G.deck) : G.deck;
       }
@@ -87,7 +92,11 @@ const game: Game<IGameState> = {
       );
       if (suzyPlayerId !== undefined) {
         const suzyPlayer = G.players[suzyPlayerId];
-        if (suzyPlayer.hp > 0 && suzyPlayer.hand.length === 0) {
+        if (
+          suzyPlayer.hp > 0 &&
+          suzyPlayer.hand.length === 0 &&
+          G.activeStage !== stageNames.duel
+        ) {
           const newCard = G.deck.pop();
           if (newCard) {
             suzyPlayer.hand.push(newCard);

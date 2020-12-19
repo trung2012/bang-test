@@ -14,7 +14,7 @@ import { CustomButton } from '../../shared';
 
 export const GameTable = () => {
   const { G, ctx, moves, playersInfo, playerID, isActive } = useGameContext();
-  const { error, setError } = useErrorContext();
+  const { error, setError, notification, setNotification } = useErrorContext();
   const { players } = G;
 
   const clientPlayerIndex = playersInfo?.findIndex(p => playerID === p.id.toString());
@@ -53,6 +53,16 @@ export const GameTable = () => {
       });
     }
   }, [error, setError]);
+
+  useEffect(() => {
+    if (notification) {
+      toast.info(notification, {
+        onClose: () => {
+          setNotification('');
+        },
+      });
+    }
+  }, [notification, setNotification]);
 
   if (ctx.gameover) {
     return <GameOver gameResult={ctx.gameover} />;

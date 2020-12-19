@@ -5,9 +5,18 @@ import { ReactComponent as PassIcon } from '../../../assets/pass.svg';
 import { ReactComponent as PowerIcon } from '../../../assets/power.svg';
 import { ReactComponent as DamageIcon } from '../../../assets/damage.svg';
 import './PlayerButtons.scss';
-import { delayBetweenActions, hasDynamite, IGamePlayer, isJailed, stageNames } from '../../../game';
+import {
+  delayBetweenActions,
+  hasActiveDynamite,
+  IGamePlayer,
+  isJailed,
+  stageNames,
+} from '../../../game';
+import useSound from 'use-sound';
+const power = require('../../../assets/sounds/power.mp3');
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
+  const [playPower] = useSound(power, { volume: 0.2 });
   const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const isCurrentPlayer = playerID === player.id;
@@ -18,6 +27,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       G.activeStage === stageNames.duel) &&
     !!ctx.activePlayers &&
     ctx.activePlayers[player.id];
+  const isPowerDisabled = player.character.activePowerUsesLeft === 0;
 
   const onEndTurnClick = () => {
     if (!isCurrentPlayer || !isActive) {
@@ -25,7 +35,10 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       return;
     }
 
-    const numCardsToDiscard = player.hand.length - player.hp;
+    const numCardsToDiscard =
+      player.character.name === 'sean mallory'
+        ? player.hand.length - 10
+        : player.hand.length - player.hp;
     if (numCardsToDiscard > 0) {
       setError(
         `Please discard ${numCardsToDiscard} card${
@@ -36,7 +49,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       return;
     }
 
-    if (hasDynamite(player) && G.dynamiteTimer === 0) {
+    if (hasActiveDynamite(player)) {
       setError('Please draw for dynamite');
       return;
     }
@@ -52,12 +65,41 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   const onPowerClick = () => {
     if (!isCurrentPlayer) return;
 
-    if (player.character.name === 'jourdonnais' && player.jourdonnaisPowerUseLeft > 0) {
-      if (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) {
-        moves.drawToReact(player.id);
-        setTimeout(() => {
-          moves.barrelResult(playerID, true);
-        }, delayBetweenActions);
+    switch (player.character.name) {
+      case 'jourdonnais': {
+        if (player.jourdonnaisPowerUseLeft > 0) {
+          if (
+            G.activeStage === stageNames.reactToGatling ||
+            G.activeStage === stageNames.reactToBang
+          ) {
+            moves.drawToReact(player.id);
+            playPower();
+            setTimeout(() => {
+              moves.barrelResult(playerID, true);
+            }, delayBetweenActions);
+          }
+          return;
+        }
+        break;
+      }
+      case 'chuck wengam': {
+        if (player.hp === 1) {
+          setError('You cannot use your power with 1 life point');
+          return;
+        }
+
+        moves.chuckWengramPower();
+        playPower();
+        return;
+      }
+      case 'jose delgado': {
+        if (!player.hand.some(card => card.type === 'equipment')) {
+          setError('You have no blue card to discard');
+          return;
+        }
+        moves.joseDelgadoPower();
+        playPower();
+        return;
       }
     }
   };
@@ -73,7 +115,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       {isCurrentPlayer && (
         <>
           {player.character.hasActivePower && (
-            <PlayerButton tooltipTitle='Activate your power' onClick={onPowerClick}>
+            <PlayerButton
+              tooltipTitle='Activate your power'
+              onClick={onPowerClick}
+              disabled={isPowerDisabled}
+            >
               <PowerIcon className='player-button-icon' />
             </PlayerButton>
           )}

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
-import { useErrorContext, useGameContext } from '../../../context';
-import { ICard, IGamePlayer } from '../../../game';
+import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
+import { cardsThatCanTargetsSelf, cardsWhichTargetCards, ICard, IGamePlayer } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
 import { PlayerEquipments } from '../PlayerEquipments';
+import { PlayerGreenEquipments } from '../PlayerGreenEquipments';
 import { PlayerHand } from '../PlayerHand';
 import { PlayerInfo } from '../PlayerInfo';
 import { PlayerSecretCards } from '../PlayerSecretCards';
@@ -18,8 +19,9 @@ interface IPlayerProps {
 }
 
 export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
-  const { G, playersInfo, moves } = useGameContext();
-  const { setError } = useErrorContext();
+  const { G, playersInfo, moves, isActive } = useGameContext();
+  const { setError, setNotification } = useErrorContext();
+  const { selectedCards, setSelectedCards } = useCardsContext();
   const { players } = G;
 
   const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
@@ -28,7 +30,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
     const sourcePlayer = players[sourcePlayerId];
 
     if (player.hp <= 0) return;
-    if (sourcePlayerId === player.id) return;
+    if (sourcePlayerId === player.id && !cardsThatCanTargetsSelf.includes(sourceCard.name)) return;
 
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
@@ -37,6 +39,22 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       player.id
     );
 
+    if (sourceCard.needsDiscard && sourcePlayer.hand.length < 2) {
+      setError(`You do not have enough cards to play this right now`);
+      return;
+    }
+
+    if (
+      sourceCard.needsDiscard &&
+      sourceCard.isTargeted &&
+      !cardsWhichTargetCards.includes(sourceCard.name)
+    ) {
+      moves.playCard(sourceCardIndex, player.id);
+      moves.makePlayerDiscardToPlay(sourceCard.name, player.id);
+      setNotification('Please click on a card to discard and continue');
+      return;
+    }
+
     switch (sourceCard.name) {
       case 'missed': {
         if (sourcePlayer.character.name !== 'calamity janet') {
@@ -44,7 +62,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           return;
         }
         if (sourcePlayer.numBangsLeft <= 0) {
-          setError('You cannot play anymore bangs');
+          setError('You cannot play any more bangs');
           return;
         }
         if (sourcePlayer.gunRange < distanceBetweenPlayers) {
@@ -55,13 +73,14 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         moves.bang(player.id);
         return;
       }
-      case 'bang': {
+      case 'bang':
+      case 'pepperbox': {
         if (sourcePlayer.gunRange < distanceBetweenPlayers) {
           setError('Target is out of range');
           return;
         }
         if (sourcePlayer.numBangsLeft <= 0) {
-          setError('You cannot play anymore bangs');
+          setError('You cannot play any more bangs');
           return;
         }
         moves.playCard(sourceCardIndex, player.id);
@@ -87,10 +106,38 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         moves.jail(player.id, sourceCardIndex);
         return;
       }
-      default:
+      case 'punch':
+      case 'knife':
+      case 'derringer': {
+        const reach = Math.max(sourcePlayer.actionRange, 1);
+        if (reach < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
         return;
+      }
+      case 'buffalo rifle': {
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
+        return;
+      }
+      default: {
+        return;
+      }
     }
   };
+
+  useEffect(() => {
+    if (!isActive && (selectedCards.hand?.length || selectedCards.green?.length)) {
+      setSelectedCards({
+        hand: [],
+        green: [],
+        equipment: [],
+      });
+    }
+  }, [isActive, selectedCards, setSelectedCards]);
 
   return (
     <div className={`player player${playerIndex}`}>
@@ -102,7 +149,10 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           </div>
         )}
       </Droppable>
-      <PlayerEquipments equipments={player.equipments} playerId={player.id} />
+      <div className='player-equipments-container'>
+        <PlayerEquipments equipments={player.equipments} playerId={player.id} />
+        <PlayerGreenEquipments equipments={player.equipmentsGreen} playerId={player.id} />
+      </div>
       <PlayerHand hand={player.hand} playerId={player.id} />
       <PlayerCardsInPlay cards={player.cardsInPlay} playerId={player.id} />
       <PlayerSecretCards cards={player.secretCards} playerId={player.id} />

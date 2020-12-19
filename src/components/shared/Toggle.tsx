@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ExpansionName } from '../../game';
 import { setSetupData } from '../../store';
@@ -10,17 +10,24 @@ interface IToggleProps {
 
 export const Toggle: React.FC<IToggleProps> = ({ option }) => {
   const dispatch = useDispatch();
+  const [isChecked, setIsChecked] = useState(false);
+
+  const onInputChange = () => {
+    dispatch(setSetupData(option));
+    setIsChecked(!isChecked);
+  };
 
   return (
     <div className='toggle-option'>
       <span>{option}</span>
       <input
         type='checkbox'
-        id='toggle'
+        id={`toggle-${option}`}
         className='checkbox'
-        onChange={() => dispatch(setSetupData(option))}
+        checked={isChecked}
+        onChange={onInputChange}
       />
-      <label htmlFor='toggle' className='switch' />
+      <label htmlFor={`toggle-${option}`} className='switch' />
     </div>
   );
 };
