@@ -13,7 +13,7 @@ export const Deck = () => {
   const clientPlayer = G.players[playerID!];
 
   const onDeckClick = () => {
-    if (!isActive || clientPlayer.cardDrawnAtStartLeft <= 0) return;
+    if (!isActive) return;
 
     if (playerID === ctx.currentPlayer && hasActiveDynamite(clientPlayer)) {
       moves.drawToReact(playerID);
