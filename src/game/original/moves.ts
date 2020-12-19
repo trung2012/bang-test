@@ -26,9 +26,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     targetPlayer.jourdonnaisPowerUseLeft = 1;
   }
 
-  checkIfBeersCanSave(G, ctx, targetPlayer);
-
   if (targetPlayer.hp <= 0) {
+    checkIfBeersCanSave(G, ctx, targetPlayer);
+
     if (ctx.events?.endStage) {
       ctx.events.endStage();
     }
