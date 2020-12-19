@@ -206,6 +206,15 @@ export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic', 'can can
 
 export const cardsThatCanTargetsSelf: CardName[] = ['tequila'];
 
+export const cardsThatWorkAgainstBang: CardName[] = [
+  'missed',
+  'dodge',
+  'bible',
+  'iron plate',
+  'sombrero',
+  'ten gallon hat',
+];
+
 export const teamLookUp = {
   sheriff: 'The Lawful',
   deputy: 'The Lawful',

@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
-import { gunRange, stageNames } from './constants';
+import { cardsThatWorkAgainstBang, gunRange, stageNames } from './constants';
 import { CardName, ICard, IGameState, RobbingType } from './types';
 import {
   isCharacterInGame,
@@ -599,7 +599,7 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const bangCard = G.players[targetPlayerId].cardsInPlay[0];
   G.activeStage = stageNames.reactToBang;
   G.reactionRequired = {
-    cardNeeded: ['missed', 'dodge', 'bible', 'iron plate', 'sombrero', 'ten gallon hat'],
+    cardNeeded: cardsThatWorkAgainstBang,
     quantity: 1,
     sourcePlayerId: currentPlayer.id,
   };
@@ -672,7 +672,7 @@ const gatling = (G: IGameState, ctx: Ctx) => {
       value: activePlayers,
     });
   }
-  G.reactionRequired.cardNeeded = ['missed'];
+  G.reactionRequired.cardNeeded = cardsThatWorkAgainstBang;
   G.activeStage = stageNames.reactToGatling;
 };
 
