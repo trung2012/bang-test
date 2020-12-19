@@ -7,6 +7,7 @@ const stages: StageMap<IGameState> = {
     moves: {
       discardFromHand: moves.discardFromHand,
       resetGameStage: moves.resetGameStage,
+      clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
   pickFromGeneralStore: {

@@ -29,7 +29,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   const { moves, playerID, isActive, G, ctx } = useGameContext();
   const { selectedCards, setSelectedCards } = useCardsContext();
   const { activeStage, players, reactionRequired } = G;
-  const { setError } = useErrorContext();
+  const { setError, setNotification } = useErrorContext();
   const [showCardOptions, setShowCardOptions] = useState(false);
   const isCardDisabled =
     !!activeStage &&
@@ -67,13 +67,12 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       if (G.reactionRequired.cardToPlayAfterDiscard) {
         const moveName = G.reactionRequired.cardToPlayAfterDiscard.replace(' ', '').toLowerCase();
 
-        console.log(moveName, G.reactionRequired.targetPlayerId);
-
         if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
           throw Error('No move no target');
         }
 
         moves[moveName](G.reactionRequired.targetPlayerId);
+        return;
       }
     }
 
@@ -192,14 +191,17 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (card.needsDiscard) {
       moves.makePlayerDiscardToPlay(card.name, playerID);
+      setNotification('Please click on a card to discard and continue');
       return;
     }
 
     const moveName = card.name.replace(' ', '').toLowerCase();
 
-    if (moves[moveName]) {
-      moves[moveName]();
+    if (!moves[moveName]) {
+      throw Error('Move errror: No such move');
     }
+
+    moves[moveName]();
 
     setTimeout(() => {
       moves.clearCardsInPlay(playerID);

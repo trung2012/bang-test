@@ -8,6 +8,7 @@ import setup from './setup';
 import stages from './stages';
 import { ICard, IGameResult, IGameState } from './types';
 import { config } from './effects';
+import { resetCardTimer } from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {
@@ -77,7 +78,11 @@ const game: Game<IGameState> = {
     onMove: (G, ctx) => {
       if (G.deck.length <= 6) {
         while (G.discarded.length > 2) {
-          G.deck.push(G.discarded.pop() as ICard);
+          const cardToPutBackInDeck = G.discarded.pop();
+          if (cardToPutBackInDeck) {
+            resetCardTimer(cardToPutBackInDeck);
+            G.deck.push(cardToPutBackInDeck);
+          }
         }
         G.deck = ctx.random?.Shuffle ? ctx.random?.Shuffle(G.deck) : G.deck;
       }

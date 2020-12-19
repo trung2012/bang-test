@@ -661,7 +661,7 @@ const targetedCards: CardName[] = [
   'pepperbox',
 ];
 
-const cardsThatNeedDiscard: CardName[] = ['rag time', 'springfield', 'tequila', 'whisky'];
+const cardsThatNeedDiscard: CardName[] = ['rag time', 'springfield', 'tequila', 'whisky', 'brawl'];
 
 const playWithBangCards: CardName[] = ['aim'];
 

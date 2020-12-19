@@ -365,6 +365,7 @@ export const cards_DodgeCity: ICard[] = [
     suit: 'spades',
     type: 'action',
     isTargeted: false,
+    needsDiscard: true,
   },
   {
     id: '316ICNQ3P-D_FBNFPySKz',

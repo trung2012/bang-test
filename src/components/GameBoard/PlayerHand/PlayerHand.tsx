@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import { useErrorContext, useGameContext, useCardsContext } from '../../../context';
+import { useErrorContext, useGameContext } from '../../../context';
 import { stageNames } from '../../../game';
 import { ICard } from '../../../game';
 import { hasActiveDynamite, isJailed } from '../../../game';

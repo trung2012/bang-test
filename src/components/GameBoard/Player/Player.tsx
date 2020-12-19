@@ -20,7 +20,7 @@ interface IPlayerProps {
 
 export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
   const { G, playersInfo, moves, isActive } = useGameContext();
-  const { setError } = useErrorContext();
+  const { setError, setNotification } = useErrorContext();
   const { selectedCards, setSelectedCards } = useCardsContext();
   const { players } = G;
 
@@ -51,6 +51,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
     ) {
       moves.playCard(sourceCardIndex, player.id);
       moves.makePlayerDiscardToPlay(sourceCard.name, player.id);
+      setNotification('Please click on a card to discard and continue');
       return;
     }
 
@@ -72,7 +73,8 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         moves.bang(player.id);
         return;
       }
-      case 'bang': {
+      case 'bang':
+      case 'pepperbox': {
         if (sourcePlayer.gunRange < distanceBetweenPlayers) {
           setError('Target is out of range');
           return;
@@ -104,8 +106,26 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
         moves.jail(player.id, sourceCardIndex);
         return;
       }
-      default:
+      case 'punch':
+      case 'knife':
+      case 'derringer': {
+        const reach = Math.max(sourcePlayer.actionRange, 1);
+        if (reach < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
         return;
+      }
+      case 'buffalo rifle': {
+        moves.playCard(sourceCardIndex, player.id);
+        moves.bang(player.id);
+        return;
+      }
+      default: {
+        return;
+      }
     }
   };
 

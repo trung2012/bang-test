@@ -1,4 +1,4 @@
-import { ICharacter } from '../original';
+import { CardName, ICharacter } from '../original';
 
 export const characters_VOS: ICharacter[] = [
   {
@@ -185,3 +185,5 @@ export const characters_DodgeCity: ICharacter[] = [
       'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_vera_custer_emwagk.png',
   },
 ];
+
+export const cardsThatDrawsOneWhenPlayed: CardName[] = ['dodge', 'bible', 'derringer'];

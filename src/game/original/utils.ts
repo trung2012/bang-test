@@ -1,5 +1,5 @@
 import { Ctx } from 'boardgame.io';
-import { cards_DodgeCity, cards_VOS } from '../expansions';
+import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, cards_VOS } from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
 import { clearCardsInPlay } from './moves';
@@ -159,4 +159,24 @@ export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) =
   }
 
   return cards;
+};
+
+export const checkIfCanDrawOneAfterReacting = (
+  G: IGameState,
+  reactingPlayer: IGamePlayer,
+  card: ICard
+) => {
+  if (card && cardsThatDrawsOneWhenPlayed.includes(card.name)) {
+    const cardToDrawFromDeck = G.deck.pop();
+
+    if (cardToDrawFromDeck) {
+      reactingPlayer.hand.push(cardToDrawFromDeck);
+    }
+  }
+};
+
+export const resetCardTimer = (card: ICard) => {
+  if (card && card.timer !== undefined) {
+    card.timer = 1;
+  }
 };

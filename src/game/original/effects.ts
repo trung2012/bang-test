@@ -34,6 +34,9 @@ export const config = {
     panic: {},
     missed: {},
     gameOver: {},
+    punch: {
+      create: (cardId: string) => cardId,
+    },
   },
 };
 
