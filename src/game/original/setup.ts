@@ -13,7 +13,7 @@ import {
   IGameState,
   Role,
 } from './types';
-import { addExpansionCards } from './utils';
+import { addExpansionCards, addExpansionCharacters } from './utils';
 
 const setup = (ctx: Ctx, setupData: ISetupData) => {
   const expansions = setupData?.expansions ?? [];
@@ -26,6 +26,8 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
 
   gameCards = addExpansionCards(gameCards, expansions);
 
+  const gameCharacters = addExpansionCharacters(characters, expansions);
+
   const cardsShuffled = ctx.random!.Shuffle(gameCards);
   const deck: ICard[] = cardsShuffled.map(card => ({
     ...card,
@@ -33,7 +35,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   }));
 
   const rolesShuffled = ctx.random!.Shuffle(roles);
-  const charactersShuffled = ctx.random!.Shuffle(characters);
+  const charactersShuffled = ctx.random!.Shuffle(gameCharacters);
   const discarded: ICard[] = [];
   const generalStore: ICard[] = [];
   const generalStoreOrder: string[] = [];

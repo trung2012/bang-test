@@ -70,6 +70,7 @@ export interface ICharacter {
   description: string;
   imageUrl: string;
   hasActivePower?: boolean;
+  activePowerUsesLeft?: number;
 }
 
 export type Role = 'sheriff' | 'deputy' | 'outlaw' | 'renegade';

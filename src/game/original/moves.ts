@@ -37,8 +37,22 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       resetGameStage(G, ctx);
     }
 
-    const vultureSamId = isCharacterInGame(G, 'vulture sam');
+    const gregDiggerId = isCharacterInGame(G, 'greg digger');
+    if (gregDiggerId !== undefined) {
+      const gregDiggerPlayer = G.players[gregDiggerId];
+      gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
+    }
 
+    const herbHunterId = isCharacterInGame(G, 'herb hunter');
+    if (herbHunterId !== undefined) {
+      const herbHunterPlayer = G.players[herbHunterId];
+      const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+      G.deck = G.deck.slice(0, G.deck.length - 2);
+      herbHunterPlayer.hand.push(...newCards);
+      herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
+    }
+
+    const vultureSamId = isCharacterInGame(G, 'vulture sam');
     if (vultureSamId && vultureSamId !== targetPlayerId) {
       const vultureSamPlayer = G.players[vultureSamId];
       const dynamiteCard = targetPlayer.equipments.find(card => card.name === 'dynamite');
@@ -437,6 +451,15 @@ const drawTwoFromDeck = (G: IGameState, ctx: Ctx) => {
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
+const drawThreeFromDeck = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
+  G.deck = G.deck.slice(0, G.deck.length - 3);
+  currentPlayer.hand.push(...newCards);
+  currentPlayer.cardDrawnAtStartLeft = 0;
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+};
+
 const drawBounty = (G: IGameState, ctx: Ctx, playerId: string) => {
   const currentPlayer = G.players[playerId];
   const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
@@ -637,6 +660,9 @@ const beer = (G: IGameState, ctx: Ctx) => {
       ctx.effects.beer(beerCard.id);
     }
     currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
+    if (currentPlayer.character.name === 'tequila joe') {
+      currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
+    }
   }
 };
 
@@ -1052,6 +1078,75 @@ export const canteen = (G: IGameState, ctx: Ctx) => {
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
 };
 
+export const billNoFaceDraw = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  drawOneFromDeck(G, ctx);
+  const lostHp = currentPlayer.maxHp - currentPlayer.hp;
+
+  if (currentPlayer.character.name === 'bill noface') {
+    const newCards: ICard[] = G.deck.slice(G.deck.length - lostHp, G.deck.length);
+    G.deck = G.deck.slice(0, G.deck.length - lostHp);
+    currentPlayer.hand.push(...newCards);
+    currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+  }
+
+  currentPlayer.cardDrawnAtStartLeft = 0;
+};
+
+export const chuckWengamPower = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  currentPlayer.hp -= 1;
+  drawTwoFromDeck(G, ctx);
+};
+
+export const docHolyDayPower = (G: IGameState, ctx: Ctx) => {
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      currentPlayer: stageNames.discardToPlayCard,
+      moveLimit: 1,
+    });
+  }
+};
+
+export const patBrennanEquipmentDraw = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number,
+  type: RobbingType
+) => {
+  const targetPlayer = G.players[targetPlayerId];
+  const currentPlayer = G.players[ctx.currentPlayer];
+
+  const cardToTake = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  resetCardTimer(cardToTake);
+  currentPlayer.hand.push(cardToTake);
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+  currentPlayer.cardDrawnAtStartLeft = 0;
+};
+
+export const joseDelgadoPower = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      currentPlayer: stageNames.discardToPlayCard,
+      moveLimit: 1,
+    });
+  }
+
+  G.reactionRequired.cardToPlayAfterDiscard = 'josedelgadodraw' as CardName;
+  G.reactionRequired.targetPlayerId = ctx.currentPlayer;
+
+  if (currentPlayer.character.activePowerUsesLeft !== undefined) {
+    currentPlayer.character.activePowerUsesLeft -= 1;
+  }
+};
+
+export const josedelgadodraw = (G: IGameState, ctx: Ctx) => {
+  drawTwoFromDeck(G, ctx);
+};
+
 export const moves_DodgeCity: MoveMap<IGameState> = {
   equipGreenCard,
   ragtime,
@@ -1066,6 +1161,12 @@ export const moves_DodgeCity: MoveMap<IGameState> = {
   ponyexpress,
   canteen,
   conestoga,
+  billNoFaceDraw,
+  chuckWengamPower,
+  docHolyDayPower,
+  patBrennanEquipmentDraw,
+  joseDelgadoPower,
+  josedelgadodraw,
 };
 
 export const moves_VOS: MoveMap<IGameState> = {};
@@ -1074,6 +1175,7 @@ export const moves: MoveMap<IGameState> = {
   takeDamage,
   drawOneFromDeck,
   drawTwoFromDeck,
+  drawThreeFromDeck,
   barrelResult,
   drawFromPlayerHand,
   discardFromHand,

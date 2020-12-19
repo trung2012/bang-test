@@ -37,6 +37,7 @@ export const config = {
     punch: {
       create: (cardId: string) => cardId,
     },
+    power: {},
   },
 };
 

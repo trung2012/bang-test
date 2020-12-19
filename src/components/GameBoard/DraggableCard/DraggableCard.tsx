@@ -2,7 +2,7 @@ import React, { Dispatch, Fragment, SetStateAction, useCallback, useState } from
 import classnames from 'classnames';
 import { Draggable, DragComponent } from 'react-dragtastic';
 import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions, RobbingType, stageNames } from '../../../game';
+import { canPlayCardToReact, delayBetweenActions, RobbingType, stageNames } from '../../../game';
 import { ICard } from '../../../game';
 import { MoreOptions } from '../../shared';
 import { Card } from '../Card';
@@ -31,22 +31,23 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   const { activeStage, players, reactionRequired } = G;
   const { setError, setNotification } = useErrorContext();
   const [showCardOptions, setShowCardOptions] = useState(false);
-  const isCardDisabled =
-    !!activeStage &&
-    !reactionRequired.cardNeeded.length &&
-    !reactionRequired.cardNeeded.includes(card.name);
+  const isClientPlayer = playerID === playerId;
+  const isCardDisabled = G.players[ctx.currentPlayer].character.name === 'belle star';
+  // || (!!activeStage &&
+  //   reactionRequired.cardNeeded.length > 0 &&
+  //   G.players[playerId].character.name !== 'calamity janet' &&
+  //   !reactionRequired.cardNeeded.includes(card.name));
   const isSelected =
     (cardLocation === 'hand' && selectedCards.hand.includes(index)) ||
     (cardLocation === 'green' && selectedCards.green.includes(index));
   const selectedCardsTotalLength = selectedCards.hand.length + selectedCards.green.length;
-  const isClientPlayer = playerID === playerId;
 
   const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
-    const currentPlayer = players[playerId];
+    const targetPlayer = players[playerId];
     if (playerID !== playerId) return;
     if (
-      currentPlayer.character.name !== 'sid ketchum' &&
+      targetPlayer.character.name !== 'sid ketchum' &&
       (!ctx.activePlayers || ctx.activePlayers[playerId] !== stageNames.discard)
     ) {
       setError('You can only discard cards at the end of your turn');
@@ -57,11 +58,26 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   };
 
   const onCardClick = () => {
-    const currentPlayer = players[playerId];
+    const targetPlayer = players[playerId];
+    const sourcePlayer = players[ctx.currentPlayer];
+
+    if (
+      cardLocation === 'green' &&
+      sourcePlayer.character.name === 'pat brennan' &&
+      sourcePlayer.cardDrawnAtStartLeft >= 2
+    ) {
+      moves.patBrennanEquipmentDraw(playerId, index, 'green');
+      return;
+    }
 
     if (!isActive || playerID !== playerId) return;
 
     if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
+      if (targetPlayer.character.name === 'jose delgado' && card.type !== 'equipment') {
+        setError('Please choose a blue card to discard');
+        return;
+      }
+
       moves.discardFromHand(playerID, index);
 
       if (G.reactionRequired.cardToPlayAfterDiscard) {
@@ -80,10 +96,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       if (
         !isSelected &&
         selectedCardsTotalLength === reactionRequired.quantity - 1 &&
-        (reactionRequired.cardNeeded.includes(card.name) ||
-          (currentPlayer.character.name === 'calamity janet' &&
-            ['bang', 'missed'].includes(card.name) &&
-            reactionRequired.cardNeeded.some(cardName => ['bang', 'missed'].includes(cardName))))
+        canPlayCardToReact(reactionRequired, targetPlayer, card)
       ) {
         if (cardLocation === 'hand') {
           moves.playCardToReact(
@@ -130,7 +143,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         } else {
           if (
             reactionRequired.cardNeeded.includes(card.name) ||
-            (currentPlayer.character.name === 'calamity janet' &&
+            (targetPlayer.character.name === 'calamity janet' &&
               ['bang', 'missed'].includes(card.name) &&
               reactionRequired.cardNeeded.some(cardName => ['bang', 'missed'].includes(cardName)))
           ) {
@@ -154,7 +167,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     if (card.type === 'green' && cardLocation === 'hand') {
-      if (currentPlayer.equipmentsGreen.find(equipment => equipment.name === card.name)) {
+      if (targetPlayer.equipmentsGreen.find(equipment => equipment.name === card.name)) {
         setError('You cannot equip something more than once');
         return;
       }
@@ -167,7 +180,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     // Equip
     if (card.type === 'equipment') {
-      if (currentPlayer.equipments.find(equipment => equipment.name === card.name)) {
+      if (targetPlayer.equipments.find(equipment => equipment.name === card.name)) {
         setError('You cannot equip something more than once');
         return;
       }
@@ -177,7 +190,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     // Play card
-    if (card.needsDiscard && currentPlayer.hand.length < 2) {
+    if (card.needsDiscard && targetPlayer.hand.length < 2) {
       setError(`You do not have enough cards to play this right now`);
       return;
     }

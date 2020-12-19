@@ -73,22 +73,22 @@ export const characters_DodgeCity: ICharacter[] = [
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bill_noface_x0ppgw.png',
   },
-  {
-    name: 'belle star',
-    hp: 4,
-    description:
-      'During her turn, no card in front of any other player has any effect. This applies both to the blue- as well as to the green- bordered cards.',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bill_noface_x0ppgw.png',
-  },
-  {
-    name: 'apache kid',
-    hp: 4,
-    description:
-      'He is unaffected by cards from the suit of Diamonds played by the other players. During a Duel , his ability does not work.',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bill_noface_x0ppgw.png',
-  },
+  // {
+  //   name: 'belle star',
+  //   hp: 4,
+  //   description:
+  //     'During her turn, no card in front of any other player has any effect. This applies both to the blue- as well as to the green- bordered cards.',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bill_noface_x0ppgw.png',
+  // },
+  // {
+  //   name: 'apache kid',
+  //   hp: 4,
+  //   description:
+  //     'He is unaffected by cards from the suit of Diamonds played by the other players. During a Duel , his ability does not work.',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888453/bang/dodge%20city/03_bill_noface_x0ppgw.png',
+  // },
   {
     name: 'chuck wengam',
     hp: 4,
@@ -96,15 +96,18 @@ export const characters_DodgeCity: ICharacter[] = [
       'During his turn, he can choose to lose 1 life point to draw 2 cards from the deck. He may also use this ability more than once in the same turn; however, he cannot choose to lose his last life point this way.',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_chuck_wengam_jgncdc.png',
+    hasActivePower: true,
   },
-  {
-    name: 'doc holyday',
-    hp: 4,
-    description:
-      'Once during his turn, he can discard any two cards from his hand for the effect of a BANG! against a player within range of his weapon. This ability does not count towards his limit of one BANG! card per turn. To hit Apache Kid in this way, at least one of the two discarded cards must not be a Diamond.',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_doc_holyday_a5fxxz.png',
-  },
+  // {
+  //   name: 'doc holyday',
+  //   hp: 4,
+  //   description:
+  //     'Once during his turn, he can discard any two cards from his hand for the effect of a BANG! against a player within range of his weapon. This ability does not count towards his limit of one BANG! card per turn. To hit Apache Kid in this way, at least one of the two discarded cards must not be a Diamond.',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888454/bang/dodge%20city/03_doc_holyday_a5fxxz.png',
+  //   hasActivePower: true,
+  //   activePowerUsesLeft: 1
+  // },
   {
     name: 'elena fuente',
     hp: 3,
@@ -135,15 +138,17 @@ export const characters_DodgeCity: ICharacter[] = [
       'During his turn he can discard a blue-bordered card from his hand to draw 2 cards from the deck. He may use this ability twice per turn.',
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1606888455/bang/dodge%20city/03_jose_delgado_az0duq.png',
+    hasActivePower: true,
+    activePowerUsesLeft: 2,
   },
-  {
-    name: 'molly stark',
-    hp: 4,
-    description:
-      'Each time she plays or voluntarily discards a Missed!, Beer, or BANG! card when it is not her turn, she draws one card from the deck. If she discards a BANG! during a Duel , she does not draw her replacement cards until the end of the Duel , when she would draw one card for each BANG! she used during the Duel . Cards that she is forced to discard due to cards like Cat Balou, Brawl, or Can-Can are not considered voluntarily discarded!',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_molly_stark_cskox2.png',
-  },
+  // {
+  //   name: 'molly stark',
+  //   hp: 4,
+  //   description:
+  //     'Each time she plays or voluntarily discards a Missed!, Beer, or BANG! card when it is not her turn, she draws one card from the deck. If she discards a BANG! during a Duel , she does not draw her replacement cards until the end of the Duel , when she would draw one card for each BANG! she used during the Duel . Cards that she is forced to discard due to cards like Cat Balou, Brawl, or Can-Can are not considered voluntarily discarded!',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_molly_stark_cskox2.png',
+  // },
   {
     name: 'pat brennan',
     hp: 4,
@@ -157,7 +162,7 @@ export const characters_DodgeCity: ICharacter[] = [
     hp: 3,
     description: 'During phase 1 of his turn, he draws 3 cards instead of 2.',
     imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888440/bang/valley%20of%20shadows/07_blackflower_pedhfp.png',
+      'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_pixie_pete_ybw05j.png',
   },
   {
     name: 'sean mallory',
@@ -175,15 +180,15 @@ export const characters_DodgeCity: ICharacter[] = [
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_tequila_joe_dvqjtv.png',
   },
-  {
-    name: 'vera custer',
-    realName: 'vera custer',
-    hp: 3,
-    description:
-      'At the beginning of her turn, before drawing any cards (in phase 1), she chooses any other character still in play. Until her next turn, she has the same ability as that character.',
-    imageUrl:
-      'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_vera_custer_emwagk.png',
-  },
+  // {
+  //   name: 'vera custer',
+  //   realName: 'vera custer',
+  //   hp: 3,
+  //   description:
+  //     'At the beginning of her turn, before drawing any cards (in phase 1), she chooses any other character still in play. Until her next turn, she has the same ability as that character.',
+  //   imageUrl:
+  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_vera_custer_emwagk.png',
+  // },
 ];
 
 export const cardsThatDrawsOneWhenPlayed: CardName[] = ['dodge', 'bible', 'derringer'];

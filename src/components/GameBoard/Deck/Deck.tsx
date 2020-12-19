@@ -56,11 +56,23 @@ export const Deck = () => {
       return;
     }
 
-    if (clientPlayer.character.name === 'kit carlson') {
-      moves.kitCarlsonDraw();
-      return;
+    switch (clientPlayer.character.name) {
+      case 'kit carlson': {
+        moves.kitCarlsonDraw();
+        return;
+      }
+      case 'pixie pete': {
+        moves.drawThreeFromDeck();
+        return;
+      }
+      case 'bill noface': {
+        moves.billNoFaceDraw();
+        return;
+      }
+      default:
+        moves.drawTwoFromDeck();
+        return;
     }
-    moves.drawTwoFromDeck();
   };
 
   return (

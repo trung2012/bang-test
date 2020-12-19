@@ -1,9 +1,23 @@
 import { Ctx } from 'boardgame.io';
-import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, cards_VOS } from '../expansions';
+import {
+  cardsThatDrawsOneWhenPlayed,
+  cards_DodgeCity,
+  cards_VOS,
+  characters_DodgeCity,
+  characters_VOS,
+} from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
 import { clearCardsInPlay } from './moves';
-import { IGameState, IGamePlayer, CharacterName, ICard, RobbingType } from './types';
+import {
+  IGameState,
+  IGamePlayer,
+  CharacterName,
+  ICard,
+  RobbingType,
+  CardName,
+  ICharacter,
+} from './types';
 
 export const hasDynamite = (player: IGamePlayer) => {
   return player.equipments.find(card => card.name === 'dynamite');
@@ -134,7 +148,10 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
     .map((card, index) => (card.name === 'beer' ? index : -1))
     .filter(index => index !== -1);
 
-  const hpAfterBeers = targetPlayer.hp + beerCardIndexes.length;
+  const hpAfterBeers =
+    targetPlayer.character.name === 'tequila joe'
+      ? targetPlayer.hp + beerCardIndexes.length * 2
+      : targetPlayer.hp + beerCardIndexes.length;
 
   if (hpAfterBeers > 0) {
     for (const beerCardIndex of beerCardIndexes) {
@@ -151,7 +168,7 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
 
 export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) => {
   if (expansions.includes('valley of shadows')) {
-    cards.push(...cards_VOS);
+    // cards.push(...cards_VOS);
   }
 
   if (expansions.includes('dodge city')) {
@@ -159,6 +176,18 @@ export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) =
   }
 
   return cards;
+};
+
+export const addExpansionCharacters = (characters: ICharacter[], expansions: ExpansionName[]) => {
+  if (expansions.includes('valley of shadows')) {
+    // characters.push(...characters_VOS);
+  }
+
+  if (expansions.includes('dodge city')) {
+    characters.push(...characters_DodgeCity);
+  }
+
+  return characters;
 };
 
 export const checkIfCanDrawOneAfterReacting = (
@@ -179,4 +208,27 @@ export const resetCardTimer = (card: ICard) => {
   if (card && card.timer !== undefined) {
     card.timer = 1;
   }
+};
+
+export const canPlayCardToReact = (
+  reactionRequired: {
+    sourcePlayerId: string | null;
+    cardNeeded: CardName[];
+    quantity: number;
+    cardToPlayAfterDiscard?: CardName | null;
+    targetPlayerId?: string;
+  },
+  reactingPlayer: IGamePlayer,
+  cardClicked: ICard
+) => {
+  return (
+    reactionRequired.cardNeeded.includes(cardClicked.name) ||
+    (reactingPlayer.character.name === 'calamity janet' &&
+      ['bang', 'missed'].includes(cardClicked.name) &&
+      reactionRequired.cardNeeded.some((cardName: CardName) =>
+        ['bang', 'missed'].includes(cardName)
+      )) ||
+    (reactionRequired.cardNeeded.includes('missed') &&
+      reactingPlayer.character.name === 'elena fuente')
+  );
 };

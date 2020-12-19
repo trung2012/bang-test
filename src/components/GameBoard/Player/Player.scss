@@ -14,7 +14,7 @@
 
     & > * {
       &:last-child:not(:only-child) {
-        margin-top: -$card-height / 1.8;
+        margin-top: -$card-height / 1.5;
       }
     }
   }
