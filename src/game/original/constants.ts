@@ -1,4 +1,3 @@
-import { CardNameExpansion } from '../expansions';
 import { ExpansionName } from './config';
 import { CardName, ICharacter, ILookup } from './types';
 
@@ -187,6 +186,8 @@ export const stageNames = {
   kitCarlsonDiscard: 'kitCarlsonDiscard',
   discard: 'discard',
   play: 'play',
+  discardToPlayCard: 'discardToPlayCard',
+  ragtime: 'ragtime',
 };
 
 export const gunRange: { [gunName: string]: number } = {
@@ -201,7 +202,9 @@ export const delayBetweenActions = 2000;
 export const animationDelayMilliseconds = 900;
 export const animationDelaySeconds = animationDelayMilliseconds / 1000;
 
-export const cardsWhichTargetCards: (CardName | CardNameExpansion)[] = ['cat balou', 'panic'];
+export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic', 'can can', 'conestoga'];
+
+export const cardsThatCanTargetsSelf: CardName[] = ['tequila'];
 
 export const teamLookUp = {
   sheriff: 'The Lawful',

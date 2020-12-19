@@ -12,8 +12,10 @@ export interface IGameState {
   activeStage: string | null;
   reactionRequired: {
     sourcePlayerId: string | null;
-    cardNeeded: (CardName | CardNameExpansion)[];
+    cardNeeded: CardName[];
     quantity: number;
+    cardToPlayAfterDiscard?: CardName | null;
+    targetPlayerId?: string;
   };
   sidKetchumId: string | null;
   expansions: ExpansionName[];
@@ -46,7 +48,7 @@ export interface IGamePlayer {
 
 export interface ICard {
   id: string;
-  name: CardName | CardNameExpansion;
+  name: CardName;
   value: number;
   suit: CardSuit;
   type: CardType;
@@ -113,7 +115,9 @@ export type CharacterName =
   | 'vera custer'
   | 'apache kid';
 
-export type CardName =
+export type CardName = CardNameOriginal | CardNameExpansion;
+
+export type CardNameOriginal =
   | 'barrel'
   | 'dynamite'
   | 'jail'
@@ -142,7 +146,7 @@ export interface ICardsToGenerate {
 }
 
 export interface ICardGenerationInfo {
-  name: CardName | CardNameExpansion;
+  name: CardName;
   imageUrl: string;
   timer?: number;
   needsDiscard?: boolean;

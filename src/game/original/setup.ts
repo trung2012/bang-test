@@ -1,7 +1,6 @@
 import { Ctx } from 'boardgame.io/dist/types/src/types';
 import { randomRotationValue } from '../../utils';
 import { generateRoles } from '../../utils/generateRoles';
-import { CardNameExpansion } from '../expansions';
 import { cards, cardsFor8 } from './cards';
 import { ISetupData } from './config';
 import { characters, gameRolesByNumPlayers } from './constants';
@@ -41,8 +40,9 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const players: IGamePlayerMap = {};
   const playOrder: string[] = [];
   const reactionRequired = {
-    cardNeeded: [] as (CardName | CardNameExpansion)[],
+    cardNeeded: [] as CardName[],
     quantity: 1,
+    cardToPlayAfterDiscard: null,
   };
   const activeStage = null;
   let sidKetchumId: string | null = null;

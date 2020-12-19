@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
 import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
-import { ICard, IGamePlayer } from '../../../game';
+import { cardsThatCanTargetsSelf, cardsWhichTargetCards, ICard, IGamePlayer } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
@@ -30,7 +30,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
     const sourcePlayer = players[sourcePlayerId];
 
     if (player.hp <= 0) return;
-    if (sourcePlayerId === player.id) return;
+    if (sourcePlayerId === player.id && !cardsThatCanTargetsSelf.includes(sourceCard.name)) return;
 
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
@@ -39,6 +39,21 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       player.id
     );
 
+    if (sourceCard.needsDiscard && sourcePlayer.hand.length < 2) {
+      setError(`You do not have enough cards to play this right now`);
+      return;
+    }
+
+    if (
+      sourceCard.needsDiscard &&
+      sourceCard.isTargeted &&
+      !cardsWhichTargetCards.includes(sourceCard.name)
+    ) {
+      moves.playCard(sourceCardIndex, player.id);
+      moves.makePlayerDiscardToPlay(sourceCard.name, player.id);
+      return;
+    }
+
     switch (sourceCard.name) {
       case 'missed': {
         if (sourcePlayer.character.name !== 'calamity janet') {
@@ -46,7 +61,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           return;
         }
         if (sourcePlayer.numBangsLeft <= 0) {
-          setError('You cannot play anymore bangs');
+          setError('You cannot play any more bangs');
           return;
         }
         if (sourcePlayer.gunRange < distanceBetweenPlayers) {
@@ -63,7 +78,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           return;
         }
         if (sourcePlayer.numBangsLeft <= 0) {
-          setError('You cannot play anymore bangs');
+          setError('You cannot play any more bangs');
           return;
         }
         moves.playCard(sourceCardIndex, player.id);

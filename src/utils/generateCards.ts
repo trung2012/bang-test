@@ -626,7 +626,7 @@ const cardsToGenerate_DodgeCity: ICardsToGenerate = {
   ],
 };
 
-// const cardsWithReaction: (CardName | CardNameExpansion)[] = [
+// const cardsWithReaction: CardName[] = [
 //   'bang',
 //   'duel',
 //   'gatling',
@@ -636,7 +636,7 @@ const cardsToGenerate_DodgeCity: ICardsToGenerate = {
 //   'fanning',
 // ];
 
-const targetedCards: (CardName | CardNameExpansion)[] = [
+const targetedCards: CardName[] = [
   'bang',
   'duel',
   'panic',
@@ -651,9 +651,9 @@ const targetedCards: (CardName | CardNameExpansion)[] = [
   'ghost',
   'rattlesnake',
   'punch',
-  'rag time',
   'springfield',
   'buffalo rifle',
+  'tequila',
   'can can',
   'conestoga',
   'derringer',
@@ -661,14 +661,9 @@ const targetedCards: (CardName | CardNameExpansion)[] = [
   'pepperbox',
 ];
 
-const cardsThatNeedDiscard: (CardName | CardNameExpansion)[] = [
-  'rag time',
-  'springfield',
-  'tequila',
-  'whisky',
-];
+const cardsThatNeedDiscard: CardName[] = ['rag time', 'springfield', 'tequila', 'whisky'];
 
-const playWithBangCards: (CardName | CardNameExpansion)[] = ['aim'];
+const playWithBangCards: CardName[] = ['aim'];
 
 const generateCards = (cardsToGenerate: ICardsToGenerate, type: string) => {
   fs.appendFileSync(

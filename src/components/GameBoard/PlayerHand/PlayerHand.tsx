@@ -65,7 +65,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
   const isPlayerDead = targetPlayer.hp <= 0;
   const isFacedUp = playerId === playerID || isPlayerDead;
   const [shouldAnimate, setShouldAnimate] = useState(true);
-  const maxCardRotationAngle = Math.min(hand.length * 25, 140);
+  const maxCardRotationAngle = Math.min(hand.length * 25, 135);
 
   useEffect(() => {
     setShouldAnimate(false);
@@ -96,10 +96,15 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
       return;
     }
 
-    if (G.activeStage === stageNames.takeCardFromHand) {
-      if (currentPlayer.character.name !== 'el gringo' || playerId !== ctx.currentPlayer) return;
-
+    if (G.activeStage === stageNames.ragtime) {
       moves.drawFromPlayerHand(playerID, playerId, index);
+      return;
+    }
+
+    if (G.activeStage === stageNames.takeCardFromHand) {
+      if (currentPlayer.character.name === 'el gringo' && playerId === ctx.currentPlayer) {
+        moves.drawFromPlayerHand(playerID, playerId, index);
+      }
     }
   };
 

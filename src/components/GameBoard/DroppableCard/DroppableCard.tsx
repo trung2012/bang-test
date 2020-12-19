@@ -24,7 +24,7 @@ export type CardContainerProps = {
 export const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   &:hover {
-    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-4rem)' : 'translateY(4rem)'} `};
+    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-3rem)' : 'translateY(2rem)'} `};
     z-index: 11;
   }
 `;
@@ -54,6 +54,13 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
       sourcePlayerId,
       playerId
     );
+
+    if (sourceCard.needsDiscard && sourceCard.isTargeted) {
+      moves.playCard(sourceCardIndex, playerId);
+      moves.makePlayerDiscardToPlay(sourceCard.name, playerId);
+      return;
+    }
+
     if (sourcePlayer.actionRange < distanceBetweenPlayers && sourceCard.name !== 'cat balou') {
       setError('Target player is out of range');
       return;

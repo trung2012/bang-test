@@ -3,6 +3,12 @@ import moves from './moves';
 import { IGameState } from './types';
 
 const stages: StageMap<IGameState> = {
+  discardToPlayCard: {
+    moves: {
+      discardFromHand: moves.discardFromHand,
+      resetGameStage: moves.resetGameStage,
+    },
+  },
   pickFromGeneralStore: {
     moves: {
       pickCardFromGeneralStore: moves.pickCardFromGeneralStore,

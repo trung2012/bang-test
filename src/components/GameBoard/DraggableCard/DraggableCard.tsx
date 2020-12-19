@@ -61,6 +61,22 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (!isActive || playerID !== playerId) return;
 
+    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
+      moves.discardFromHand(playerID, index);
+
+      if (G.reactionRequired.cardToPlayAfterDiscard) {
+        const moveName = G.reactionRequired.cardToPlayAfterDiscard.replace(' ', '').toLowerCase();
+
+        console.log(moveName, G.reactionRequired.targetPlayerId);
+
+        if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
+          throw Error('No move no target');
+        }
+
+        moves[moveName](G.reactionRequired.targetPlayerId);
+      }
+    }
+
     if (activeStage && reactionRequired.cardNeeded.length && selectedCards && setSelectedCards) {
       if (
         !isSelected &&
@@ -162,12 +178,23 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     // Play card
+    if (card.needsDiscard && currentPlayer.hand.length < 2) {
+      setError(`You do not have enough cards to play this right now`);
+      return;
+    }
+
     if (card.timer !== undefined && card.timer > 0 && card.name !== 'dynamite') {
       setError('You cannot play this card right now');
       return;
     }
 
     moves.playCard(index, playerID);
+
+    if (card.needsDiscard) {
+      moves.makePlayerDiscardToPlay(card.name, playerID);
+      return;
+    }
+
     const moveName = card.name.replace(' ', '').toLowerCase();
 
     if (moves[moveName]) {

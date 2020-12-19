@@ -1,7 +1,7 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames } from './constants';
-import { ICard, IGameState, RobbingType } from './types';
+import { CardName, ICard, IGameState, RobbingType } from './types';
 import {
   isCharacterInGame,
   getOtherPlayersAliveStages,
@@ -919,19 +919,54 @@ export const equipGreenCard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
   currentPlayer.equipmentsGreen.push(equipmentGreenCard);
 };
 
+export const resetDiscardStage = (G: IGameState, ctx: Ctx) => {
+  G.reactionRequired.cardToPlayAfterDiscard = null;
+  G.reactionRequired.targetPlayerId = undefined;
+};
+
+export const makePlayerDiscardToPlay = (
+  G: IGameState,
+  ctx: Ctx,
+  cardName: CardName,
+  targetPlayerId?: string
+) => {
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      currentPlayer: stageNames.discardToPlayCard,
+      moveLimit: 1,
+    });
+  }
+
+  G.reactionRequired.cardToPlayAfterDiscard = cardName;
+  G.reactionRequired.targetPlayerId = targetPlayerId;
+};
+
 export const ragtime = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
       currentPlayer: stageNames.takeCardFromHand,
-      moveLimit: 1,
     });
   }
+
+  G.activeStage = stageNames.ragtime;
+
+  resetDiscardStage(G, ctx);
+  clearCardsInPlay(G, ctx, ctx.currentPlayer);
+};
+
+export const springfield = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  bang(G, ctx, targetPlayerId);
+
+  resetDiscardStage(G, ctx);
+  clearCardsInPlay(G, ctx, targetPlayerId);
 };
 
 export const tequila = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const targetPlayer = G.players[targetPlayerId];
-
   targetPlayer.hp = Math.min(targetPlayer.maxHp, targetPlayer.hp + 1);
+
+  resetDiscardStage(G, ctx);
+  clearCardsInPlay(G, ctx, targetPlayerId);
 };
 
 export const whisky = (G: IGameState, ctx: Ctx) => {
@@ -943,13 +978,18 @@ export const whisky = (G: IGameState, ctx: Ctx) => {
   }
 
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 2);
+  resetDiscardStage(G, ctx);
+  clearCardsInPlay(G, ctx, ctx.currentPlayer);
 };
 
 export const moves_DodgeCity: MoveMap<IGameState> = {
   equipGreenCard,
   ragtime,
+  springfield,
   tequila,
   whisky,
+  makePlayerDiscardToPlay,
+  resetDiscardStage,
 };
 
 export const moves_VOS: MoveMap<IGameState> = {};

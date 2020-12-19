@@ -394,7 +394,7 @@ export const cards_DodgeCity: ICard[] = [
       'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_rag_time_i4vvik.png',
     suit: 'hearts',
     type: 'action',
-    isTargeted: true,
+    isTargeted: false,
     needsDiscard: true,
   },
   {
@@ -416,7 +416,7 @@ export const cards_DodgeCity: ICard[] = [
       'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_tequila_oirtpx.png',
     suit: 'clubs',
     type: 'action',
-    isTargeted: false,
+    isTargeted: true,
     needsDiscard: true,
   },
   {

@@ -9,25 +9,13 @@
 
   .player-equipments-container {
     position: absolute;
+    display: flex;
+    flex-direction: column;
 
     & > * {
       &:last-child:not(:only-child) {
-        margin-top: -$card-height / 2.5;
+        margin-top: -$card-height / 1.8;
       }
-    }
-  }
-
-  &.player0 {
-    .player-equipments-container {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  &:not(.player0) {
-    .player-equipments-container {
-      display: flex;
-      flex-direction: column;
     }
   }
 }
