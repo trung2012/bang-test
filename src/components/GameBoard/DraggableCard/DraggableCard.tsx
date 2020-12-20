@@ -2,7 +2,14 @@ import React, { Dispatch, Fragment, SetStateAction, useCallback, useState } from
 import classnames from 'classnames';
 import { Draggable, DragComponent } from 'react-dragtastic';
 import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
-import { canPlayCardToReact, delayBetweenActions, RobbingType, stageNames } from '../../../game';
+import {
+  canPlayCardToReact,
+  delayBetweenActions,
+  hasActiveDynamite,
+  isJailed,
+  RobbingType,
+  stageNames,
+} from '../../../game';
 import { ICard } from '../../../game';
 import { MoreOptions } from '../../shared';
 import { Card } from '../Card';
@@ -60,6 +67,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   const onCardClick = () => {
     const targetPlayer = players[playerId];
     const sourcePlayer = players[ctx.currentPlayer];
+    const isPlayerTurn = playerId === ctx.currentPlayer;
 
     if (
       cardLocation === 'green' &&
@@ -71,6 +79,16 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     if (!isActive || playerID !== playerId) return;
+
+    if (isPlayerTurn && hasActiveDynamite(targetPlayer)) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isPlayerTurn && isJailed(targetPlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
 
     if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
       if (targetPlayer.character.name === 'jose delgado' && card.type !== 'equipment') {
@@ -200,12 +218,12 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       return;
     }
 
-    if (card.timer !== undefined && card.timer > 0 && card.name !== 'dynamite') {
+    if (cardLocation === 'green' && card.timer !== undefined && card.timer > 0) {
       setError('You cannot play this card right now');
       return;
     }
 
-    moves.playCard(index, playerID);
+    moves.playCard(index, playerID, cardLocation);
 
     if (card.needsDiscard) {
       moves.makePlayerDiscardToPlay(card.name, playerID);
@@ -236,7 +254,12 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       <Draggable
         id={`${card.id}`}
         type='card'
-        data={{ sourceCard: card, sourceCardIndex: index, sourcePlayerId: playerID }}
+        data={{
+          sourceCard: card,
+          sourceCardIndex: index,
+          sourcePlayerId: playerID,
+          sourceCardLocation: cardLocation,
+        }}
       >
         {draggableDragState => (
           <DraggableCardContainer

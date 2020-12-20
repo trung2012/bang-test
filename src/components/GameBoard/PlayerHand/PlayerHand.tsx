@@ -113,7 +113,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
       <div className='player-hand'>
         {hand.map((card, index) => (
           <DraggableCard
-            key={`${card.id}-${index}`}
+            key={`${card.id}-${index}-hand`}
             card={card}
             index={index}
             isFacedUp={isFacedUp}

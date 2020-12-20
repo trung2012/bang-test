@@ -1,12 +1,13 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
-import { ICard, RobbingType } from '../../../game';
+import { hasActiveDynamite, ICard, isJailed, RobbingType } from '../../../game';
 import { Card } from '../Card';
 import './DroppableCard.scss';
 import { useErrorContext, useGameContext } from '../../../context';
 import { cardsWhichTargetCards, delayBetweenActions } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import styled from '@emotion/styled';
+import { IDraggableCardData } from '../DraggableCard/DraggableCard.types';
 interface IDroppableCardProps {
   card: ICard;
   index: number;
@@ -41,13 +42,28 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   const { setError, setNotification } = useErrorContext();
   const { players } = G;
 
-  const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
+  const onDrop = (data: IDraggableCardData) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
-    const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    const { sourceCard, sourceCardIndex, sourcePlayerId, sourceCardLocation } = data;
+    const sourcePlayer = players[sourcePlayerId];
 
     if (players[playerId].hp <= 0) return;
 
-    const sourcePlayer = players[sourcePlayerId];
+    if (hasActiveDynamite(sourcePlayer)) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isJailed(sourcePlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
+
+    if (sourceCardLocation === 'green' && sourceCard.timer !== undefined && sourceCard.timer > 0) {
+      setError('You cannot play this card right now');
+      return;
+    }
+
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
       playersInfo,
@@ -56,7 +72,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     );
 
     if (sourceCard.needsDiscard && sourceCard.isTargeted) {
-      moves.playCard(sourceCardIndex, playerId);
+      moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
       moves.makePlayerDiscardToPlay(sourceCard.name, playerId);
       setNotification('Please click on a card to discard and continue');
       return;
@@ -68,7 +84,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     }
     if (!cardsWhichTargetCards.includes(sourceCard.name)) return;
 
-    moves.playCard(sourceCardIndex, playerId);
+    moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
 
     setTimeout(() => {
       const moveName = sourceCard.name.replace(' ', '').toLowerCase();

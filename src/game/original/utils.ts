@@ -1,11 +1,5 @@
 import { Ctx } from 'boardgame.io';
-import {
-  cardsThatDrawsOneWhenPlayed,
-  cards_DodgeCity,
-  cards_VOS,
-  characters_DodgeCity,
-  characters_VOS,
-} from '../expansions';
+import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, characters_DodgeCity } from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
 import { clearCardsInPlay } from './moves';

@@ -2,8 +2,15 @@ import React, { useEffect } from 'react';
 import { Droppable } from 'react-dragtastic';
 import { IServerPlayer } from '../../../api/types';
 import { useCardsContext, useErrorContext, useGameContext } from '../../../context';
-import { cardsThatCanTargetsSelf, cardsWhichTargetCards, ICard, IGamePlayer } from '../../../game';
+import {
+  cardsThatCanTargetsSelf,
+  cardsWhichTargetCards,
+  hasActiveDynamite,
+  IGamePlayer,
+  isJailed,
+} from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
+import { IDraggableCardData } from '../DraggableCard/DraggableCard.types';
 import { PlayerButtons } from '../PlayerButtons';
 import { PlayerCardsInPlay } from '../PlayerCardsInPlay';
 import { PlayerEquipments } from '../PlayerEquipments';
@@ -24,13 +31,28 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
   const { selectedCards, setSelectedCards } = useCardsContext();
   const { players } = G;
 
-  const onDrop = (data: { sourceCard: ICard; sourceCardIndex: number; sourcePlayerId: string }) => {
+  const onDrop = (data: IDraggableCardData) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
-    const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    const { sourceCard, sourceCardIndex, sourcePlayerId, sourceCardLocation } = data;
     const sourcePlayer = players[sourcePlayerId];
 
     if (player.hp <= 0) return;
     if (sourcePlayerId === player.id && !cardsThatCanTargetsSelf.includes(sourceCard.name)) return;
+
+    if (hasActiveDynamite(sourcePlayer)) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isJailed(sourcePlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
+
+    if (sourceCardLocation === 'green' && sourceCard.timer !== undefined && sourceCard.timer > 0) {
+      setError('You cannot play this card right now');
+      return;
+    }
 
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
@@ -49,7 +71,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
       sourceCard.isTargeted &&
       !cardsWhichTargetCards.includes(sourceCard.name)
     ) {
-      moves.playCard(sourceCardIndex, player.id);
+      moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
       moves.makePlayerDiscardToPlay(sourceCard.name, player.id);
       setNotification('Please click on a card to discard and continue');
       return;
@@ -69,7 +91,7 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           setError('Target is out of range');
           return;
         }
-        moves.playCard(sourceCardIndex, player.id);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.bang(player.id);
         return;
       }
@@ -83,12 +105,12 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           setError('You cannot play any more bangs');
           return;
         }
-        moves.playCard(sourceCardIndex, player.id);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.bang(player.id);
         return;
       }
       case 'duel': {
-        moves.playCard(sourceCardIndex, player.id);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.duel(player.id, sourcePlayerId);
         return;
       }
@@ -114,12 +136,12 @@ export const Player: React.FC<IPlayerProps> = ({ player, playerIndex }) => {
           setError('Target is out of range');
           return;
         }
-        moves.playCard(sourceCardIndex, player.id);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.bang(player.id);
         return;
       }
       case 'buffalo rifle': {
-        moves.playCard(sourceCardIndex, player.id);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.bang(player.id);
         return;
       }

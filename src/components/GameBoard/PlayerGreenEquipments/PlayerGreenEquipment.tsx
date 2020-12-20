@@ -19,7 +19,12 @@ export const PlayerGreenEquipments: React.FC<IPlayerGreenEquipments> = ({
   return (
     <div className='player-green-equipments'>
       {equipments.map((card, index) => (
-        <DroppableDraggableCard key={card.id} card={card} index={index} playerId={playerId} />
+        <DroppableDraggableCard
+          key={`${card.id}-${index}-green`}
+          card={card}
+          index={index}
+          playerId={playerId}
+        />
       ))}
     </div>
   );

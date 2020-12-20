@@ -196,11 +196,25 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   }
 };
 
-export const playCard = (G: IGameState, ctx: Ctx, cardIndex: number, targetPlayerId: string) => {
+export const playCard = (
+  G: IGameState,
+  ctx: Ctx,
+  cardIndex: number,
+  targetPlayerId: string,
+  cardLocation: RobbingType
+) => {
   ctx.effects.swoosh();
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
-  const cardToPlay = currentPlayer.hand.splice(cardIndex, 1)[0];
+  let cardToPlay = currentPlayer.hand.splice(cardIndex, 1)[0];
+
+  switch (cardLocation) {
+    case 'green': {
+      cardToPlay = currentPlayer.equipmentsGreen.splice(cardIndex, 1)[0];
+      break;
+    }
+  }
+
   targetPlayer.cardsInPlay.push(cardToPlay);
 };
 
@@ -244,12 +258,20 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
   } else {
     const nextPlayerId = (Number(currentPlayer.id) + 1) % ctx.playOrder.length;
     const nextPlayer = G.players[nextPlayerId];
-    const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
-    nextPlayer.equipments.push(dynamiteCard);
-    while (currentPlayer.cardsInPlay.length > 0) {
-      const discardedCard = currentPlayer.cardsInPlay.shift();
-      if (discardedCard) {
-        G.discarded.push(discardedCard);
+    const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
+    if (
+      otherPlayersAlive.length === 1 &&
+      nextPlayer.equipments.some(card => card.name === 'dynamite')
+    ) {
+      // do nothing
+    } else {
+      const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
+      nextPlayer.equipments.push(dynamiteCard);
+      while (currentPlayer.cardsInPlay.length > 0) {
+        const discardedCard = currentPlayer.cardsInPlay.shift();
+        if (discardedCard) {
+          G.discarded.push(discardedCard);
+        }
       }
     }
   }
