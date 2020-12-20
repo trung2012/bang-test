@@ -28,6 +28,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
       <div
         className={classnames('player-info', {
           'player-info--active': isActivePlayer,
+          'player-info--reacting': isReactingPlayer,
         })}
       >
         {player.role === 'sheriff' && (
@@ -39,7 +40,6 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
         <div
           className={classnames('player-character-image-container', {
             'player-character-image-container--active': isActivePlayer,
-            'player-character-image-container--reacting': isReactingPlayer,
           })}
         >
           <Tippy content={player.character.description}>
