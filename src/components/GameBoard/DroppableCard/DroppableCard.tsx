@@ -10,7 +10,7 @@ import {
 import { Card } from '../Card';
 import './DroppableCard.scss';
 import { useErrorContext, useGameContext } from '../../../context';
-import { cardsWhichTargetCards, delayBetweenActions } from '../../../game';
+import { delayBetweenActions } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import styled from '@emotion/styled';
 import { IDraggableCardData } from '../DraggableCard/DraggableCard.types';
@@ -85,13 +85,12 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     }
 
     if (
-      sourcePlayer.actionRange < distanceBetweenPlayers &&
-      !cardsWithNoRangeLimit.includes(card.name)
+      !cardsWithNoRangeLimit.includes(card.name) ||
+      sourcePlayer.actionRange < distanceBetweenPlayers
     ) {
       setError('Target player is out of range');
       return;
     }
-    if (!cardsWhichTargetCards.includes(sourceCard.name)) return;
 
     moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
 

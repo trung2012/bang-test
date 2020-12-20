@@ -420,8 +420,21 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
         currentPlayer.numBangsLeft = 1;
       }
     }
-    currentPlayer.gunRange =
-      currentPlayer.character.name === 'rose doolan' ? newGunRange + 1 : newGunRange;
+
+    let extraRange = 0;
+    if (currentPlayer.character.name === 'rose doolan') {
+      extraRange += 1;
+    }
+
+    if (currentPlayer.equipments.some(card => card.name === 'scope')) {
+      extraRange += 1;
+    }
+
+    if (currentPlayer.equipments.some(card => card.name === 'binocular')) {
+      extraRange += 1;
+    }
+
+    currentPlayer.gunRange = newGunRange + extraRange;
   }
 
   currentPlayer.equipments.push(equipmentCard);
