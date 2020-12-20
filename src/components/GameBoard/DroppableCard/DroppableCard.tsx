@@ -85,7 +85,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     }
 
     if (
-      cardsWithNoRangeLimit.includes(card.name) ||
+      cardsWithNoRangeLimit.includes(sourceCard.name) ||
       sourcePlayer.actionRange >= distanceBetweenPlayers
     ) {
       moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
