@@ -26,7 +26,7 @@
     align-self: flex-end;
     flex-direction: row;
     align-items: center;
-    justify-self: center;
+    justify-self: flex-start;
     margin-left: 3rem;
 
     .player-info {
@@ -36,7 +36,8 @@
     }
 
     .player-hand {
-      margin-left: 1rem;
+      position: absolute;
+      left: 100%;
     }
 
     .player-equipments-container {
@@ -567,9 +568,9 @@
     // 5
     .player5 {
       grid-column: 7 / span 2;
-      grid-row: 2 / span 3;
+      grid-row: 2 / span 2;
       flex-direction: row-reverse;
-      align-self: center;
+      align-self: flex-start;
       justify-self: flex-end;
       margin-right: 1rem;
 
@@ -579,12 +580,16 @@
 
       .player-cards-in-play {
         left: 0;
-        transform: translate(0, 18rem);
+        transform: translate(0, 21rem);
       }
 
       .player-equipments-container {
-        top: -$card-height;
-        right: 30%;
+        top: 0;
+        right: 120%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
     }
   }
@@ -626,7 +631,7 @@
     // 6
     .player6 {
       grid-column: 7 / span 2;
-      grid-row: 2 / span 2;
+      grid-row: 5 / span 2;
       flex-direction: row-reverse;
       align-self: flex-start;
       justify-self: flex-end;

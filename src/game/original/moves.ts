@@ -157,11 +157,11 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
     G.discarded.push(dynamiteCard);
   }
 
-  checkIfBeersCanSave(G, ctx, targetPlayer);
-
   clearCardsInPlay(G, ctx, targetPlayerId);
 
   if (targetPlayer.hp <= 0) {
+    checkIfBeersCanSave(G, ctx, targetPlayer);
+
     const vultureSamId = isCharacterInGame(G, 'vulture sam');
 
     if (vultureSamId && vultureSamId !== targetPlayerId) {

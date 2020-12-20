@@ -24,7 +24,7 @@ export const DraggableCardContainer = styled.div<{
         ? 'translateY(-3rem)'
         : 'translateY(-1rem)'
       : 'none',
-    zIndex: 10,
+    zIndex: props.cardLocation === 'hand' ? 1 : 10,
   },
 }));
 

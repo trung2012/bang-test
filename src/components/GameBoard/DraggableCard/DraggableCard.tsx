@@ -78,6 +78,11 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         return;
       }
 
+      if (cardLocation !== 'hand') {
+        setError('You can only discard from your hand');
+        return;
+      }
+
       moves.discardFromHand(playerID, index);
 
       if (G.reactionRequired.cardToPlayAfterDiscard) {
