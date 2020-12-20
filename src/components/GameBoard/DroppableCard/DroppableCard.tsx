@@ -85,23 +85,23 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     }
 
     if (
-      !cardsWithNoRangeLimit.includes(card.name) ||
-      sourcePlayer.actionRange < distanceBetweenPlayers
+      cardsWithNoRangeLimit.includes(card.name) ||
+      sourcePlayer.actionRange >= distanceBetweenPlayers
     ) {
+      moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
+
+      setTimeout(() => {
+        const moveName = sourceCard.name.replace(' ', '').toLowerCase();
+        const robbingType: RobbingType = cardLocation;
+        moves.clearCardsInPlay(playerId);
+        if (moves[moveName]) {
+          moves[moveName](playerId, index, robbingType);
+        }
+      }, delayBetweenActions);
+    } else {
       setError('Target player is out of range');
       return;
     }
-
-    moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
-
-    setTimeout(() => {
-      const moveName = sourceCard.name.replace(' ', '').toLowerCase();
-      const robbingType: RobbingType = cardLocation;
-      moves.clearCardsInPlay(playerId);
-      if (moves[moveName]) {
-        moves[moveName](playerId, index, robbingType);
-      }
-    }, delayBetweenActions);
   };
 
   return (

@@ -157,6 +157,7 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
     }
 
     clearCardsInPlay(G, ctx, targetPlayer.id);
+    return true;
   }
 };
 
