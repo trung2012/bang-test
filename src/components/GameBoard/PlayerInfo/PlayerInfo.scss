@@ -24,6 +24,10 @@
   &--active {
     box-shadow: $box-shadow-player-active;
   }
+
+  &--reacting {
+    box-shadow: $box-shadow-player-reacting;
+  }
 }
 
 .player-role {

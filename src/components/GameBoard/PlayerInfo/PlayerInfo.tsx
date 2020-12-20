@@ -6,7 +6,6 @@ import { PlayerHp } from '../PlayerHp';
 import { PlayerDead } from '../PlayerDead';
 import { ReactComponent as SheriffBadge } from '../../../assets/sheriff.svg';
 import Tippy from '@tippyjs/react';
-import { stageNames } from '../../../game';
 import explosionImg from '../../../assets/explosion.png';
 import jailImg from '../../../assets/jail.png';
 import './PlayerInfo.scss';
@@ -17,11 +16,8 @@ interface IPlayerInfoProps {
 export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
   const { ctx, playerID } = useGameContext();
   const isClientPlayer = player.id === playerID;
-  const isActivePlayer =
-    player.id === ctx.currentPlayer ||
-    (ctx.activePlayers &&
-      ctx.activePlayers[player.id] &&
-      ctx.activePlayers[player.id] !== stageNames.discard);
+  const isActivePlayer = player.id === ctx.currentPlayer;
+  const isReactingPlayer = ctx.activePlayers && ctx.activePlayers[player.id];
 
   if (player.hp <= 0) {
     return <PlayerDead player={player} />;
@@ -43,6 +39,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
         <div
           className={classnames('player-character-image-container', {
             'player-character-image-container--active': isActivePlayer,
+            'player-character-image-container--reacting': isReactingPlayer,
           })}
         >
           <Tippy content={player.character.description}>

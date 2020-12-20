@@ -1,6 +1,12 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
-import { hasActiveDynamite, ICard, isJailed, RobbingType } from '../../../game';
+import {
+  cardsWithNoRangeLimit,
+  hasActiveDynamite,
+  ICard,
+  isJailed,
+  RobbingType,
+} from '../../../game';
 import { Card } from '../Card';
 import './DroppableCard.scss';
 import { useErrorContext, useGameContext } from '../../../context';
@@ -78,7 +84,10 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
       return;
     }
 
-    if (sourcePlayer.actionRange < distanceBetweenPlayers) {
+    if (
+      sourcePlayer.actionRange < distanceBetweenPlayers &&
+      !cardsWithNoRangeLimit.includes(card.name)
+    ) {
       setError('Target player is out of range');
       return;
     }

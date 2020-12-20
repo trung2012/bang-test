@@ -206,6 +206,13 @@ export const cardsWhichTargetCards: CardName[] = ['cat balou', 'panic', 'can can
 
 export const cardsThatCanTargetsSelf: CardName[] = ['tequila'];
 
+export const cardsWithNoRangeLimit: CardName[] = [
+  'cat balou',
+  'can can',
+  'conestoga',
+  'buffalo rifle',
+];
+
 export const cardsThatWorkAgainstBang: CardName[] = [
   'missed',
   'dodge',
