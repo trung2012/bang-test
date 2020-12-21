@@ -833,7 +833,7 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
   G.generalStoreOrder = [
     ...ctx.playOrder.slice(ctx.playOrderPos),
     ...ctx.playOrder.slice(0, ctx.playOrderPos),
-  ];
+  ].filter(playerId => G.players[playerId].hp > 0);
 };
 
 const pickCardFromGeneralStore = (
