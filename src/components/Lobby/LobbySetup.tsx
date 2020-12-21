@@ -51,7 +51,10 @@ export const LobbySetup: React.FC<ILobbySetupProps> = ({ startGame, roomId }) =>
 
   useEffect(() => {
     const alreadyJoined = roomData?.players.find(player => player.name === playerName);
-    if (alreadyJoined) return;
+    if (alreadyJoined) {
+      dispatch(setPlayerId(alreadyJoined.id));
+      return;
+    }
 
     const emptySeatId = roomData?.players.find(player => !player.name)?.id;
     if (emptySeatId !== undefined) {

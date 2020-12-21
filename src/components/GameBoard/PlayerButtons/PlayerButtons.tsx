@@ -110,6 +110,10 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     moves.takeDamage(player.id);
   };
 
+  if (player.hp <= 0) {
+    return null;
+  }
+
   return (
     <div className='player-buttons'>
       {isCurrentPlayer && (
