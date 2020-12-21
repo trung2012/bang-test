@@ -256,21 +256,10 @@ export const useBgioEffects = () => {
 
   useEffectListener<BangEffectsConfig>(
     'clearJail',
-    (payload: { playerId: string; isFailure: boolean }) => {
-      const { playerId, isFailure } = payload;
+    (isFailure: boolean) => {
       if (!isFailure) {
         playFanfare();
       }
-
-      const playerJailElement = document.getElementsByClassName(`jail-bars-${playerId}`)[0];
-
-      gsap.to(playerJailElement, {
-        opacity: 0,
-        zIndex: -100,
-        y: -2000,
-        duration: 0.5,
-        ease: Power3.easeIn,
-      });
     },
     [playFanfare]
   );

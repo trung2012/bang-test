@@ -55,22 +55,31 @@
 @mixin player1($numPlayers) {
   @if $numPlayers == 2 {
     .player1 {
-      grid-column: 4 / span 2;
-      grid-row: 1;
+      grid-column: 7 / span 2;
+      grid-row: 6 / span 3;
+      flex-direction: row-reverse;
       align-self: flex-start;
-      justify-self: center;
-      margin-top: 2rem;
-
-      .player-equipments-container {
-        left: $card-width * 2;
-      }
+      justify-self: flex-end;
+      margin-right: 2rem;
+      margin-top: 4rem;
 
       .player-hand {
-        transform: translateX(3rem) rotate(5deg);
+        transform: translate(-7rem, 14rem) rotate(40deg);
+        z-index: 1;
       }
 
       .player-cards-in-play {
-        top: $card-height * 2;
+        left: 0;
+        transform: translate(1rem, -15rem);
+      }
+
+      .player-equipments-container {
+        top: -25%;
+        right: 110%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
     }
   }
@@ -85,7 +94,7 @@
       margin-left: 1rem;
 
       .player-hand {
-        transform: translate(10rem, 10rem) rotate(-65deg);
+        transform: translate(10rem, 15rem) rotate(-65deg);
       }
 
       .player-cards-in-play {
@@ -108,7 +117,7 @@
       margin-left: 1rem;
 
       .player-hand {
-        transform: translate(10rem, 10rem) rotate(-65deg);
+        transform: translate(10rem, 15rem) rotate(-65deg);
       }
 
       .player-cards-in-play {
@@ -131,7 +140,7 @@
       margin-left: 1rem;
 
       .player-hand {
-        transform: translate(10rem, 10rem) rotate(-65deg);
+        transform: translate(10rem, 15rem) rotate(-65deg);
       }
 
       .player-cards-in-play {
@@ -154,7 +163,7 @@
       margin-left: 1rem;
 
       .player-hand {
-        transform: translate(10rem, 10rem) rotate(-65deg);
+        transform: translate(10rem, 15rem) rotate(-65deg);
       }
 
       .player-cards-in-play {
@@ -345,21 +354,25 @@
     .player3 {
       grid-column: 5 / span 4;
       grid-row: 1 / span 2;
-      align-self: flex-start;
-      justify-self: center;
+      align-self: center;
+      justify-self: flex-end;
       margin-top: 1rem;
 
       .player-equipments-container {
-        left: $card-width * 2;
+        top: -25%;
+        right: 120%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
 
       .player-hand {
-        transform: translateX(3rem) rotate(15deg);
+        transform: translate(-5rem, 5rem) rotate(40deg);
       }
 
       .player-cards-in-play {
-        left: -$card-width;
-        top: $card-height * 0.2;
+        transform: translate(-24rem, 15rem);
       }
     }
   }
@@ -448,7 +461,7 @@
       margin-right: 1rem;
 
       .player-hand {
-        transform: translate(-15rem, 0) rotate(80deg);
+        transform: translate(-11rem, 13rem) rotate(60deg);
       }
 
       .player-cards-in-play {
@@ -457,8 +470,12 @@
       }
 
       .player-equipments-container {
-        top: -$card-height;
-        right: 35%;
+        top: -40%;
+        right: 110%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
     }
   }
@@ -473,7 +490,7 @@
       margin-right: 1rem;
 
       .player-hand {
-        transform: translate(-15rem, 0) rotate(80deg);
+        transform: translate(-15rem, 10rem) rotate(60deg);
       }
 
       .player-cards-in-play {
@@ -491,23 +508,27 @@
   @if $numPlayers == 7 {
     // 4
     .player4 {
-      grid-column: 5 / span 3;
+      grid-column: 5 / span 4;
       grid-row: 1 / span 2;
-      align-self: flex-start;
-      justify-self: center;
+      align-self: center;
+      justify-self: flex-end;
       margin-top: 1rem;
 
       .player-equipments-container {
-        left: $card-width * 2;
+        top: -25%;
+        right: 120%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
 
       .player-hand {
-        transform: translateX(3rem) rotate(15deg);
+        transform: translate(-5rem, 5rem) rotate(40deg);
       }
 
       .player-cards-in-play {
-        left: -$card-width;
-        top: $card-height * 0.2;
+        transform: translate(-24rem, 15rem);
       }
     }
   }
@@ -549,7 +570,7 @@
       margin-right: 1rem;
 
       .player-hand {
-        transform: translate(-15rem, 0) rotate(80deg);
+        transform: translate(-15rem, 10rem) rotate(60deg);
       }
 
       .player-cards-in-play {
@@ -570,12 +591,12 @@
       grid-column: 7 / span 2;
       grid-row: 2 / span 2;
       flex-direction: row-reverse;
-      align-self: flex-start;
+      align-self: flex-end;
       justify-self: flex-end;
       margin-right: 1rem;
 
       .player-hand {
-        transform: translate(-15rem, 0) rotate(80deg);
+        transform: translate(-17rem, 3rem) rotate(75deg);
       }
 
       .player-cards-in-play {
@@ -584,8 +605,8 @@
       }
 
       .player-equipments-container {
-        top: 0;
-        right: 120%;
+        bottom: 90%;
+        right: 100%;
 
         & > * {
           flex-direction: row-reverse;
@@ -631,7 +652,7 @@
     // 6
     .player6 {
       grid-column: 7 / span 2;
-      grid-row: 5 / span 2;
+      grid-row: 6 / span 2;
       flex-direction: row-reverse;
       align-self: flex-start;
       justify-self: flex-end;
@@ -647,8 +668,12 @@
       }
 
       .player-equipments-container {
-        top: -$card-height;
-        right: 30%;
+        bottom: 90%;
+        right: 100%;
+
+        & > * {
+          flex-direction: row-reverse;
+        }
       }
     }
   }
@@ -662,20 +687,21 @@
       align-self: center;
       justify-self: flex-end;
       margin-right: 2rem;
-      margin-top: 2rem;
+      margin-bottom: 1rem;
 
       .player-hand {
-        transform: translate(-5rem, 18rem) rotate(40deg);
+        transform: translate(-9rem, 16rem) rotate(30deg);
+        z-index: 1;
       }
 
       .player-cards-in-play {
         left: 0;
-        transform: translate(-33rem, 23rem);
+        transform: translate(-27rem, 19rem);
       }
 
       .player-equipments-container {
-        top: 0;
-        right: 120%;
+        bottom: 30%;
+        right: 110%;
 
         & > * {
           flex-direction: row-reverse;

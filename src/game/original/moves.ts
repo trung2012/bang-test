@@ -244,7 +244,7 @@ export const jailResult = (G: IGameState, ctx: Ctx) => {
     ctx.events.endTurn();
   }
 
-  ctx.effects.clearJail({ playerId: ctx.currentPlayer, isFailure });
+  ctx.effects.clearJail(isFailure);
 };
 
 export const dynamiteResult = (G: IGameState, ctx: Ctx) => {

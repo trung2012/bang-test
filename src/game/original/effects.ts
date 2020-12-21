@@ -21,10 +21,7 @@ export const config = {
       create: (playerId: string) => playerId,
     },
     clearJail: {
-      create: (payload: { playerId: string; isFailure: boolean }) => ({
-        playerId: payload.playerId,
-        isFailure: payload.isFailure,
-      }),
+      create: (isFailure: boolean) => isFailure,
     },
     beer: {
       create: (cardId: string) => cardId,

@@ -1,8 +1,10 @@
 import React from 'react';
+import classnames from 'classnames';
 import { IGamePlayer, roleImageSrcLookup } from '../../../game';
 import { ReactComponent as TombSvg } from '../../../assets/tomb.svg';
 import './PlayerDead.scss';
 import { useGameContext } from '../../../context';
+import explosionImg from '../../../assets/explosion.png';
 
 export const PlayerDead: React.FC<{ player: IGamePlayer }> = ({ player }) => {
   const { playersInfo } = useGameContext();
@@ -16,6 +18,11 @@ export const PlayerDead: React.FC<{ player: IGamePlayer }> = ({ player }) => {
       {player.role !== 'sheriff' && (
         <img className='player-role-img' src={playerRoleImg} alt={player.role} />
       )}
+      <img
+        className={classnames('dynamite-explosion', `dynamite-explosion-${player.id}`)}
+        src={explosionImg}
+        alt='explosion'
+      />
     </>
   );
 };
