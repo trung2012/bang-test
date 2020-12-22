@@ -73,7 +73,7 @@ export const GameTable = () => {
       <div className={`game-table game-table--${playersInfo.length}-players`}>
         {renderedPlayers &&
           renderedPlayers.map((p, index) => {
-            const player = { ...players[p.id], name: p.name };
+            const player = { ...players[p.id], name: players[p.id].name || p.name };
 
             return player && <Player key={player.id} player={player} playerIndex={index} />;
           })}

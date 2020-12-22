@@ -58,6 +58,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
 
     const player: IGamePlayer = {
       id: playerId,
+      name: setupData?.previousGamePlayers ? setupData.previousGamePlayers[playerId] : undefined,
       hp: playerRole === 'sheriff' ? playerCharacter.hp + 1 : playerCharacter.hp,
       maxHp: playerRole === 'sheriff' ? playerCharacter.hp + 1 : playerCharacter.hp,
       hand,

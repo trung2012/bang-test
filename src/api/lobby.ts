@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { SERVER_URL } from '../config';
-import { ISetupData } from '../game';
+import { IPreviousGamePlayers, ISetupData } from '../game';
 import { IPlayerJoinData, IRoomData } from './types';
 
 const gameName = 'bang';
@@ -24,7 +24,7 @@ const createGame = async (numPlayers: number, setupData?: ISetupData) => {
   }
 };
 
-const joinGame = async (roomId: string, playerData: IPlayerJoinData): Promise<string> => {
+const joinGame = async (roomId: string, playerData: IPlayerJoinData) => {
   const { data } = await axios.post(`/${roomId}/join`, {
     ...playerData,
   });
@@ -37,9 +37,28 @@ const getGameData = async (roomId: string): Promise<IRoomData> => {
   return data;
 };
 
-const leaveRoom = async (roomId: string, playerId: string, credentials: string): Promise<void> => {
+const leaveRoom = async (roomId: string, playerId: string, credentials: string) => {
   try {
     await axios.post(`/${roomId}/leave`, { playerID: playerId, credentials });
+  } catch (err) {
+    console.log(err.response.data);
+  }
+};
+
+const playAgain = async (
+  roomId: string,
+  playerId: string,
+  credentials: string,
+  previousGamePlayers?: IPreviousGamePlayers
+) => {
+  try {
+    let requestBody = { playerID: playerId, credentials, setupData: { previousGamePlayers } };
+    if (previousGamePlayers) {
+      requestBody.setupData = { previousGamePlayers };
+    }
+
+    const { data } = await axios.post(`/${roomId}/playAgain`, requestBody);
+    return data.nextMatchID;
   } catch (err) {
     console.log(err.response.data);
   }
@@ -50,4 +69,5 @@ export const lobbyService = {
   joinGame,
   getGameData,
   leaveRoom,
+  playAgain,
 };
