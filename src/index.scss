@@ -1,5 +1,11 @@
+@import './sass/_mixins';
+
 html {
-  font-size: 62.5%;
+  font-size: 59.375%;
+
+  @include respond(big-desktop) {
+    font-size: 62.5%;
+  }
 }
 
 body {

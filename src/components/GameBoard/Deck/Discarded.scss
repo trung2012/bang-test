@@ -1,8 +1,8 @@
-@import '../../../sass/_main';
+@import '../../../sass/_variables';
 
 .discarded {
-  width: 10rem;
-  height: 15rem;
+  width: $card-width;
+  height: $card-height;
   border: dashed 4px $color-gray-light;
   cursor: pointer;
 

@@ -1,11 +1,11 @@
-@import '../../../sass/_main';
+@import '../../../sass/_variables';
 
 .card-pile {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10rem;
-  height: 15rem;
+  width: $card-width;
+  height: $card-height;
   border-radius: $card-border-radius;
   position: relative;
 

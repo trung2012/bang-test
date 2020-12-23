@@ -1,3 +1,29 @@
+@mixin respond($breakpoint) {
+  @if $breakpoint == phone {
+    @media (max-width: 37.5em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-port {
+    @media (max-width: 56.25em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-land {
+    @media (max-width: 75em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == big-desktop {
+    @media (min-width: 120.0625em) {
+      @content;
+    }
+  }
+}
+
 @mixin gameTableLayout($numPlayers) {
   position: relative;
   display: grid;
@@ -61,10 +87,10 @@
       align-self: flex-start;
       justify-self: flex-end;
       margin-right: 2rem;
-      margin-top: 4rem;
+      margin-top: 2rem;
 
       .player-hand {
-        transform: translate(-7rem, 14rem) rotate(40deg);
+        transform: translate(-10rem, 11rem) rotate(50deg);
         z-index: 1;
       }
 
@@ -718,13 +744,14 @@
       grid-column: 7 / span 2;
       grid-row: 6 / span 3;
       flex-direction: row-reverse;
-      align-self: center;
+      align-self: flex-start;
       justify-self: flex-end;
       margin-right: 2rem;
       margin-top: 2rem;
 
       .player-hand {
-        transform: translate(-15rem, 10rem) rotate(80deg);
+        transform: translate(-10rem, 11rem) rotate(50deg);
+        z-index: 1;
       }
 
       .player-cards-in-play {
@@ -734,7 +761,7 @@
 
       .player-equipments-container {
         top: -25%;
-        right: 120%;
+        right: 110%;
 
         & > * {
           flex-direction: row-reverse;

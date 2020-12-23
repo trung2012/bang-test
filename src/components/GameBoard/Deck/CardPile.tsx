@@ -4,6 +4,7 @@ import { Card } from '../Card';
 
 import { ICard } from '../../../game';
 import './CardPile.scss';
+import classnames from 'classnames';
 
 const CardContainer = styled(Card)<{ index: number; cardRotationValue: number }>`
   position: absolute;
@@ -20,7 +21,7 @@ interface ICardPileProps {
 
 export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className, onClick }) => {
   return (
-    <div className={`${className ?? ''} card-pile`} onClick={onClick}>
+    <div className={classnames(`card-pile `, className ? className : '')} onClick={onClick}>
       {cards.map((card, index) => {
         return (
           <CardContainer

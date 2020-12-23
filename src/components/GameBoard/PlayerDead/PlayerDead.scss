@@ -1,8 +1,8 @@
 @import '../../../sass/_variables';
 
 .tomb {
-  height: 15rem;
-  width: 10rem;
+  height: $card-height;
+  width: $card-width;
 }
 
 .player-role-img {
