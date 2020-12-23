@@ -84,6 +84,8 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
       return;
     }
 
+    if (!sourceCard.isTargeted) return;
+
     if (
       cardsWithNoRangeLimit.includes(sourceCard.name) ||
       sourcePlayer.actionRange >= distanceBetweenPlayers

@@ -22,7 +22,7 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
   const { roomId } = useParams<{ roomId: string }>();
   const clientPlayerId = useSelector(selectPlayerId);
   const clientPlayerCredentials = useSelector(selectPlayerCredentials);
-  const { playersInfo = [] } = useGameContext();
+  const { G, playersInfo = [] } = useGameContext();
   const winners = gameResult.winners.map(player => ({
     ...player,
     name: playersInfo[Number(player.id)].name,
@@ -53,12 +53,16 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
     }
 
     const previousGamePlayers = getPreviousGamePlayersMap(playersInfo);
+    const previousExpansion = G.expansions;
 
     const nextMatchID = await lobbyService.playAgain(
       roomId,
       clientPlayerId,
       clientPlayerCredentials,
-      previousGamePlayers
+      {
+        previousGamePlayers,
+        expansions: previousExpansion,
+      }
     );
     history.push(`/rooms/${nextMatchID}`);
   };

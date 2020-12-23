@@ -17,9 +17,7 @@ export const config = {
       create: (cardId: string) => cardId,
     },
     swoosh: {},
-    jail: {
-      create: (playerId: string) => playerId,
-    },
+    jail: {},
     clearJail: {
       create: (isFailure: boolean) => isFailure,
     },

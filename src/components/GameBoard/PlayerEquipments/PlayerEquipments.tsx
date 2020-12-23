@@ -1,6 +1,6 @@
 import React from 'react';
-import { useGameContext } from '../../../context';
-import { delayBetweenActions, stageNames } from '../../../game';
+import { useErrorContext, useGameContext } from '../../../context';
+import { delayBetweenActions, hasActiveDynamite, isJailed, stageNames } from '../../../game';
 import { ICard } from '../../../game';
 import { DroppableCard } from '../DroppableCard';
 import './PlayerEquipments.scss';
@@ -11,25 +11,58 @@ interface IPlayerEquipments {
 }
 
 export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipments }) => {
-  const { G, ctx, playerID, moves } = useGameContext();
+  const { G, ctx, playerID, moves, isActive } = useGameContext();
+  const { setError } = useErrorContext();
+  const { players } = G;
+  const cardLocation = 'equipment';
 
   const onEquipmentClick = (equipmentCard: ICard, index: number) => {
-    const player = G.players[playerId];
-    const sourcePlayer = G.players[ctx.currentPlayer];
-    if (sourcePlayer.character.name === 'pat brennan' && sourcePlayer.cardDrawnAtStartLeft >= 2) {
-      moves.patBrennanEquipmentDraw(playerId, index, 'equipment');
+    if (!isActive || playerID === null) return;
+
+    const sourcePlayer = players[playerID];
+    const targetPlayer = players[playerId];
+    const isPlayerTurn = playerId === playerID;
+
+    if (
+      sourcePlayer.character.name === 'pat brennan' &&
+      G.activeStage !== stageNames.reactToGatling &&
+      G.activeStage !== stageNames.reactToBang
+    ) {
+      if (isPlayerTurn && hasActiveDynamite(sourcePlayer)) {
+        setError('Please draw for dynamite');
+        return;
+      }
+
+      if (isPlayerTurn && isJailed(sourcePlayer)) {
+        setError('Please draw for jail');
+        return;
+      }
+
+      if (sourcePlayer.cardDrawnAtStartLeft >= 2) {
+        moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
+        return;
+      }
+    }
+
+    if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer] === stageNames.ragtime) {
+      moves.panic(playerId, index, cardLocation);
       return;
     }
 
-    if (playerID !== playerId || equipmentCard.name !== 'barrel' || player.barrelUseLeft <= 0) {
+    if (playerID !== playerId) {
       return;
     }
 
-    if (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) {
+    if (
+      equipmentCard.name === 'barrel' &&
+      (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) &&
+      targetPlayer.barrelUseLeft > 0
+    ) {
       moves.drawToReact(playerID);
       setTimeout(() => {
         moves.barrelResult(playerID, false);
       }, delayBetweenActions);
+      return;
     }
   };
 
@@ -46,7 +79,7 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
           index={index}
           isFacedUp={true}
           playerId={playerId}
-          cardLocation='equipment'
+          cardLocation={cardLocation}
           onClick={() => onEquipmentClick(card, index)}
         />
       ))}

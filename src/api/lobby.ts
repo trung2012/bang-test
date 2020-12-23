@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { SERVER_URL } from '../config';
-import { IPreviousGamePlayers, ISetupData } from '../game';
+import { ISetupData } from '../game';
 import { IPlayerJoinData, IRoomData } from './types';
 
 const gameName = 'bang';
@@ -49,12 +49,12 @@ const playAgain = async (
   roomId: string,
   playerId: string,
   credentials: string,
-  previousGamePlayers?: IPreviousGamePlayers
+  setupData: ISetupData
 ) => {
   try {
-    let requestBody = { playerID: playerId, credentials, setupData: { previousGamePlayers } };
-    if (previousGamePlayers) {
-      requestBody.setupData = { previousGamePlayers };
+    let requestBody = { playerID: playerId, credentials, setupData };
+    if (setupData) {
+      requestBody.setupData = setupData;
     }
 
     const { data } = await axios.post(`/${roomId}/playAgain`, requestBody);

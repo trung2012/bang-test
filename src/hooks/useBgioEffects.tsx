@@ -230,26 +230,8 @@ export const useBgioEffects = () => {
 
   useEffectListener<BangEffectsConfig>(
     'jail',
-    (playerId: string) => {
-      setTimeout(() => {
-        const playerJailElement = document.getElementsByClassName(`jail-bars-${playerId}`)[0];
-
-        gsap.fromTo(
-          playerJailElement,
-          {
-            zIndex: 2,
-            y: '-100%',
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.25,
-            ease: Bounce.easeOut,
-          }
-        );
-
-        playJail();
-      }, animationDelayMilliseconds);
+    () => {
+      playJail();
     },
     [playJail]
   );

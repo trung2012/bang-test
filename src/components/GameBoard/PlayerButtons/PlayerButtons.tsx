@@ -88,7 +88,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
           return;
         }
 
-        moves.chuckWengramPower();
+        moves.chuckWengamPower();
         playPower();
         return;
       }

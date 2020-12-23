@@ -26,16 +26,18 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
 
   gameCards = addExpansionCards(gameCards, expansions);
 
-  const gameCharacters = addExpansionCharacters(characters, expansions);
+  let gameCharacters = addExpansionCharacters(characters, expansions);
 
-  const cardsShuffled = ctx.random!.Shuffle(gameCards);
+  const cardsShuffled = ctx.random?.Shuffle ? ctx.random.Shuffle(gameCards) : gameCards;
   const deck: ICard[] = cardsShuffled.map(card => ({
     ...card,
     rotationValue: randomRotationValue(),
   }));
 
-  const rolesShuffled = ctx.random!.Shuffle(roles);
-  const charactersShuffled = ctx.random!.Shuffle(gameCharacters);
+  const rolesShuffled = ctx.random?.Shuffle ? ctx.random.Shuffle(roles) : roles;
+  const charactersShuffled = ctx.random?.Shuffle
+    ? ctx.random.Shuffle(gameCharacters)
+    : gameCharacters;
   const discarded: ICard[] = [];
   const generalStore: ICard[] = [];
   const generalStoreOrder: string[] = [];
@@ -49,6 +51,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const activeStage = null;
   let sidKetchumId: string | null = null;
 
+  console.log(charactersShuffled.length);
   // Create players
   for (const playerId of ctx.playOrder) {
     const playerRole = rolesShuffled.pop() as Role;
@@ -84,6 +87,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     players[playerId] = player;
     playOrder.push(playerId);
   }
+  console.log(charactersShuffled.length);
 
   return {
     deck,

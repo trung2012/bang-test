@@ -68,6 +68,11 @@ const stages: StageMap<IGameState> = {
       discardFromHand: moves.discardFromHand,
     },
   },
+  ragtime: {
+    moves: {
+      panic: moves.panic,
+    },
+  },
 };
 
 export default stages;

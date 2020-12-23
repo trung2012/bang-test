@@ -7,7 +7,7 @@ import {
   getOtherPlayersAliveStages,
   getOtherPlayersAlive,
   shuffle,
-  processEquipmentRemoval,
+  processCardRemoval,
   checkIfBeersCanSave,
   hasDynamite,
   checkIfCanDrawOneAfterReacting,
@@ -466,7 +466,7 @@ const jail = (G: IGameState, ctx: Ctx, targetPlayerId: string, jailCardIndex: nu
   if (targetPlayer.role === 'sheriff') return INVALID_MOVE;
 
   targetPlayer.equipments.push(jailCard);
-  ctx.effects.jail(targetPlayerId);
+  ctx.effects.jail();
 };
 
 const drawOneFromDeck = (G: IGameState, ctx: Ctx) => {
@@ -711,7 +711,7 @@ const catbalou = (
   type: RobbingType
 ) => {
   const targetPlayer = G.players[targetPlayerId];
-  const cardToDiscard = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  const cardToDiscard = processCardRemoval(targetPlayer, targetCardIndex, type);
   resetCardTimer(cardToDiscard);
 
   G.discarded.push(cardToDiscard);
@@ -768,10 +768,14 @@ const panic = (
   const currentPlayer = G.players[ctx.currentPlayer];
   ctx.effects.panic();
 
-  const cardToTake = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  const cardToTake = processCardRemoval(targetPlayer, targetCardIndex, type);
   resetCardTimer(cardToTake);
   currentPlayer.hand.push(cardToTake);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
 };
 
 const saloon = (G: IGameState, ctx: Ctx) => {
@@ -787,8 +791,8 @@ const stagecoach = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
   // Take 2 cards
-  const newCards = G.deck.slice(0, 2);
-  G.deck = G.deck.slice(2);
+  const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+  G.deck = G.deck.slice(0, G.deck.length - 2);
 
   if (newCards) {
     currentPlayer.hand.push(...newCards);
@@ -799,8 +803,8 @@ const wellsfargo = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
   // Take 3 cards
-  const newCards = G.deck.slice(0, 3);
-  G.deck = G.deck.slice(3);
+  const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
+  G.deck = G.deck.slice(0, G.deck.length - 3);
 
   if (newCards) {
     currentPlayer.hand.push(...newCards);
@@ -1025,11 +1029,9 @@ export const makePlayerDiscardToPlay = (
 export const ragtime = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
-      currentPlayer: stageNames.takeCardFromHand,
+      currentPlayer: stageNames.ragtime,
     });
   }
-
-  G.activeStage = stageNames.ragtime;
 
   resetDiscardStage(G, ctx);
   clearCardsInPlay(G, ctx, ctx.currentPlayer);
@@ -1155,7 +1157,7 @@ export const patBrennanEquipmentDraw = (
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
 
-  const cardToTake = processEquipmentRemoval(targetPlayer, targetCardIndex, type);
+  const cardToTake = processCardRemoval(targetPlayer, targetCardIndex, type);
   resetCardTimer(cardToTake);
   currentPlayer.hand.push(cardToTake);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);

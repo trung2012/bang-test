@@ -103,7 +103,7 @@ export const shuffle = (ctx: Ctx, array: any[]) => {
   return (array = ctx.random?.Shuffle ? ctx.random.Shuffle(array) : array);
 };
 
-export const processEquipmentRemoval = (
+export const processCardRemoval = (
   targetPlayer: IGamePlayer,
   targetCardIndex: number,
   type: RobbingType
@@ -162,27 +162,30 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
 };
 
 export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) => {
+  const newCards = [...cards];
   if (expansions.includes('valley of shadows')) {
-    // cards.push(...cards_VOS);
+    // newCards.push(...cards_VOS);
   }
 
   if (expansions.includes('dodge city')) {
-    cards.push(...cards_DodgeCity);
+    newCards.push(...cards_DodgeCity);
   }
 
-  return cards;
+  return newCards;
 };
 
 export const addExpansionCharacters = (characters: ICharacter[], expansions: ExpansionName[]) => {
   if (expansions.includes('valley of shadows')) {
-    // characters.push(...characters_VOS);
+    // newCharacters.push(...characters_VOS);
   }
 
-  if (expansions.includes('dodge city')) {
-    characters.push(...characters_DodgeCity);
-  }
+  // if (expansions.includes('dodge city')) {
+  //   //
+  // }
+  const newCharacters = [...characters];
+  newCharacters.push(...characters_DodgeCity);
 
-  return characters;
+  return [...newCharacters];
 };
 
 export const checkIfCanDrawOneAfterReacting = (

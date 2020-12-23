@@ -11,5 +11,5 @@ export const generateRoles = (roleCount: number[]) => {
     }
   });
 
-  return roles;
+  return [...roles];
 };

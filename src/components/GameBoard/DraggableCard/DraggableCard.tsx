@@ -65,55 +65,42 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
   };
 
   const onCardClick = () => {
+    if (!isActive || playerID === null) return;
+
     const targetPlayer = players[playerId];
-    const sourcePlayer = players[ctx.currentPlayer];
-    const isPlayerTurn = playerId === ctx.currentPlayer;
+    const sourcePlayer = players[playerID];
+    const isPlayerTurn = playerId === playerID;
+
+    // Process moves when source player is different from target player
 
     if (
+      playerID !== playerId &&
       cardLocation === 'green' &&
       sourcePlayer.character.name === 'pat brennan' &&
-      sourcePlayer.cardDrawnAtStartLeft >= 2
+      sourcePlayer.cardDrawnAtStartLeft >= 2 &&
+      (!ctx.activePlayers || !ctx.activePlayers[sourcePlayer.id])
     ) {
-      moves.patBrennanEquipmentDraw(playerId, index, 'green');
-      return;
-    }
-
-    if (!isActive || playerID !== playerId) return;
-
-    if (isPlayerTurn && hasActiveDynamite(targetPlayer)) {
-      setError('Please draw for dynamite');
-      return;
-    }
-
-    if (isPlayerTurn && isJailed(targetPlayer)) {
-      setError('Please draw for jail');
-      return;
-    }
-
-    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
-      if (targetPlayer.character.name === 'jose delgado' && card.type !== 'equipment') {
-        setError('Please choose a blue card to discard');
+      if (hasActiveDynamite(sourcePlayer)) {
+        setError('Please draw for dynamite');
         return;
       }
 
-      if (cardLocation !== 'hand') {
-        setError('You can only discard from your hand');
+      if (isJailed(sourcePlayer)) {
+        setError('Please draw for jail');
         return;
       }
 
-      moves.discardFromHand(playerID, index);
-
-      if (G.reactionRequired.cardToPlayAfterDiscard) {
-        const moveName = G.reactionRequired.cardToPlayAfterDiscard.replace(' ', '').toLowerCase();
-
-        if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
-          throw Error('No move no target');
-        }
-
-        moves[moveName](G.reactionRequired.targetPlayerId);
-        return;
-      }
+      moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
+      return;
     }
+
+    if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer] === stageNames.ragtime) {
+      moves.panic(playerId, index, cardLocation);
+      return;
+    }
+
+    // Process moves when source player is target player (current turn)
+    if (!isPlayerTurn) return;
 
     if (activeStage && reactionRequired.cardNeeded.length && selectedCards && setSelectedCards) {
       if (
@@ -185,6 +172,41 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
             }
           }
         }
+        return;
+      }
+    }
+
+    if (hasActiveDynamite(targetPlayer)) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isJailed(targetPlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
+
+    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
+      if (targetPlayer.character.name === 'jose delgado' && card.type !== 'equipment') {
+        setError('Please choose a blue card to discard');
+        return;
+      }
+
+      if (cardLocation !== 'hand') {
+        setError('You can only discard from your hand');
+        return;
+      }
+
+      moves.discardFromHand(playerID, index);
+
+      if (G.reactionRequired.cardToPlayAfterDiscard) {
+        const moveName = G.reactionRequired.cardToPlayAfterDiscard.replace(' ', '').toLowerCase();
+
+        if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
+          throw Error('No move no target');
+        }
+
+        moves[moveName](G.reactionRequired.targetPlayerId);
         return;
       }
     }
@@ -265,7 +287,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
           <DraggableCardContainer
             className={classnames({
               'draggable-card': !isSelected,
-              'draggable-card-selected': isSelected,
+              'draggable-card-selected': isSelected && playerID === playerId,
             })}
             {...draggableDragState.events}
             draggableDragState={draggableDragState}

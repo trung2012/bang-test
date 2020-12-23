@@ -66,6 +66,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
   const isFacedUp = playerId === playerID || isPlayerDead;
   const [shouldAnimate, setShouldAnimate] = useState(true);
   const maxCardRotationAngle = Math.min(hand.length * 25, 135);
+  const cardLocation = 'hand';
 
   useEffect(() => {
     setShouldAnimate(false);
@@ -79,7 +80,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
     };
   }, [hand.length]);
 
-  const onPlayerHandCardClick = (index: number) => {
+  const onPlayerHandDroppableCardClick = (index: number) => {
     if (hasActiveDynamite(clientPlayer)) {
       setError('Please draw for dynamite');
       return;
@@ -96,8 +97,8 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
       return;
     }
 
-    if (G.activeStage === stageNames.ragtime) {
-      moves.drawFromPlayerHand(playerID, playerId, index);
+    if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer] === stageNames.ragtime) {
+      moves.panic(playerId, index, cardLocation);
       return;
     }
 
@@ -118,7 +119,7 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
             index={index}
             isFacedUp={isFacedUp}
             playerId={playerId}
-            cardLocation='hand'
+            cardLocation={cardLocation}
           />
         ))}
       </div>
@@ -140,8 +141,8 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
             index={index}
             isFacedUp={isFacedUp}
             playerId={playerId}
-            cardLocation='hand'
-            onClick={() => onPlayerHandCardClick(index)}
+            cardLocation={cardLocation}
+            onClick={() => onPlayerHandDroppableCardClick(index)}
           />
         </PlayerHandDroppableCardContainer>
       ))}
