@@ -53,9 +53,6 @@ const playAgain = async (
 ) => {
   try {
     let requestBody = { playerID: playerId, credentials, setupData };
-    if (setupData) {
-      requestBody.setupData = setupData;
-    }
 
     const { data } = await axios.post(`/${roomId}/playAgain`, requestBody);
     return data.nextMatchID;

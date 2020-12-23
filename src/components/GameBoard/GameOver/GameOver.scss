@@ -1,4 +1,4 @@
-@import '../../../sass/_main';
+@import '../../../sass/_variables';
 
 .game-result {
   display: flex;
@@ -9,7 +9,7 @@
   text-align: center;
 
   span {
-    font-size: 3rem;
+    font-size: 3.2rem;
   }
 
   &-winners {
@@ -26,10 +26,13 @@
   }
 
   &-winner-character-image {
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
+    box-shadow: $box-shadow-secondary;
+    border-radius: $card-border-radius;
   }
 
   &-buttons {
+    display: flex;
     margin-top: 15rem;
   }
 }

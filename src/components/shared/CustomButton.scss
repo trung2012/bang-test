@@ -14,11 +14,14 @@
   color: #fff;
   background: $color-tertiary;
   border-radius: 5px;
-  margin-right: 1.5rem;
   padding: 1.5rem 4rem;
   opacity: 0.9;
   box-shadow: $box-shadow-primary;
   cursor: pointer;
+
+  &:not(:only-child):not(:last-child) {
+    margin-right: 1.5rem;
+  }
 
   &:active {
     transform: translate(0.1rem, 0.1rem);

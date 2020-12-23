@@ -51,7 +51,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const activeStage = null;
   let sidKetchumId: string | null = null;
 
-  console.log(charactersShuffled.length);
   // Create players
   for (const playerId of ctx.playOrder) {
     const playerRole = rolesShuffled.pop() as Role;
@@ -87,7 +86,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     players[playerId] = player;
     playOrder.push(playerId);
   }
-  console.log(charactersShuffled.length);
 
   return {
     deck,

@@ -624,10 +624,10 @@ export const barrelResult = (
   const isSuccessful = reactingPlayer.cardsInPlay.some(card => card.suit === 'hearts');
 
   clearCardsInPlay(G, ctx, targetPlayerId);
-  if (!isInnatePower) {
-    reactingPlayer.barrelUseLeft -= 1;
-  } else {
+  if (isInnatePower) {
     reactingPlayer.jourdonnaisPowerUseLeft -= 1;
+  } else {
+    reactingPlayer.barrelUseLeft -= 1;
   }
 
   if (isSuccessful) {
@@ -935,6 +935,10 @@ export const endTurn = (G: IGameState, ctx: Ctx) => {
   if (ctx.events?.endTurn) {
     ctx.events.endTurn();
   }
+
+  if (currentPlayer.character.name === 'jose delgado') {
+    currentPlayer.character.activePowerUsesLeft = 2;
+  }
 };
 
 export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: number) => {
@@ -1054,11 +1058,6 @@ export const tequila = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
 
 export const whisky = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
-  const whiskyCard = currentPlayer.cardsInPlay[0];
-
-  if (whiskyCard) {
-    ctx.effects.beer(whiskyCard.id);
-  }
 
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 2);
   resetDiscardStage(G, ctx);

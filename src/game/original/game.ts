@@ -6,7 +6,7 @@ import moves from './moves';
 import phases from './phases';
 import setup from './setup';
 import stages from './stages';
-import { ICard, IGameResult, IGameState } from './types';
+import { IGameResult, IGameState } from './types';
 import { config } from './effects';
 import { resetCardTimer } from './utils';
 

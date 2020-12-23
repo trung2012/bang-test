@@ -85,14 +85,14 @@
   opacity: 0;
   z-index: -100;
   transform: translateY(-200rem);
-  transition: transform 0.5s cubic-bezier(1, 0.02, 0.88, 0.62),
+  transition: transform 0.4s cubic-bezier(1, 0.02, 0.88, 0.62),
     opacity 0.2s cubic-bezier(1, 0.02, 0.88, 0.62);
 
   &--active {
     transform: translateY(0);
     opacity: 1;
-    transition: transform 0.5s cubic-bezier(0.94, 0.31, 0.83, 1.03) 0.3s,
-      opacity 0.5s cubic-bezier(1, 0.02, 0.88, 0.62) 0.3s;
+    transition: transform 0.3s cubic-bezier(0.94, 0.31, 0.83, 1.03),
+      opacity 0.3s cubic-bezier(1, 0.02, 0.88, 0.62);
     z-index: 1;
   }
 }

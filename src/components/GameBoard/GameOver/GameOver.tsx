@@ -53,7 +53,7 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
     }
 
     const previousGamePlayers = getPreviousGamePlayersMap(playersInfo);
-    const previousExpansion = G.expansions;
+    const previousExpansions = G.expansions;
 
     const nextMatchID = await lobbyService.playAgain(
       roomId,
@@ -61,7 +61,7 @@ export const GameOver: React.FC<IGameOverProps> = ({ gameResult }) => {
       clientPlayerCredentials,
       {
         previousGamePlayers,
-        expansions: previousExpansion,
+        expansions: previousExpansions,
       }
     );
     history.push(`/rooms/${nextMatchID}`);

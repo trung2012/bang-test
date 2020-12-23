@@ -2,9 +2,16 @@ import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import { DraggableCard } from '.';
 import { useGameContext, useErrorContext } from '../../../context';
-import { cardsWhichTargetCards, RobbingType, delayBetweenActions, ICard } from '../../../game';
+import {
+  cardsWhichTargetCards,
+  RobbingType,
+  delayBetweenActions,
+  ICard,
+  cardsWithNoRangeLimit,
+} from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
 import { DroppableCardContainer } from '../DroppableCard';
+import { IDraggableCardData } from './DraggableCard.types';
 
 interface IDroppableDraggableCardProps {
   playerId: string;
@@ -20,10 +27,11 @@ export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
   const { G, playersInfo, moves, playerID } = useGameContext();
   const { setError } = useErrorContext();
   const { players } = G;
+  const cardLocation: RobbingType = 'green';
 
-  const onDrop = (data: any) => {
+  const onDrop = (data: IDraggableCardData) => {
     if (!playersInfo?.length) throw Error('Something went wrong');
-    const { sourceCard, sourceCardIndex, sourcePlayerId } = data;
+    const { sourceCard, sourceCardIndex, sourcePlayerId, sourceCardLocation } = data;
 
     if (players[playerId].hp <= 0) return;
 
@@ -34,21 +42,27 @@ export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
       sourcePlayerId,
       playerId
     );
-    if (sourcePlayer.actionRange < distanceBetweenPlayers && sourceCard.name !== 'cat balou') {
+
+    if (!cardsWhichTargetCards.includes(sourceCard.name)) return;
+
+    if (
+      cardsWithNoRangeLimit.includes(sourceCard.name) ||
+      sourcePlayer.actionRange >= distanceBetweenPlayers
+    ) {
+      moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
+
+      setTimeout(() => {
+        const moveName = sourceCard.name.replace(' ', '').toLowerCase();
+        const robbingType: RobbingType = cardLocation;
+        moves.clearCardsInPlay(playerId);
+        if (moves[moveName]) {
+          moves[moveName](playerId, index, robbingType);
+        }
+      }, delayBetweenActions);
+    } else {
       setError('Target player is out of range');
       return;
     }
-    if (!cardsWhichTargetCards.includes(sourceCard.name)) return;
-    moves.playCard(sourceCardIndex, playerId);
-
-    setTimeout(() => {
-      const moveName = sourceCard.name.replace(' ', '').toLowerCase();
-      const robbingType: RobbingType = 'green';
-      moves.clearCardsInPlay(playerId);
-      if (moves[moveName]) {
-        moves[moveName](playerId, index, robbingType);
-      }
-    }, delayBetweenActions);
   };
 
   return (
@@ -60,12 +74,11 @@ export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
           {...droppableDragState.events}
         >
           <DraggableCard
-            key={`${card.id}-${index}`}
             card={card}
             index={index}
             isFacedUp={true}
             playerId={playerId}
-            cardLocation='green'
+            cardLocation={cardLocation}
           />
         </DroppableCardContainer>
       )}
