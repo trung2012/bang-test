@@ -141,14 +141,14 @@ export const characters_DodgeCity: ICharacter[] = [
     hasActivePower: true,
     activePowerUsesLeft: 2,
   },
-  // {
-  //   name: 'molly stark',
-  //   hp: 4,
-  //   description:
-  //     'Each time she plays or voluntarily discards a Missed!, Beer, or BANG! card when it is not her turn, she draws one card from the deck. If she discards a BANG! during a Duel , she does not draw her replacement cards until the end of the Duel , when she would draw one card for each BANG! she used during the Duel . Cards that she is forced to discard due to cards like Cat Balou, Brawl, or Can-Can are not considered voluntarily discarded!',
-  //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_molly_stark_cskox2.png',
-  // },
+  {
+    name: 'molly stark',
+    hp: 4,
+    description:
+      'Each time she plays or voluntarily discards a Missed!, Beer, or BANG! card when it is not her turn, she draws one card from the deck. If she discards a BANG! during a Duel , she does not draw her replacement cards until the end of the Duel , when she would draw one card for each BANG! she used during the Duel . Cards that she is forced to discard due to cards like Cat Balou, Brawl, or Can-Can are not considered voluntarily discarded!',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1606888456/bang/dodge%20city/03_molly_stark_cskox2.png',
+  },
   {
     name: 'pat brennan',
     hp: 4,
@@ -192,3 +192,5 @@ export const characters_DodgeCity: ICharacter[] = [
 ];
 
 export const cardsThatDrawsOneWhenPlayed: CardName[] = ['dodge', 'bible', 'derringer'];
+
+export const cardsActivatingMollyStarkPower: CardName[] = ['bang', 'missed', 'beer'];

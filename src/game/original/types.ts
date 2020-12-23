@@ -44,6 +44,7 @@ export interface IGamePlayer {
   targetedCard?: ICard;
   barrelUseLeft: number;
   jourdonnaisPowerUseLeft: number;
+  mollyStarkCardsPlayed: number;
 }
 
 export interface ICard {

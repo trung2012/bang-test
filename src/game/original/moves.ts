@@ -12,8 +12,10 @@ import {
   hasDynamite,
   checkIfCanDrawOneAfterReacting,
   resetCardTimer,
+  mollyStarkDraw,
 } from './utils';
 import { SelectedCards } from '../../context';
+import { cardsActivatingMollyStarkPower } from '../expansions';
 
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
@@ -26,7 +28,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     targetPlayer.jourdonnaisPowerUseLeft = 1;
   }
 
-  if (targetPlayer.hp <= 0) {
+  if (targetPlayer.hp <= 0 && ctx.phase !== 'suddenDeath') {
     checkIfBeersCanSave(G, ctx, targetPlayer);
   }
 
@@ -97,15 +99,28 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       }
     }
   } else {
-    if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
-      resetGameStage(G, ctx);
-    }
-
     if (ctx.events?.endStage) {
       ctx.events.endStage();
     }
 
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+      const sourcePlayer = G.reactionRequired.sourcePlayerId
+        ? G.players[G.reactionRequired.sourcePlayerId]
+        : null;
+      if (G.activeStage === stageNames.duel && sourcePlayer) {
+        if (
+          targetPlayer.character.name === 'molly stark' &&
+          targetPlayer.mollyStarkCardsPlayed > 0
+        ) {
+          mollyStarkDraw(G, targetPlayer);
+        } else if (
+          sourcePlayer.character.name === 'molly stark' &&
+          sourcePlayer.mollyStarkCardsPlayed > 0
+        ) {
+          mollyStarkDraw(G, sourcePlayer);
+        }
+      }
+
       resetGameStage(G, ctx);
     }
 
@@ -323,15 +338,20 @@ export const playCardToReact = (
 
   for (let i = handCardIndexes.length - 1; i >= 0; i--) {
     const cardToPlay = reactingPlayer.hand.splice(handCardIndexes[i], 1)[0];
+    if (
+      reactingPlayer.character.name === 'molly stark' &&
+      cardsActivatingMollyStarkPower.includes(cardToPlay.name)
+    ) {
+      reactingPlayer.mollyStarkCardsPlayed += 1;
+    }
     reactingPlayer.cardsInPlay.push(cardToPlay);
-
     checkIfCanDrawOneAfterReacting(G, reactingPlayer, cardToPlay);
   }
 
   for (let i = greenCardIndexes.length - 1; i >= 0; i--) {
     const cardToPlay = reactingPlayer.equipmentsGreen.splice(greenCardIndexes[i], 1)[0];
-    reactingPlayer.cardsInPlay.push(cardToPlay);
 
+    reactingPlayer.cardsInPlay.push(cardToPlay);
     checkIfCanDrawOneAfterReacting(G, reactingPlayer, cardToPlay);
   }
 
@@ -358,11 +378,19 @@ export const playCardToReact = (
   if (
     onlyHandCardToPlay !== null &&
     onlyHandCardToPlay.name === 'bang' &&
-    previousActiveStage === 'duel'
+    previousActiveStage === stageNames.duel
   ) {
     if (previousSourcePlayerId) {
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
     }
+  }
+
+  if (
+    previousActiveStage !== stageNames.duel &&
+    reactingPlayer.character.name === 'molly stark' &&
+    reactingPlayer.mollyStarkCardsPlayed > 0
+  ) {
+    mollyStarkDraw(G, reactingPlayer);
   }
 };
 
@@ -381,7 +409,9 @@ const discardFromHand = (
   if (!discardedCard) return INVALID_MOVE;
 
   moveToDiscard(G, ctx, discardedCard);
-  targetPlayer.cardDiscardedThisTurn += 1;
+  if (!G.reactionRequired.cardToPlayAfterDiscard) {
+    targetPlayer.cardDiscardedThisTurn += 1;
+  }
 
   if (targetPlayer.cardDiscardedThisTurn === 2 && targetPlayer.character.name === 'sid ketchum') {
     targetPlayer.hp = Math.min(targetPlayer.hp + 1, targetPlayer.maxHp);
@@ -667,10 +697,15 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     G.reactionRequired.quantity = 2;
   }
 
-  if (bangCard.name === 'punch') {
-    ctx.effects.punch(bangCard.id);
-  } else {
-    ctx.effects.gunshot(bangCard.id);
+  switch (bangCard.name) {
+    case 'punch': {
+      ctx.effects.punch(bangCard.id);
+      break;
+    }
+    default: {
+      ctx.effects.gunshot(bangCard.id);
+      break;
+    }
   }
 
   if (ctx.events?.setActivePlayers) {

@@ -2,7 +2,6 @@ import { Ctx } from 'boardgame.io';
 import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, characters_DodgeCity } from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
-import { clearCardsInPlay } from './moves';
 import {
   IGameState,
   IGamePlayer,
@@ -149,14 +148,23 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
 
   if (hpAfterBeers > 0) {
     for (const beerCardIndex of beerCardIndexes) {
-      if (beerCardIndex !== -1 && ctx.phase !== 'suddenDeath') {
+      if (beerCardIndex !== -1) {
         const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
-        targetPlayer.cardsInPlay.push(cardToPlay);
+        G.discarded.push(cardToPlay);
         targetPlayer.hp = hpAfterBeers;
       }
     }
+    if (targetPlayer.character.name === 'molly stark') {
+      const mollyStarkCardsToDraw = G.deck.slice(
+        G.deck.length - beerCardIndexes.length,
+        G.deck.length
+      );
+      if (mollyStarkCardsToDraw.length > 0) {
+        G.deck = G.deck.slice(0, G.deck.length - beerCardIndexes.length);
+        targetPlayer.hand.push(...mollyStarkCardsToDraw);
+      }
+    }
 
-    clearCardsInPlay(G, ctx, targetPlayer.id);
     return true;
   }
 };
@@ -229,4 +237,16 @@ export const canPlayCardToReact = (
     (reactionRequired.cardNeeded.includes('missed') &&
       reactingPlayer.character.name === 'elena fuente')
   );
+};
+
+export const mollyStarkDraw = (G: IGameState, targetPlayer: IGamePlayer) => {
+  const mollyStarkCardsToDraw = G.deck.slice(
+    G.deck.length - targetPlayer.mollyStarkCardsPlayed,
+    G.deck.length
+  );
+  if (mollyStarkCardsToDraw.length > 0) {
+    G.deck = G.deck.slice(0, G.deck.length - targetPlayer.mollyStarkCardsPlayed);
+    targetPlayer.hand.push(...mollyStarkCardsToDraw);
+  }
+  targetPlayer.mollyStarkCardsPlayed = 0;
 };

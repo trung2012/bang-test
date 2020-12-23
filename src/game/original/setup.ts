@@ -77,6 +77,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       cardDiscardedThisTurn: 0,
       cardDrawnAtStartLeft: 2,
       jourdonnaisPowerUseLeft: playerCharacter.name === 'jourdonnais' ? 1 : 0,
+      mollyStarkCardsPlayed: 0,
     };
 
     if (playerCharacter.name === 'sid ketchum') {
