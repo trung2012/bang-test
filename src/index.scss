@@ -3,6 +3,18 @@
 html {
   font-size: 59.375%;
 
+  @include respond(phone) {
+    font-size: 23.4375%;
+  }
+
+  @include respond(tab-port) {
+    font-size: 35.15625%;
+  }
+
+  @include respond(tab-land) {
+    font-size: 46.875%;
+  }
+
   @include respond(big-desktop) {
     font-size: 62.5%;
   }
