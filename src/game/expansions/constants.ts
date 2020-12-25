@@ -180,15 +180,17 @@ export const characters_DodgeCity: ICharacter[] = [
     imageUrl:
       'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_tequila_joe_dvqjtv.png',
   },
-  // {
-  //   name: 'vera custer',
-  //   realName: 'vera custer',
-  //   hp: 3,
-  //   description:
-  //     'At the beginning of her turn, before drawing any cards (in phase 1), she chooses any other character still in play. Until her next turn, she has the same ability as that character.',
-  //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_vera_custer_emwagk.png',
-  // },
+  {
+    name: 'vera custer',
+    realName: 'vera custer',
+    hp: 3,
+    description:
+      'At the beginning of her turn, before drawing any cards (in phase 1), she chooses any other character still in play. Until her next turn, she has the same ability as that character.',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1606888457/bang/dodge%20city/03_vera_custer_emwagk.png',
+    hasActivePower: true,
+    activePowerUsesLeft: 1,
+  },
 ];
 
 export const cardsThatDrawsOneWhenPlayed: CardName[] = ['dodge', 'bible', 'derringer'];

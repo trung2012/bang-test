@@ -73,6 +73,11 @@ const stages: StageMap<IGameState> = {
       panic: moves.panic,
     },
   },
+  copyCharacter: {
+    moves: {
+      copyCharacter: moves.copyCharacter,
+    },
+  },
 };
 
 export default stages;
