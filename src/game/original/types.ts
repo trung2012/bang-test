@@ -17,7 +17,6 @@ export interface IGameState {
     cardToPlayAfterDiscard?: CardName | null;
     targetPlayerId?: string;
   };
-  sidKetchumId: string | null;
   expansions: ExpansionName[];
 }
 
@@ -45,6 +44,7 @@ export interface IGamePlayer {
   barrelUseLeft: number;
   jourdonnaisPowerUseLeft: number;
   mollyStarkCardsPlayed: number;
+  originalCharacter?: ICharacter;
 }
 
 export interface ICard {

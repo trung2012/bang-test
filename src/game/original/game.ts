@@ -8,7 +8,13 @@ import setup from './setup';
 import stages from './stages';
 import { IGameResult, IGameState } from './types';
 import { config } from './effects';
-import { resetCardTimer } from './utils';
+import {
+  hasActiveDynamite,
+  isCharacterInGame,
+  isJailed,
+  resetCardTimer,
+  setVeraCusterStage,
+} from './utils';
 
 declare module 'boardgame.io' {
   interface Ctx {
@@ -87,20 +93,28 @@ const game: Game<IGameState> = {
         G.deck = ctx.random?.Shuffle ? ctx.random?.Shuffle(G.deck) : G.deck;
       }
 
-      let suzyPlayerId = ctx.playOrder.find(
-        playerId => G.players[playerId].character.name === 'suzy lafayette'
-      );
-      if (suzyPlayerId !== undefined) {
-        const suzyPlayer = G.players[suzyPlayerId];
-        if (
-          suzyPlayer.hp > 0 &&
-          suzyPlayer.hand.length === 0 &&
-          G.activeStage !== stageNames.duel
-        ) {
-          const newCard = G.deck.pop();
-          if (newCard) {
-            suzyPlayer.hand.push(newCard);
+      let suzyPlayerIds = isCharacterInGame(G, 'suzy lafayette');
+      if (suzyPlayerIds !== undefined) {
+        for (const suzyPlayerId of suzyPlayerIds) {
+          const suzyPlayer = G.players[suzyPlayerId];
+          if (suzyPlayer.hand.length === 0 && G.activeStage !== stageNames.duel) {
+            const newCard = G.deck.pop();
+            if (newCard) {
+              suzyPlayer.hand.push(newCard);
+            }
           }
+        }
+      }
+    },
+    onBegin: (G, ctx) => {
+      const currentPlayer = G.players[ctx.currentPlayer];
+      if (currentPlayer.character.realName === 'vera custer') {
+        if (currentPlayer.originalCharacter) {
+          currentPlayer.character = currentPlayer.originalCharacter;
+        }
+
+        if (!hasActiveDynamite(currentPlayer) && !isJailed(currentPlayer)) {
+          setVeraCusterStage(ctx);
         }
       }
     },

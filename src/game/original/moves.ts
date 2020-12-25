@@ -13,6 +13,10 @@ import {
   checkIfCanDrawOneAfterReacting,
   resetCardTimer,
   mollyStarkDraw,
+  processOneVultureSamPower,
+  processMultipleVultureSamPower,
+  isJailed,
+  setVeraCusterStage,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -41,41 +45,31 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       resetGameStage(G, ctx);
     }
 
-    const gregDiggerId = isCharacterInGame(G, 'greg digger');
-    if (gregDiggerId !== undefined) {
-      const gregDiggerPlayer = G.players[gregDiggerId];
-      gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
+    const gregDiggerIds = isCharacterInGame(G, 'greg digger');
+    if (gregDiggerIds !== undefined) {
+      for (const gregDiggerId of gregDiggerIds) {
+        const gregDiggerPlayer = G.players[gregDiggerId];
+        gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
+      }
     }
 
-    const herbHunterId = isCharacterInGame(G, 'herb hunter');
-    if (herbHunterId !== undefined) {
-      const herbHunterPlayer = G.players[herbHunterId];
-      const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
-      G.deck = G.deck.slice(0, G.deck.length - 2);
-      herbHunterPlayer.hand.push(...newCards);
-      herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
+    const herbHunterIds = isCharacterInGame(G, 'herb hunter');
+    if (herbHunterIds !== undefined) {
+      for (const herbHunterId of herbHunterIds) {
+        const herbHunterPlayer = G.players[herbHunterId];
+        const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+        G.deck = G.deck.slice(0, G.deck.length - 2);
+        herbHunterPlayer.hand.push(...newCards);
+        herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
+      }
     }
 
-    const vultureSamId = isCharacterInGame(G, 'vulture sam');
-    if (vultureSamId && vultureSamId !== targetPlayerId) {
-      const vultureSamPlayer = G.players[vultureSamId];
-      const dynamiteCard = targetPlayer.equipments.find(card => card.name === 'dynamite');
-      if (dynamiteCard) {
-        dynamiteCard.timer = 1;
-      }
-
-      while (targetPlayer.hand.length > 0) {
-        const cardToTake = targetPlayer.hand.pop();
-        if (cardToTake) {
-          vultureSamPlayer.hand.push(cardToTake);
-        }
-      }
-
-      while (targetPlayer.equipments.length > 0) {
-        const cardToTake = targetPlayer.equipments.pop();
-        if (cardToTake) {
-          vultureSamPlayer.hand.push(cardToTake);
-        }
+    const vultureSamIds = isCharacterInGame(G, 'vulture sam');
+    if (vultureSamIds !== undefined) {
+      if (vultureSamIds.length === 1) {
+        processOneVultureSamPower(G, targetPlayer, vultureSamIds[0]);
+      } else {
+        processMultipleVultureSamPower(G, targetPlayer, vultureSamIds);
       }
     } else {
       discardHand(G, ctx, targetPlayerId);
@@ -112,12 +106,12 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
           targetPlayer.character.name === 'molly stark' &&
           targetPlayer.mollyStarkCardsPlayed > 0
         ) {
-          mollyStarkDraw(G, targetPlayer);
+          mollyStarkDraw(G, ctx, targetPlayer);
         } else if (
           sourcePlayer.character.name === 'molly stark' &&
           sourcePlayer.mollyStarkCardsPlayed > 0
         ) {
-          mollyStarkDraw(G, sourcePlayer);
+          mollyStarkDraw(G, ctx, sourcePlayer);
         }
       }
 
@@ -179,22 +173,12 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   if (targetPlayer.hp <= 0) {
     checkIfBeersCanSave(G, ctx, targetPlayer);
 
-    const vultureSamId = isCharacterInGame(G, 'vulture sam');
-
-    if (vultureSamId && vultureSamId !== targetPlayerId) {
-      const vultureSamPlayer = G.players[vultureSamId];
-      while (targetPlayer.hand.length > 0) {
-        const cardToTake = targetPlayer.hand.pop();
-        if (cardToTake) {
-          vultureSamPlayer.hand.push(cardToTake);
-        }
-      }
-
-      while (targetPlayer.equipments.length > 0) {
-        const cardToTake = targetPlayer.equipments.pop();
-        if (cardToTake) {
-          vultureSamPlayer.hand.push(cardToTake);
-        }
+    const vultureSamIds = isCharacterInGame(G, 'vulture sam');
+    if (vultureSamIds !== undefined) {
+      if (vultureSamIds.length === 1) {
+        processOneVultureSamPower(G, targetPlayer, vultureSamIds[0]);
+      } else {
+        processMultipleVultureSamPower(G, targetPlayer, vultureSamIds);
       }
     } else {
       discardHand(G, ctx, targetPlayerId);
@@ -209,6 +193,10 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
       const newCards: ICard[] = G.deck.slice(G.deck.length - 3, G.deck.length);
       G.deck = G.deck.slice(0, G.deck.length - 3);
       targetPlayer.hand.push(...newCards);
+    }
+
+    if (targetPlayer.character.realName && !isJailed(targetPlayer)) {
+      setVeraCusterStage(ctx);
     }
   }
 };
@@ -260,6 +248,15 @@ export const jailResult = (G: IGameState, ctx: Ctx) => {
   }
 
   ctx.effects.clearJail(isFailure);
+
+  if (!isFailure && currentPlayer.character.realName === 'vera custer') {
+    if (ctx.events?.setActivePlayers) {
+      ctx.events.setActivePlayers({
+        currentPlayer: stageNames.copyCharacter,
+        moveLimit: 1,
+      });
+    }
+  }
 };
 
 export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
@@ -290,6 +287,10 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
           G.discarded.push(discardedCard);
         }
       }
+    }
+
+    if (currentPlayer.character.realName && !isJailed(currentPlayer)) {
+      setVeraCusterStage(ctx);
     }
   }
 };
@@ -390,7 +391,7 @@ export const playCardToReact = (
     reactingPlayer.character.name === 'molly stark' &&
     reactingPlayer.mollyStarkCardsPlayed > 0
   ) {
-    mollyStarkDraw(G, reactingPlayer);
+    mollyStarkDraw(G, ctx, reactingPlayer);
   }
 };
 
@@ -443,38 +444,23 @@ const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
         1
       )[0];
       moveToDiscard(G, ctx, previouslyEquippedGun);
-    }
 
-    if (equipmentCard.name === 'volcanic') {
-      currentPlayer.numBangsLeft = 9999;
-    } else {
-      if (currentPlayer.character.name !== 'willy the kid') {
+      if (
+        previouslyEquippedGun.name === 'volcanic' &&
+        currentPlayer.character.name !== 'willy the kid'
+      ) {
         currentPlayer.numBangsLeft = 1;
       }
     }
 
-    let extraRange = 0;
-    if (currentPlayer.character.name === 'rose doolan') {
-      extraRange += 1;
+    if (equipmentCard.name === 'volcanic') {
+      currentPlayer.numBangsLeft = 9999;
     }
 
-    if (currentPlayer.equipments.some(card => card.name === 'scope')) {
-      extraRange += 1;
-    }
-
-    if (currentPlayer.equipments.some(card => card.name === 'binocular')) {
-      extraRange += 1;
-    }
-
-    currentPlayer.gunRange = newGunRange + extraRange;
+    currentPlayer.gunRange = newGunRange;
   }
 
   currentPlayer.equipments.push(equipmentCard);
-
-  if (equipmentCard.name === 'scope' || equipmentCard.name === 'binocular') {
-    currentPlayer.actionRange += 1;
-    currentPlayer.gunRange += 1;
-  }
 
   if (equipmentCard.name === 'mustang') {
     ctx.effects.horse(equipmentCard.id);
@@ -995,6 +981,28 @@ export const initialCardDeal = (G: IGameState, ctx: Ctx) => {
   }
 };
 
+export const copyCharacter = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const targetPlayer = G.players[targetPlayerId];
+
+  if (currentPlayer.character.realName) {
+    currentPlayer.originalCharacter = currentPlayer.character;
+
+    currentPlayer.character = {
+      ...targetPlayer.character,
+      realName: currentPlayer.character.realName,
+    };
+  }
+
+  if (targetPlayer.character.name === 'willy the kid') {
+    currentPlayer.numBangsLeft = 9999;
+  }
+
+  if (targetPlayer.character.name === 'jourdonnais') {
+    currentPlayer.jourdonnaisPowerUseLeft = 1;
+  }
+};
+
 export const reselectCharacter = (G: IGameState, ctx: Ctx) => {
   let currentPlayer = G.players[ctx.currentPlayer];
   const randomIndex = Math.floor(Math.random() * G.characters.length);
@@ -1004,17 +1012,13 @@ export const reselectCharacter = (G: IGameState, ctx: Ctx) => {
     const newPlayer = {
       ...currentPlayer,
       character: newCharacter,
-      gunRange: newCharacter.name === 'rose doolan' ? 2 : 1,
-      actionRange: newCharacter.name === 'rose doolan' ? 2 : 1,
+      gunRange: 1,
+      actionRange: 1,
       numBangsLeft: newCharacter.name === 'willy the kid' ? 9999 : 1,
       jourdonnaisPowerUseLeft: newCharacter.name === 'jourdonnais' ? 1 : 0,
       hp: currentPlayer.role === 'sheriff' ? newCharacter.hp + 1 : newCharacter.hp,
       maxHp: currentPlayer.role === 'sheriff' ? newCharacter.hp + 1 : newCharacter.hp,
     };
-
-    if (newCharacter.name === 'sid ketchum') {
-      G.sidKetchumId = newPlayer.id;
-    }
 
     G.players[ctx.currentPlayer] = newPlayer;
 
@@ -1240,6 +1244,7 @@ export const moves_DodgeCity: MoveMap<IGameState> = {
   patBrennanEquipmentDraw,
   joseDelgadoPower,
   josedelgadodraw,
+  copyCharacter,
 };
 
 export const moves_VOS: MoveMap<IGameState> = {};

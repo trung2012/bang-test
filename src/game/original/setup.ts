@@ -49,7 +49,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     cardToPlayAfterDiscard: null,
   };
   const activeStage = null;
-  let sidKetchumId: string | null = null;
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -68,8 +67,8 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       equipmentsGreen: [],
       character: playerCharacter,
       role: playerRole,
-      gunRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
-      actionRange: playerCharacter.name === 'rose doolan' ? 2 : 1,
+      gunRange: 1,
+      actionRange: 1,
       cardsInPlay: [],
       secretCards: [],
       numBangsLeft: playerCharacter.name === 'willy the kid' ? 9999 : 1,
@@ -79,10 +78,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
       jourdonnaisPowerUseLeft: playerCharacter.name === 'jourdonnais' ? 1 : 0,
       mollyStarkCardsPlayed: 0,
     };
-
-    if (playerCharacter.name === 'sid ketchum') {
-      sidKetchumId = playerId;
-    }
 
     players[playerId] = player;
     playOrder.push(playerId);
@@ -97,7 +92,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     activeStage,
     reactionRequired,
     playOrder,
-    sidKetchumId,
     expansions,
     characters: charactersShuffled,
   } as IGameState;
