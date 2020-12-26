@@ -358,6 +358,10 @@ export const playCardToReact = (
 
   clearCardsInPlay(G, ctx, reactingPlayerId);
 
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    resetGameStage(G, ctx);
+  }
+
   if (ctx.events?.endStage) {
     ctx.events.endStage();
 
@@ -370,10 +374,6 @@ export const playCardToReact = (
 
   if (G.reactionRequired.cardNeeded.includes('missed')) {
     ctx.effects.missed();
-  }
-
-  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
-    resetGameStage(G, ctx);
   }
 
   if (
@@ -588,12 +588,12 @@ const drawFromPlayerHand = (
     currentPlayer.cardDrawnAtStartLeft -= 1;
   }
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
-
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
     resetGameStage(G, ctx);
+  }
+
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
   }
 };
 
