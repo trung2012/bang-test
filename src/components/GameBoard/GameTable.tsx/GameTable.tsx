@@ -11,10 +11,13 @@ import Modal from '../../shared/Modal';
 import './GameTable.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { CustomButton } from '../../shared';
+import { useModalContext } from '../../../context/modal';
+import { stageNames } from '../../../game';
 
 export const GameTable = () => {
   const { G, ctx, moves, playersInfo, playerID, isActive } = useGameContext();
   const { error, setError, notification, setNotification } = useErrorContext();
+  const { modalContent, setModalContent } = useModalContext();
   const { players } = G;
 
   const clientPlayerIndex = playersInfo?.findIndex(p => playerID === p.id.toString());
@@ -64,6 +67,19 @@ export const GameTable = () => {
     }
   }, [notification, setNotification]);
 
+  useEffect(() => {
+    if (ctx.phase === 'reselectCharacter' && isActive) {
+      setModalContent({
+        title: 'Choose another character',
+        text: 'Do you want to play with another character?',
+        yesButtonText: 'Yes',
+        yesButtonMoveName: 'reselectCharacter',
+        noButtonText: 'No',
+        noButtonMoveName: 'endTurn',
+      });
+    }
+  }, [ctx.phase, isActive, setModalContent]);
+
   if (ctx.gameover) {
     return <GameOver gameResult={ctx.gameover} />;
   }
@@ -94,12 +110,40 @@ export const GameTable = () => {
           pauseOnHover
         />
         <InfoSidePane />
-        {ctx.phase === 'reselectCharacter' && isActive && (
-          <Modal title='Choose a different character'>
-            <span>Do you want to play with another character?</span>
-            <div className='reselect-character-buttons'>
-              <CustomButton text='Yes' onClick={() => moves.reselectCharacter()} />
-              <CustomButton text='No' onClick={() => moves.endTurn()} />
+        {modalContent && (
+          <Modal title={modalContent.title}>
+            <span>{modalContent.text}</span>
+            <div className='modal-buttons'>
+              <CustomButton
+                text={modalContent.yesButtonText}
+                onClick={() => {
+                  if (modalContent.yesButtonMoveName && moves[modalContent.yesButtonMoveName]) {
+                    if (modalContent.yesButtonArgs) {
+                      moves[modalContent.yesButtonMoveName](...modalContent.yesButtonArgs);
+                      return;
+                    }
+
+                    moves[modalContent.yesButtonMoveName]();
+                  }
+
+                  setModalContent(null);
+                }}
+              />
+              <CustomButton
+                text={modalContent.noButtonText}
+                onClick={() => {
+                  if (modalContent.noButtonMoveName && moves[modalContent.noButtonMoveName]) {
+                    if (modalContent.noButtonArgs) {
+                      moves[modalContent.noButtonMoveName](...modalContent.noButtonArgs);
+                      return;
+                    }
+
+                    moves[modalContent.noButtonMoveName]();
+                  }
+
+                  setModalContent(null);
+                }}
+              />
             </div>
           </Modal>
         )}

@@ -4,6 +4,7 @@ import { AnimationProvider, CardsProvider, ErrorProvider, GameContext } from '..
 import { IGameState } from '../../game';
 import { GameTable } from './GameTable.tsx';
 import 'tippy.js/dist/tippy.css';
+import { ModalProvider } from '../../context/modal';
 
 export const GameBoard: React.FC<BoardProps<IGameState>> = ({
   G,
@@ -29,7 +30,9 @@ export const GameBoard: React.FC<BoardProps<IGameState>> = ({
       <ErrorProvider>
         <AnimationProvider>
           <CardsProvider>
-            <GameTable />
+            <ModalProvider>
+              <GameTable />
+            </ModalProvider>
           </CardsProvider>
         </AnimationProvider>
       </ErrorProvider>

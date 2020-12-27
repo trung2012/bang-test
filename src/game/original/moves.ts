@@ -971,6 +971,12 @@ export const makePlayerDiscard = (G: IGameState, ctx: Ctx, numCardsToDiscard: nu
   }
 };
 
+export const endStage = (G: IGameState, ctx: Ctx) => {
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
+};
+
 export const initialCardDeal = (G: IGameState, ctx: Ctx) => {
   let currentPlayer = G.players[ctx.currentPlayer];
   for (let hp = 1; hp <= currentPlayer.hp; hp++) {
@@ -1288,6 +1294,7 @@ export const moves: MoveMap<IGameState> = {
   discardEquipments,
   makePlayerDiscard,
   endTurn,
+  endStage,
   reselectCharacter,
 };
 

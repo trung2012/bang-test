@@ -4,6 +4,7 @@ import { PlayerButton } from './PlayerButton';
 import { ReactComponent as PassIcon } from '../../../assets/pass.svg';
 import { ReactComponent as PowerIcon } from '../../../assets/power.svg';
 import { ReactComponent as DamageIcon } from '../../../assets/damage.svg';
+import { ReactComponent as CancelIcon } from '../../../assets/cancel.svg';
 import './PlayerButtons.scss';
 import {
   delayBetweenActions,
@@ -20,13 +21,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const isCurrentPlayer = playerID === player.id;
-  const isReactingToBullets =
-    (G.activeStage === stageNames.reactToBang ||
-      G.activeStage === stageNames.reactToGatling ||
-      G.activeStage === stageNames.reactToIndians ||
-      G.activeStage === stageNames.duel) &&
-    !!ctx.activePlayers &&
-    ctx.activePlayers[player.id];
+  const isReactingToBullets = !!ctx.activePlayers && ctx.activePlayers[player.id];
   const isPowerDisabled = player.character.activePowerUsesLeft === 0;
 
   const onEndTurnClick = () => {
@@ -137,6 +132,13 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
               <DamageIcon className='player-button-icon damage-icon' />
             </PlayerButton>
           )}
+          {ctx.activePlayers &&
+            ctx.activePlayers[ctx.currentPlayer] === stageNames.discard &&
+            isActive && (
+              <PlayerButton tooltipTitle='Cancel end turn' onClick={() => moves.endStage()}>
+                <CancelIcon className='player-button-icon damage-icon' />
+              </PlayerButton>
+            )}
         </>
       )}
     </div>

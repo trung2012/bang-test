@@ -1,6 +1,7 @@
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import {
+  cardsWhichTargetCards,
   cardsWithNoRangeLimit,
   hasActiveDynamite,
   ICard,
@@ -62,6 +63,11 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
 
     if (isJailed(sourcePlayer)) {
       setError('Please draw for jail');
+      return;
+    }
+
+    if (!cardsWhichTargetCards.includes(sourceCard.name)) {
+      setError('This card cannot be played on other cards');
       return;
     }
 

@@ -66,6 +66,7 @@ const stages: StageMap<IGameState> = {
   discard: {
     moves: {
       discardFromHand: moves.discardFromHand,
+      endStage: moves.endStage,
     },
   },
   ragtime: {
