@@ -81,31 +81,23 @@
 @mixin player1($numPlayers) {
   @if $numPlayers == 2 {
     .player1 {
-      grid-column: 7 / span 2;
-      grid-row: 6 / span 3;
-      flex-direction: row-reverse;
+      grid-column: 5 / span 3;
+      grid-row: 1 / span 2;
       align-self: flex-start;
-      justify-self: flex-end;
-      margin-right: 2rem;
-      margin-top: 2rem;
+      justify-self: center;
+      margin-top: 1rem;
+
+      .player-equipments-container {
+        left: $card-width * 2;
+      }
 
       .player-hand {
-        transform: translate(-10rem, 11rem) rotate(50deg);
-        z-index: 1;
+        transform: translateX(3rem) rotate(5deg);
       }
 
       .player-cards-in-play {
-        left: 0;
-        transform: translate(1rem, -15rem);
-      }
-
-      .player-equipments-container {
-        top: -25%;
-        right: 110%;
-
-        & > * {
-          flex-direction: row-reverse;
-        }
+        left: -$card-width;
+        top: $card-height * 0.2;
       }
     }
   }
@@ -534,27 +526,23 @@
   @if $numPlayers == 7 {
     // 4
     .player4 {
-      grid-column: 5 / span 4;
+      grid-column: 5 / span 3;
       grid-row: 1 / span 2;
-      align-self: center;
-      justify-self: flex-end;
+      align-self: flex-start;
+      justify-self: center;
       margin-top: 1rem;
 
       .player-equipments-container {
-        top: -25%;
-        right: 120%;
-
-        & > * {
-          flex-direction: row-reverse;
-        }
+        left: $card-width * 2;
       }
 
       .player-hand {
-        transform: translate(-5rem, 5rem) rotate(40deg);
+        transform: translateX(3rem) rotate(5deg);
       }
 
       .player-cards-in-play {
-        transform: translate(-24rem, 15rem);
+        left: -$card-width;
+        top: $card-height * 0.2;
       }
     }
   }
