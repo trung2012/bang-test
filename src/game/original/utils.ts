@@ -1,4 +1,5 @@
 import { Ctx } from 'boardgame.io';
+import { INVALID_MOVE } from 'boardgame.io/core';
 import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, characters_DodgeCity } from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
@@ -194,6 +195,10 @@ export const canPlayCardToReact = (
 };
 
 export const mollyStarkDraw = (G: IGameState, ctx: Ctx, targetPlayer: IGamePlayer) => {
+  if (targetPlayer.id === ctx.currentPlayer) {
+    return INVALID_MOVE;
+  }
+
   const mollyStarkCardsToDraw = G.deck.slice(
     G.deck.length - targetPlayer.mollyStarkCardsPlayed,
     G.deck.length
