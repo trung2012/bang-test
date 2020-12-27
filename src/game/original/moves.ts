@@ -17,6 +17,7 @@ import {
   processMultipleVultureSamPower,
   isJailed,
   setVeraCusterStage,
+  getNextPlayerToPassEquipments,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -270,7 +271,7 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
   if (isFailure) {
     dynamiteExplodes(G, ctx, ctx.currentPlayer);
   } else {
-    const nextPlayerId = (Number(currentPlayer.id) + 1) % ctx.playOrder.length;
+    const nextPlayerId = getNextPlayerToPassEquipments(G, ctx);
     const nextPlayer = G.players[nextPlayerId];
     const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
     if (

@@ -277,3 +277,11 @@ export const setVeraCusterStage = (ctx: Ctx) => {
     });
   }
 };
+
+export const getNextPlayerToPassEquipments = (G: IGameState, ctx: Ctx) => {
+  let nextPlayerPos = ctx.playOrderPos % ctx.playOrder.length;
+  do {
+    nextPlayerPos = (nextPlayerPos + 1) % ctx.playOrder.length;
+  } while (G.players[nextPlayerPos.toString()].hp <= 0);
+  return nextPlayerPos;
+};
