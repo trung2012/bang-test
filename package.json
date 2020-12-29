@@ -30,7 +30,7 @@
     "use-sound": "^2.0.1"
   },
   "scripts": {
-    "build": "react-scripts build && gzipper --verbose ./build",
+    "build": "react-scripts build && gzipper compress ./build --verbose",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "ts-node-dev --ignore-watch ./src ./server.ts",
