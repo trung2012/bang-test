@@ -359,6 +359,10 @@ export const playCardToReact = (
 
   clearCardsInPlay(G, ctx, reactingPlayerId);
 
+  if (G.reactionRequired.cardNeeded.includes('missed')) {
+    ctx.effects.missed();
+  }
+
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
     resetGameStage(G, ctx);
   }
@@ -371,10 +375,6 @@ export const playCardToReact = (
     if (reactingPlayer.character.name === 'jourdonnais') {
       reactingPlayer.jourdonnaisPowerUseLeft = 1;
     }
-  }
-
-  if (G.reactionRequired.cardNeeded.includes('missed')) {
-    ctx.effects.missed();
   }
 
   if (

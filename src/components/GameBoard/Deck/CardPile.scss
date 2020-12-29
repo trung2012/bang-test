@@ -8,9 +8,16 @@
   height: $card-height;
   border-radius: $card-border-radius;
   position: relative;
+  color: $color-gray-dark;
 
   &:hover {
     box-shadow: $box-shadow-deck-active-hover;
+  }
+
+  &-count {
+    position: absolute;
+    font-weight: bold;
+    top: -3rem;
   }
 
   .card-image {

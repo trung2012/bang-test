@@ -20,6 +20,10 @@ interface ICardPileProps {
 }
 
 export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className, onClick }) => {
+  if (!cards) {
+    return null;
+  }
+
   return (
     <div className={classnames(`card-pile `, className ? className : '')} onClick={onClick}>
       {cards.map((card, index) => {
@@ -33,6 +37,7 @@ export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className
           />
         );
       })}
+      <span className='card-pile-count'>{cards.length}</span>
     </div>
   );
 };

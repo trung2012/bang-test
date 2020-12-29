@@ -78,7 +78,8 @@ export const Deck = () => {
   return (
     <CardPile
       className={classnames('deck', {
-        'deck--active': isActive && clientPlayer.cardDrawnAtStartLeft > 0,
+        'deck--active':
+          isActive && playerID === ctx.currentPlayer && clientPlayer.cardDrawnAtStartLeft > 0,
       })}
       cards={deck}
       isFacedUp={false}
