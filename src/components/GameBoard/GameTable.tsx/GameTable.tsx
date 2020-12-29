@@ -12,7 +12,6 @@ import './GameTable.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { CustomButton } from '../../shared';
 import { useModalContext } from '../../../context/modal';
-import { stageNames } from '../../../game';
 
 export const GameTable = () => {
   const { G, ctx, moves, playersInfo, playerID, isActive } = useGameContext();
