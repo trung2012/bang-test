@@ -37,7 +37,6 @@ export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className
           />
         );
       })}
-      <span className='card-pile-count'>{cards.length}</span>
     </div>
   );
 };

@@ -313,7 +313,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
           </DraggableCardContainer>
         )}
       </Draggable>
-      <DragComponent for={`${card.id}`}>
+      <DragComponent for={`${card.id}`} subscribeTo={['x', 'y']}>
         {draggableDragState => (
           <DragComponentContainer className='card-dragging' draggableDragState={draggableDragState}>
             <Card card={card} isFacedUp={isFacedUp} disabled={isCardDisabled} />

@@ -37,7 +37,7 @@ export const ChangeNickName = () => {
 
   return (
     <div className='change-nickname'>
-      <h3>What is your name?</h3>
+      <h2>What is your name?</h2>
       <form onSubmit={handleSubmit} className='change-nickname-form'>
         <CustomInput
           value={newPlayerName}
