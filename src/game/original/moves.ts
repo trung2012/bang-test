@@ -173,6 +173,27 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
 
   if (targetPlayer.hp <= 0) {
     checkIfBeersCanSave(G, ctx, targetPlayer);
+  }
+
+  if (targetPlayer.hp <= 0) {
+    const gregDiggerIds = isCharacterInGame(G, 'greg digger');
+    if (gregDiggerIds !== undefined) {
+      for (const gregDiggerId of gregDiggerIds) {
+        const gregDiggerPlayer = G.players[gregDiggerId];
+        gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
+      }
+    }
+
+    const herbHunterIds = isCharacterInGame(G, 'herb hunter');
+    if (herbHunterIds !== undefined) {
+      for (const herbHunterId of herbHunterIds) {
+        const herbHunterPlayer = G.players[herbHunterId];
+        const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+        G.deck = G.deck.slice(0, G.deck.length - 2);
+        herbHunterPlayer.hand.push(...newCards);
+        herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
+      }
+    }
 
     const vultureSamIds = isCharacterInGame(G, 'vulture sam');
     if (vultureSamIds !== undefined) {
@@ -273,11 +294,7 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
   } else {
     const nextPlayerId = getNextPlayerToPassEquipments(G, ctx);
     const nextPlayer = G.players[nextPlayerId];
-    const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
-    if (
-      otherPlayersAlive.length === 1 &&
-      nextPlayer.equipments.some(card => card.name === 'dynamite')
-    ) {
+    if (nextPlayer.equipments.some(card => card.name === 'dynamite')) {
       // do nothing
     } else {
       const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
