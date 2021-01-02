@@ -55,6 +55,7 @@
   right: -1.5rem;
   height: 4.5rem;
   width: 4.5rem;
+  filter: drop-shadow(0 0 0rem);
 }
 
 .player-name {
@@ -69,6 +70,7 @@
   width: 400%;
   opacity: 0;
   z-index: -100;
+  filter: drop-shadow(0 0 0.5rem);
 }
 
 .jail-bars,
@@ -95,5 +97,6 @@
     transition: transform 0.3s cubic-bezier(0.94, 0.31, 0.83, 1.03),
       opacity 0.3s cubic-bezier(1, 0.02, 0.88, 0.62);
     z-index: 1;
+    filter: drop-shadow(0 0 0.1rem);
   }
 }
