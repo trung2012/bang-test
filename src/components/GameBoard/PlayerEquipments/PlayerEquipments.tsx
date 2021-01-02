@@ -21,19 +21,18 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
 
     const sourcePlayer = players[playerID];
     const targetPlayer = players[playerId];
-    const isPlayerTurn = playerId === playerID;
 
     if (
       sourcePlayer.character.name === 'pat brennan' &&
       G.activeStage !== stageNames.reactToGatling &&
       G.activeStage !== stageNames.reactToBang
     ) {
-      if (isPlayerTurn && hasActiveDynamite(sourcePlayer)) {
+      if (hasActiveDynamite(sourcePlayer)) {
         setError('Please draw for dynamite');
         return;
       }
 
-      if (isPlayerTurn && isJailed(sourcePlayer)) {
+      if (isJailed(sourcePlayer)) {
         setError('Please draw for jail');
         return;
       }
