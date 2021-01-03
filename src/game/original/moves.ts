@@ -18,6 +18,8 @@ import {
   isJailed,
   setVeraCusterStage,
   getNextPlayerToPassEquipments,
+  processGregDiggerPower,
+  processHerbHunterPower,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -46,24 +48,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       resetGameStage(G, ctx);
     }
 
-    const gregDiggerIds = isCharacterInGame(G, 'greg digger');
-    if (gregDiggerIds !== undefined) {
-      for (const gregDiggerId of gregDiggerIds) {
-        const gregDiggerPlayer = G.players[gregDiggerId];
-        gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
-      }
-    }
+    processGregDiggerPower(G);
 
-    const herbHunterIds = isCharacterInGame(G, 'herb hunter');
-    if (herbHunterIds !== undefined) {
-      for (const herbHunterId of herbHunterIds) {
-        const herbHunterPlayer = G.players[herbHunterId];
-        const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
-        G.deck = G.deck.slice(0, G.deck.length - 2);
-        herbHunterPlayer.hand.push(...newCards);
-        herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
-      }
-    }
+    processHerbHunterPower(G, ctx);
 
     const vultureSamIds = isCharacterInGame(G, 'vulture sam');
     if (vultureSamIds !== undefined) {
@@ -176,24 +163,9 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
   }
 
   if (targetPlayer.hp <= 0) {
-    const gregDiggerIds = isCharacterInGame(G, 'greg digger');
-    if (gregDiggerIds !== undefined) {
-      for (const gregDiggerId of gregDiggerIds) {
-        const gregDiggerPlayer = G.players[gregDiggerId];
-        gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
-      }
-    }
+    processGregDiggerPower(G);
 
-    const herbHunterIds = isCharacterInGame(G, 'herb hunter');
-    if (herbHunterIds !== undefined) {
-      for (const herbHunterId of herbHunterIds) {
-        const herbHunterPlayer = G.players[herbHunterId];
-        const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
-        G.deck = G.deck.slice(0, G.deck.length - 2);
-        herbHunterPlayer.hand.push(...newCards);
-        herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
-      }
-    }
+    processHerbHunterPower(G, ctx);
 
     const vultureSamIds = isCharacterInGame(G, 'vulture sam');
     if (vultureSamIds !== undefined) {
@@ -294,8 +266,10 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
   } else {
     const nextPlayerId = getNextPlayerToPassEquipments(G, ctx);
     const nextPlayer = G.players[nextPlayerId];
-    if (nextPlayer.equipments.some(card => card.name === 'dynamite')) {
+    const dynamiteCard = hasDynamite(nextPlayer);
+    if (dynamiteCard) {
       // do nothing
+      dynamiteCard.timer = 1;
     } else {
       const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
       nextPlayer.equipments.push(dynamiteCard);
