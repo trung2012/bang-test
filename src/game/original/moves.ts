@@ -266,20 +266,18 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
   } else {
     const nextPlayerId = getNextPlayerToPassEquipments(G, ctx);
     const nextPlayer = G.players[nextPlayerId];
-    const dynamiteCard = hasDynamite(nextPlayer);
-    if (dynamiteCard) {
-      // do nothing
-      dynamiteCard.timer = 1;
+    const nextPlayerDynamiteCard = hasDynamite(nextPlayer);
+    const currentPlayerDynamiteCard = currentPlayer.equipments[dynamiteCardIndex];
+    if (nextPlayerDynamiteCard) {
+      currentPlayerDynamiteCard.timer = 1;
     } else {
-      const dynamiteCard = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
-      nextPlayer.equipments.push(dynamiteCard);
-      while (currentPlayer.cardsInPlay.length > 0) {
-        const discardedCard = currentPlayer.cardsInPlay.shift();
-        if (discardedCard) {
-          G.discarded.push(discardedCard);
-        }
+      const dynamiteCardToPass = currentPlayer.equipments.splice(dynamiteCardIndex, 1)[0];
+      if (dynamiteCardToPass) {
+        nextPlayer.equipments.push(dynamiteCardToPass);
       }
     }
+
+    clearCardsInPlay(G, ctx, ctx.currentPlayer);
 
     if (currentPlayer.character.realName && !isJailed(currentPlayer)) {
       setVeraCusterStage(ctx);

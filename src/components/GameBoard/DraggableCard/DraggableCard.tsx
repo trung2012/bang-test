@@ -69,7 +69,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     const targetPlayer = players[playerId];
     const sourcePlayer = players[playerID];
-    const isPlayerTurn = playerId === playerID;
+    const isTargetPlayerTurn = playerId === playerID;
 
     // Process moves when source player is different from target player
 
@@ -100,7 +100,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     // Process moves when source player is target player (current turn)
-    if (!isPlayerTurn) return;
+    if (!isTargetPlayerTurn) return;
 
     if (activeStage && reactionRequired.cardNeeded.length && selectedCards && setSelectedCards) {
       if (
@@ -266,10 +266,15 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }, delayBetweenActions);
   };
 
-  const onContextMenu = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setShowCardOptions(true);
-  }, []);
+  const onContextMenu = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      if (cardLocation === 'hand') {
+        setShowCardOptions(true);
+      }
+    },
+    [cardLocation]
+  );
 
   return (
     <Fragment>
@@ -313,10 +318,15 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
           </DraggableCardContainer>
         )}
       </Draggable>
-      <DragComponent for={`${card.id}`} subscribeTo={['x', 'y']}>
+      <DragComponent for={`${card.id}`}>
         {draggableDragState => (
           <DragComponentContainer className='card-dragging' draggableDragState={draggableDragState}>
-            <Card card={card} isFacedUp={isFacedUp} disabled={isCardDisabled} />
+            <Card
+              card={card}
+              isFacedUp={isFacedUp}
+              disabled={isCardDisabled}
+              isDragComponent={true}
+            />
           </DragComponentContainer>
         )}
       </DragComponent>

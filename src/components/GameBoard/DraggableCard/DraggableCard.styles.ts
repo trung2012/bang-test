@@ -38,7 +38,7 @@ export const DragComponentContainer = styled.div<{
     cursor: 'grabbing',
   },
   ({ draggableDragState }) => ({
-    left: draggableDragState.isDragging ? draggableDragState.x : draggableDragState.startingX,
-    top: draggableDragState.isDragging ? draggableDragState.y : draggableDragState.startingY,
+    left: draggableDragState.x,
+    top: draggableDragState.y,
   })
 );

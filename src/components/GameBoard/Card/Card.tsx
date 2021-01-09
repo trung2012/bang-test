@@ -7,6 +7,7 @@ import './Card.scss';
 import { CardBack } from './CardBack';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/themes/light.css';
+import { useWhyDidYouUpdate } from '../../../hooks';
 
 interface ICardProps {
   isFacedUp: boolean;
@@ -16,6 +17,7 @@ interface ICardProps {
   onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onClick?: () => void;
   disabled?: boolean;
+  isDragComponent?: boolean;
 }
 
 export const CardBaseComponent: React.FC<ICardProps> = ({
@@ -26,12 +28,23 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   onContextMenu,
   onClick,
   disabled,
+  isDragComponent,
 }) => {
   const { cardPositions, setCardPositions } = useAnimationContext();
   const cardRef = useRef<HTMLDivElement | null>(null);
+  useWhyDidYouUpdate('CardBaseComponent', {
+    card,
+    style,
+    isFacedUp,
+    className,
+    onContextMenu,
+    onClick,
+    disabled,
+    isDragComponent,
+  });
 
   useLayoutEffect(() => {
-    if (cardPositions && cardRef.current) {
+    if (cardPositions && cardRef.current && !isDragComponent) {
       const oldPosition = cardPositions[card.id];
       const newPosition = cardRef.current.getBoundingClientRect();
       if (oldPosition) {
@@ -54,7 +67,7 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!cardPositions[card.id] && cardRef.current) {
+    if (!cardPositions[card.id] && cardRef.current && !isDragComponent) {
       const newPosition = cardRef.current.getBoundingClientRect();
       setCardPositions(card.id, {
         left: newPosition.left,

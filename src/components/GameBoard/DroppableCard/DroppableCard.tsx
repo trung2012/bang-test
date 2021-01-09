@@ -30,8 +30,8 @@ export type CardContainerProps = {
 };
 
 export const DroppableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   &:hover {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: ${props => `${props.isCurrentPlayer ? 'translateY(-3rem)' : 'translateY(2rem)'} `};
     z-index: 11;
   }
