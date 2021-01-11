@@ -366,11 +366,7 @@ export const playCardToReact = (
     }
   }
 
-  if (
-    onlyHandCardToPlay !== null &&
-    onlyHandCardToPlay.name === 'bang' &&
-    previousActiveStage === stageNames.duel
-  ) {
+  if (onlyHandCardToPlay !== null && previousActiveStage === stageNames.duel) {
     if (previousSourcePlayerId) {
       duel(G, ctx, previousSourcePlayerId, reactingPlayerId);
     }
@@ -941,6 +937,10 @@ export const endTurn = (G: IGameState, ctx: Ctx) => {
     currentPlayer.equipmentsGreen.forEach(card => {
       card.timer = 0;
     });
+  }
+
+  if (currentPlayer.cardsInPlay.length > 0) {
+    clearCardsInPlay(G, ctx, ctx.currentPlayer);
   }
 
   if (ctx.events?.endTurn) {
