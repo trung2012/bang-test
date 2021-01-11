@@ -92,6 +92,8 @@ export const processCardRemoval = (
 };
 
 export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGamePlayer) => {
+  if (ctx.phase === 'suddenDeath') return;
+
   const beerCardIndexes = targetPlayer.hand
     .map((card, index) => (card.name === 'beer' ? index : -1))
     .filter(index => index !== -1);
@@ -269,26 +271,26 @@ export const processMultipleVultureSamPower = (
 
 export const processGregDiggerPower = (G: IGameState) => {
   const gregDiggerIds = isCharacterInGame(G, 'greg digger');
-    if (gregDiggerIds !== undefined) {
-      for (const gregDiggerId of gregDiggerIds) {
-        const gregDiggerPlayer = G.players[gregDiggerId];
-        gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
-      }
+  if (gregDiggerIds !== undefined) {
+    for (const gregDiggerId of gregDiggerIds) {
+      const gregDiggerPlayer = G.players[gregDiggerId];
+      gregDiggerPlayer.hp = Math.min(gregDiggerPlayer.hp + 2, gregDiggerPlayer.maxHp);
     }
-}
+  }
+};
 
 export const processHerbHunterPower = (G: IGameState, ctx: Ctx) => {
   const herbHunterIds = isCharacterInGame(G, 'herb hunter');
-    if (herbHunterIds !== undefined) {
-      for (const herbHunterId of herbHunterIds) {
-        const herbHunterPlayer = G.players[herbHunterId];
-        const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
-        G.deck = G.deck.slice(0, G.deck.length - 2);
-        herbHunterPlayer.hand.push(...newCards);
-        herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
-      }
+  if (herbHunterIds !== undefined) {
+    for (const herbHunterId of herbHunterIds) {
+      const herbHunterPlayer = G.players[herbHunterId];
+      const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+      G.deck = G.deck.slice(0, G.deck.length - 2);
+      herbHunterPlayer.hand.push(...newCards);
+      herbHunterPlayer.hand = shuffle(ctx, herbHunterPlayer.hand);
     }
-}
+  }
+};
 
 export const setVeraCusterStage = (ctx: Ctx) => {
   if (ctx.events?.setActivePlayers) {

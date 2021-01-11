@@ -9,7 +9,7 @@
   }
 }
 
-@keyframes main {
+@keyframes ribbonMain {
   0% {
     transform: scaleX(0);
   }
@@ -18,7 +18,7 @@
   }
 }
 
-@keyframes edge {
+@keyframes ribbonEdge {
   0%,
   50% {
     transform: scaleY(0);
@@ -28,7 +28,7 @@
   }
 }
 
-@keyframes back {
+@keyframes ribbonBack {
   0%,
   75% {
     transform: scaleX(0);

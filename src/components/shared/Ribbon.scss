@@ -11,7 +11,7 @@
   align-items: center;
   text-transform: uppercase;
   background: $color-secondary-dark;
-  animation: main 250ms linear 1.25s backwards;
+  animation: ribbonMain 250ms linear 1.25s backwards;
   margin-bottom: 12rem;
 
   i {
@@ -25,7 +25,7 @@
       z-index: -1;
       border: 2rem solid transparent;
       border-right-color: $color-tertiary-dark;
-      animation: edge 500ms linear 1.25s backwards;
+      animation: ribbonEdge 500ms linear 1.25s backwards;
     }
 
     &:nth-child(2) {
@@ -43,7 +43,7 @@
       z-index: -2;
       border: 3rem solid $color-tertiary;
       border-left-color: transparent;
-      animation: back 600ms linear 1.25s backwards;
+      animation: ribbonBack 600ms linear 1.25s backwards;
       transform-origin: 100% 0;
     }
 
