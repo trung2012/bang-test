@@ -186,12 +186,17 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       return;
     }
 
-    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
-      if (targetPlayer.character.name === 'jose delgado' && card.type !== 'equipment') {
-        setError('Please choose a blue card to discard');
-        return;
-      }
+    if (
+      ctx.activePlayers &&
+      ctx.activePlayers[playerID] === stageNames.joseDelgadoDiscard &&
+      targetPlayer.character.name === 'jose delgado' &&
+      card.type !== 'equipment'
+    ) {
+      setError('Please choose a blue card to discard');
+      return;
+    }
 
+    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
       if (cardLocation !== 'hand') {
         setError('You can only discard from your hand');
         return;

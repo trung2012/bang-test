@@ -1203,7 +1203,7 @@ export const joseDelgadoPower = (G: IGameState, ctx: Ctx) => {
 
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
-      currentPlayer: stageNames.discardToPlayCard,
+      currentPlayer: stageNames.joseDelgadoDiscard,
       moveLimit: 1,
     });
   }

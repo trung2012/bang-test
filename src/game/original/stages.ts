@@ -10,6 +10,13 @@ const stages: StageMap<IGameState> = {
       clearCardsInPlay: moves.clearCardsInPlay,
     },
   },
+  joseDelgadoDiscard: {
+    moves: {
+      discardFromHand: moves.discardFromHand,
+      resetGameStage: moves.resetGameStage,
+      clearCardsInPlay: moves.clearCardsInPlay,
+    },
+  },
   pickFromGeneralStore: {
     moves: {
       pickCardFromGeneralStore: moves.pickCardFromGeneralStore,

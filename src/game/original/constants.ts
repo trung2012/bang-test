@@ -189,6 +189,7 @@ export const stageNames = {
   discardToPlayCard: 'discardToPlayCard',
   ragtime: 'ragtime',
   copyCharacter: 'copyCharacter',
+  joseDelgadoDiscard: 'joseDelgadoDiscard',
 };
 
 export const gunRange: { [gunName: string]: number } = {
