@@ -192,6 +192,13 @@ export const stageNames = {
   joseDelgadoDiscard: 'joseDelgadoDiscard',
 };
 
+export const stagesReactingToBullets = [
+  stageNames.duel,
+  stageNames.reactToBang,
+  stageNames.reactToGatling,
+  stageNames.reactToIndians,
+];
+
 export const gunRange: { [gunName: string]: number } = {
   remington: 3,
   'rev carabine': 4,

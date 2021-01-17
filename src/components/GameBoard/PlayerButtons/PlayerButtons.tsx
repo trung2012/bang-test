@@ -12,6 +12,7 @@ import {
   IGamePlayer,
   isJailed,
   stageNames,
+  stagesReactingToBullets,
 } from '../../../game';
 import useSound from 'use-sound';
 const power = require('../../../assets/sounds/power.mp3');
@@ -20,8 +21,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   const [playPower] = useSound(power, { volume: 0.2 });
   const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
-  const isCurrentPlayer = playerID === player.id;
-  const isReactingToBullets = !!ctx.activePlayers && ctx.activePlayers[player.id];
+  const isCurrentPlayer = playerID === player.id && player.id === ctx.currentPlayer;
+  const isReactingToBullets =
+    !!ctx.activePlayers &&
+    ctx.activePlayers[player.id] &&
+    stagesReactingToBullets.includes(ctx.activePlayers[player.id]);
   const isPowerDisabled = player.character.activePowerUsesLeft === 0;
 
   const onEndTurnClick = () => {
@@ -113,7 +117,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     <div className='player-buttons'>
       {isCurrentPlayer && (
         <>
-          {player.character.hasActivePower && (
+          {player.character.hasActivePower && isActive && (
             <PlayerButton
               tooltipTitle='Activate your power'
               onClick={onPowerClick}
@@ -135,7 +139,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
           {ctx.activePlayers &&
             ctx.activePlayers[ctx.currentPlayer] === stageNames.discard &&
             isActive && (
-              <PlayerButton tooltipTitle='Cancel end turn' onClick={() => moves.endStage()}>
+              <PlayerButton tooltipTitle='Cancel' onClick={() => moves.endStage()}>
                 <CancelIcon className='player-button-icon damage-icon' />
               </PlayerButton>
             )}
