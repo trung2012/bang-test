@@ -176,7 +176,7 @@ export const canPlayCardToReact = (
     sourcePlayerId: string | null;
     cardNeeded: CardName[];
     quantity: number;
-    cardToPlayAfterDiscard?: CardName | null;
+    moveToPlayAfterDiscard?: CardName | null;
     targetPlayerId?: string;
   },
   reactingPlayer: IGamePlayer,

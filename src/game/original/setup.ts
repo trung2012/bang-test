@@ -46,7 +46,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const reactionRequired = {
     cardNeeded: [] as CardName[],
     quantity: 1,
-    cardToPlayAfterDiscard: null,
+    moveToPlayAfterDiscard: null,
   };
   const activeStage = null;
 

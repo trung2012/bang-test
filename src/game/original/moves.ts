@@ -396,7 +396,7 @@ const discardFromHand = (
   if (!discardedCard) return INVALID_MOVE;
 
   moveToDiscard(G, ctx, discardedCard);
-  if (!G.reactionRequired.cardToPlayAfterDiscard) {
+  if (!G.reactionRequired.moveToPlayAfterDiscard) {
     targetPlayer.cardDiscardedThisTurn += 1;
   }
 
@@ -1044,7 +1044,7 @@ export const equipGreenCard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
 };
 
 export const resetDiscardStage = (G: IGameState, ctx: Ctx) => {
-  G.reactionRequired.cardToPlayAfterDiscard = null;
+  G.reactionRequired.moveToPlayAfterDiscard = null;
   G.reactionRequired.targetPlayerId = undefined;
 };
 
@@ -1061,7 +1061,7 @@ export const makePlayerDiscardToPlay = (
     });
   }
 
-  G.reactionRequired.cardToPlayAfterDiscard = cardName;
+  G.reactionRequired.moveToPlayAfterDiscard = cardName;
   G.reactionRequired.targetPlayerId = targetPlayerId;
 };
 
@@ -1208,7 +1208,7 @@ export const joseDelgadoPower = (G: IGameState, ctx: Ctx) => {
     });
   }
 
-  G.reactionRequired.cardToPlayAfterDiscard = 'josedelgadodraw' as CardName;
+  G.reactionRequired.moveToPlayAfterDiscard = 'josedelgadodraw' as CardName;
   G.reactionRequired.targetPlayerId = ctx.currentPlayer;
 
   if (currentPlayer.character.activePowerUsesLeft !== undefined) {

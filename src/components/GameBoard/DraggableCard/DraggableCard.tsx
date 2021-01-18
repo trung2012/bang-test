@@ -204,8 +204,8 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
       moves.discardFromHand(playerID, index);
 
-      if (G.reactionRequired.cardToPlayAfterDiscard) {
-        const moveName = G.reactionRequired.cardToPlayAfterDiscard.replace(' ', '').toLowerCase();
+      if (G.reactionRequired.moveToPlayAfterDiscard) {
+        const moveName = G.reactionRequired.moveToPlayAfterDiscard.replace(' ', '').toLowerCase();
 
         if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
           throw Error('No move no target');
