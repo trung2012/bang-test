@@ -1045,7 +1045,7 @@ export const equipGreenCard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
 
 export const resetDiscardStage = (G: IGameState, ctx: Ctx) => {
   G.reactionRequired.moveToPlayAfterDiscard = null;
-  G.reactionRequired.targetPlayerId = undefined;
+  G.reactionRequired.moveArgs = undefined;
 };
 
 export const makePlayerDiscardToPlay = (
@@ -1062,7 +1062,7 @@ export const makePlayerDiscardToPlay = (
   }
 
   G.reactionRequired.moveToPlayAfterDiscard = cardName;
-  G.reactionRequired.targetPlayerId = targetPlayerId;
+  G.reactionRequired.moveArgs = [targetPlayerId];
 };
 
 export const ragtime = (G: IGameState, ctx: Ctx) => {
@@ -1209,7 +1209,6 @@ export const joseDelgadoPower = (G: IGameState, ctx: Ctx) => {
   }
 
   G.reactionRequired.moveToPlayAfterDiscard = 'josedelgadodraw' as CardName;
-  G.reactionRequired.targetPlayerId = ctx.currentPlayer;
 
   if (currentPlayer.character.activePowerUsesLeft !== undefined) {
     currentPlayer.character.activePowerUsesLeft -= 1;

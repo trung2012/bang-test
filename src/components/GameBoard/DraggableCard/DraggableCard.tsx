@@ -189,14 +189,19 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     if (
       ctx.activePlayers &&
       ctx.activePlayers[playerID] === stageNames.joseDelgadoDiscard &&
-      targetPlayer.character.name === 'jose delgado' &&
-      card.type !== 'equipment'
+      targetPlayer.character.name === 'jose delgado'
     ) {
-      setError('Please choose a blue card to discard');
-      return;
+      if (card.type !== 'equipment') {
+        setError('Please choose a blue card to discard');
+        return;
+      }
     }
 
-    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.discardToPlayCard) {
+    if (
+      ctx.activePlayers &&
+      (ctx.activePlayers[playerID] === stageNames.discardToPlayCard ||
+        ctx.activePlayers[playerID] === stageNames.joseDelgadoDiscard)
+    ) {
       if (cardLocation !== 'hand') {
         setError('You can only discard from your hand');
         return;
@@ -207,11 +212,16 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       if (G.reactionRequired.moveToPlayAfterDiscard) {
         const moveName = G.reactionRequired.moveToPlayAfterDiscard.replace(' ', '').toLowerCase();
 
-        if (!moves[moveName] || G.reactionRequired.targetPlayerId === undefined) {
+        if (!moves[moveName]) {
           throw Error('No move no target');
         }
 
-        moves[moveName](G.reactionRequired.targetPlayerId);
+        if (G.reactionRequired.moveArgs) {
+          moves[moveName](...G.reactionRequired.moveArgs);
+        } else {
+          moves[moveName]();
+        }
+
         return;
       }
     }

@@ -21,15 +21,16 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   const [playPower] = useSound(power, { volume: 0.2 });
   const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
-  const isCurrentPlayer = playerID === player.id && player.id === ctx.currentPlayer;
+  const isClientPlayer = playerID === player.id;
+  const isCurrentPlayer = isClientPlayer && player.id === ctx.currentPlayer;
   const isReactingToBullets =
-    !!ctx.activePlayers &&
-    ctx.activePlayers[player.id] &&
+    ctx.activePlayers !== null &&
+    !!ctx.activePlayers[player.id] &&
     stagesReactingToBullets.includes(ctx.activePlayers[player.id]);
   const isPowerDisabled = player.character.activePowerUsesLeft === 0;
 
   const onEndTurnClick = () => {
-    if (!isCurrentPlayer || !isActive) {
+    if (!isClientPlayer || !isActive) {
       setError('You cannot perform this action right now');
       return;
     }
@@ -62,7 +63,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   };
 
   const onPowerClick = () => {
-    if (!isCurrentPlayer) return;
+    if (!isClientPlayer) return;
 
     switch (player.character.name) {
       case 'jourdonnais': {
@@ -104,7 +105,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
   };
 
   const onTakeDamageClick = () => {
-    if (!isCurrentPlayer) return;
+    if (!isClientPlayer) return;
 
     moves.takeDamage(player.id);
   };
@@ -115,7 +116,7 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
 
   return (
     <div className='player-buttons'>
-      {isCurrentPlayer && (
+      {isClientPlayer && (
         <>
           {player.character.hasActivePower && isActive && (
             <PlayerButton

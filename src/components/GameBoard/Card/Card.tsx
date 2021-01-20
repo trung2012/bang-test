@@ -7,7 +7,6 @@ import './Card.scss';
 import { CardBack } from './CardBack';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/themes/light.css';
-import { useWhyDidYouUpdate } from '../../../hooks';
 
 interface ICardProps {
   isFacedUp: boolean;
@@ -32,16 +31,6 @@ export const CardBaseComponent: React.FC<ICardProps> = ({
 }) => {
   const { cardPositions, setCardPositions } = useAnimationContext();
   const cardRef = useRef<HTMLDivElement | null>(null);
-  useWhyDidYouUpdate('CardBaseComponent', {
-    card,
-    style,
-    isFacedUp,
-    className,
-    onContextMenu,
-    onClick,
-    disabled,
-    isDragComponent,
-  });
 
   useLayoutEffect(() => {
     if (cardPositions && cardRef.current && !isDragComponent) {

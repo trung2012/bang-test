@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import React from 'react';
 import { Droppable } from 'react-dragtastic';
 import { DraggableCard } from '.';
@@ -10,7 +11,6 @@ import {
   cardsWithNoRangeLimit,
 } from '../../../game';
 import { calculateDistanceFromTarget } from '../../../utils';
-import { DroppableCardContainer } from '../DroppableCard';
 import { IDraggableCardData } from './DraggableCard.types';
 
 interface IDroppableDraggableCardProps {
@@ -18,6 +18,14 @@ interface IDroppableDraggableCardProps {
   card: ICard;
   index: number;
 }
+
+export const DroppableDraggableCardContainer = styled.div<{ isCurrentPlayer: boolean }>`
+  &:hover {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: ${props => `${props.isCurrentPlayer ? 'translateY(-3rem)' : 'translateY(2rem)'} `};
+    z-index: 11;
+  }
+`;
 
 export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
   card,
@@ -68,7 +76,7 @@ export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
   return (
     <Droppable accepts='card' onDrop={onDrop}>
       {droppableDragState => (
-        <DroppableCardContainer
+        <DroppableDraggableCardContainer
           isCurrentPlayer={playerID === playerId}
           className='droppable-card'
           {...droppableDragState.events}
@@ -80,7 +88,7 @@ export const DroppableDraggableCard: React.FC<IDroppableDraggableCardProps> = ({
             playerId={playerId}
             cardLocation={cardLocation}
           />
-        </DroppableCardContainer>
+        </DroppableDraggableCardContainer>
       )}
     </Droppable>
   );

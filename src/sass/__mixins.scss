@@ -81,7 +81,7 @@
 @mixin player1($numPlayers) {
   @if $numPlayers == 2 {
     .player1 {
-      grid-column: 5 / span 3;
+      grid-column: 3 / span 4;
       grid-row: 1 / span 2;
       align-self: flex-start;
       justify-self: center;
@@ -326,7 +326,7 @@
       margin-bottom: -10%;
 
       .player-hand {
-        transform: translate(10rem, 4rem) rotate(-65deg);
+        transform: translate(10rem, 10rem) rotate(-65deg);
       }
 
       .player-cards-in-play {
@@ -453,7 +453,7 @@
       margin-top: 10%;
 
       .player-hand {
-        transform: translate(10rem, 4rem) rotate(-65deg);
+        transform: translate(10rem, 10rem) rotate(-65deg);
       }
 
       .player-cards-in-play {

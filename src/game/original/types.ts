@@ -15,7 +15,7 @@ export interface IGameState {
     cardNeeded: CardName[];
     quantity: number;
     moveToPlayAfterDiscard?: CardName | null;
-    targetPlayerId?: string;
+    moveArgs?: any[];
   };
   expansions: ExpansionName[];
 }

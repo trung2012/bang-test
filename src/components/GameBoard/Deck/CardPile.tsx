@@ -23,7 +23,6 @@ export const CardPile: React.FC<ICardPileProps> = ({ cards, isFacedUp, className
   if (!cards) {
     return null;
   }
-  console.log(cards);
 
   return (
     <div className={classnames(`card-pile `, className ? className : '')} onClick={onClick}>
