@@ -19,14 +19,17 @@ const power = require('../../../assets/sounds/power.mp3');
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
   const [playPower] = useSound(power, { volume: 0.2 });
-  const { G, ctx, moves, playerID, isActive } = useGameContext();
+  const { ctx, moves, playerID, isActive } = useGameContext();
   const { setError } = useErrorContext();
   const isClientPlayer = playerID === player.id;
   const isCurrentPlayer = isClientPlayer && player.id === ctx.currentPlayer;
+  const playerCurrentStage = (ctx.activePlayers
+    ? ctx.activePlayers[playerID!]
+    : 'none') as stageNames;
   const isReactingToBullets =
     ctx.activePlayers !== null &&
-    !!ctx.activePlayers[player.id] &&
-    stagesReactingToBullets.includes(ctx.activePlayers[player.id]);
+    !!ctx.activePlayers[playerID!] &&
+    stagesReactingToBullets.includes(playerCurrentStage);
   const isPowerDisabled = player.character.activePowerUsesLeft === 0;
 
   const onEndTurnClick = () => {
@@ -69,8 +72,8 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
       case 'jourdonnais': {
         if (player.jourdonnaisPowerUseLeft > 0) {
           if (
-            G.activeStage === stageNames.reactToGatling ||
-            G.activeStage === stageNames.reactToBang
+            playerCurrentStage === stageNames.reactToGatling ||
+            playerCurrentStage === stageNames.reactToBang
           ) {
             moves.drawToReact(player.id);
             playPower();
@@ -137,13 +140,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
               <DamageIcon className='player-button-icon damage-icon' />
             </PlayerButton>
           )}
-          {ctx.activePlayers &&
-            ctx.activePlayers[ctx.currentPlayer] === stageNames.discard &&
-            isActive && (
-              <PlayerButton tooltipTitle='Cancel' onClick={() => moves.endStage()}>
-                <CancelIcon className='player-button-icon damage-icon' />
-              </PlayerButton>
-            )}
+          {playerCurrentStage === stageNames.discard && isActive && (
+            <PlayerButton tooltipTitle='Cancel' onClick={() => moves.endStage()}>
+              <CancelIcon className='player-button-icon damage-icon' />
+            </PlayerButton>
+          )}
         </>
       )}
     </div>

@@ -17,14 +17,17 @@ export const SecretCard = styled(Card)<{ index: number; isCurrentPlayer: boolean
 `;
 
 export const PlayerSecretCards: React.FC<IPlayerSecretCards> = ({ cards, playerId }) => {
-  const { G, playerID, moves } = useGameContext();
+  const { ctx, playerID, moves } = useGameContext();
+  const currentPlayerStage = (ctx.activePlayers
+    ? ctx.activePlayers[playerID!]
+    : 'none') as stageNames;
 
   if (!cards?.length) {
     return null;
   }
 
   const onSecretCardClick = (index: number) => {
-    if (G.activeStage === stageNames.kitCarlsonDiscard) {
+    if (currentPlayerStage === stageNames.kitCarlsonDiscard) {
       moves.kitCarlsonDiscard(index);
     }
   };

@@ -44,11 +44,11 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
   const players: IGamePlayerMap = {};
   const playOrder: string[] = [];
   const reactionRequired = {
+    sourcePlayerId: null,
     cardNeeded: [] as CardName[],
     quantity: 1,
     moveToPlayAfterDiscard: null,
   };
-  const activeStage = null;
 
   // Create players
   for (const playerId of ctx.playOrder) {
@@ -89,7 +89,6 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     players,
     generalStore,
     generalStoreOrder,
-    activeStage,
     reactionRequired,
     playOrder,
     expansions,

@@ -9,10 +9,8 @@ export interface IGameState {
   players: IGamePlayerMap;
   playOrder: string[];
   characters: ICharacter[];
-  activeStage: string | null;
   reactionRequired: {
     sourcePlayerId: string | null;
-    cardNeeded: CardName[];
     quantity: number;
     moveToPlayAfterDiscard?: CardName | null;
     moveArgs?: any[];

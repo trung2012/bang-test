@@ -174,23 +174,23 @@ export const gameNames = {
   bang: 'bang',
 };
 
-export const stageNames = {
-  clearCardsInPlay: 'clearCardsInPlay',
-  drawToReact: 'drawToReact',
-  pickFromGeneralStore: 'pickFromGeneralStore',
-  duel: 'duel',
-  reactToGatling: 'reactToGatling',
-  reactToIndians: 'reactToIndians',
-  reactToBang: 'reactToBang',
-  takeCardFromHand: 'takeCardFromHand',
-  kitCarlsonDiscard: 'kitCarlsonDiscard',
-  discard: 'discard',
-  play: 'play',
-  discardToPlayCard: 'discardToPlayCard',
-  ragtime: 'ragtime',
-  copyCharacter: 'copyCharacter',
-  joseDelgadoDiscard: 'joseDelgadoDiscard',
-};
+export enum stageNames {
+  clearCardsInPlay = 'clearCardsInPlay',
+  drawToReact = 'drawToReact',
+  pickFromGeneralStore = 'pickFromGeneralStore',
+  duel = 'duel',
+  reactToGatling = 'reactToGatling',
+  reactToIndians = 'reactToIndians',
+  reactToBang = 'reactToBang',
+  takeCardFromHand = 'takeCardFromHand',
+  kitCarlsonDiscard = 'kitCarlsonDiscard',
+  discard = 'discard',
+  play = 'play',
+  discardToPlayCard = 'discardToPlayCard',
+  ragtime = 'ragtime',
+  copyCharacter = 'copyCharacter',
+  joseDelgadoDiscard = 'joseDelgadoDiscard',
+}
 
 export const stagesReactingToBullets = [
   stageNames.duel,
@@ -205,6 +205,8 @@ export const gunRange: { [gunName: string]: number } = {
   schofield: 2,
   volcanic: 1,
   winchester: 5,
+  lemat: 1,
+  shotgun: 1,
 };
 
 export const delayBetweenActions = 2000;
@@ -229,7 +231,17 @@ export const cardsThatWorkAgainstBang: CardName[] = [
   'iron plate',
   'sombrero',
   'ten gallon hat',
+  'backfire',
 ];
+
+export const stageNameToRequiredCardsMap: {
+  [key in stageNames]?: CardName[];
+} = {
+  reactToGatling: cardsThatWorkAgainstBang,
+  reactToIndians: ['bang'],
+  reactToBang: cardsThatWorkAgainstBang,
+  duel: ['bang'],
+};
 
 export const teamLookUp = {
   sheriff: 'The Lawful',

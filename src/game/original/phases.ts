@@ -2,6 +2,7 @@ import { Ctx, PhaseConfig } from 'boardgame.io';
 import { TurnOrder } from 'boardgame.io/core';
 import moves from './moves';
 import { IGameState } from './types';
+import { isPlayerGhost } from './utils';
 
 interface IGamePhases {
   [phaseName: string]: PhaseConfig;
@@ -25,7 +26,10 @@ const phases: IGamePhases = {
           let nextPlayerPos = ctx.playOrderPos % ctx.playOrder.length;
           do {
             nextPlayerPos = (nextPlayerPos + 1) % ctx.playOrder.length;
-          } while (G.players[nextPlayerPos.toString()].hp <= 0);
+          } while (
+            G.players[nextPlayerPos.toString()].hp <= 0 &&
+            !isPlayerGhost(G.players[nextPlayerPos.toString()])
+          );
           return nextPlayerPos;
         },
       },

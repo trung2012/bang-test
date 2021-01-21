@@ -7,6 +7,7 @@ import {
   hasActiveDynamite,
   IGamePlayer,
   isJailed,
+  isPlayerGhost,
   stageNames,
 } from '../../../game';
 import { PlayerHp } from '../PlayerHp';
@@ -34,6 +35,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
   const isReactingPlayer = ctx.activePlayers && ctx.activePlayers[player.id];
   const isPlayerJailed = isJailed(player);
   const clientPlayer = G.players[playerID!];
+  const isGhost = !!isPlayerGhost(player);
 
   const onPlayerClick = () => {
     if (!isActive || isActivePlayer || !playerID) return;
@@ -162,6 +164,26 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
         moves.bang(player.id);
         return;
       }
+      case 'aim': {
+        const bangCardIndex = sourcePlayer.hand.findIndex(card => card.name === 'bang');
+        if (bangCardIndex === -1) {
+          setError('You need a BANG! card to play this');
+          return;
+        }
+        moves.playCard(bangCardIndex, player.id, sourceCardLocation);
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+        moves.bang(player.id);
+        return;
+      }
+      case 'ghost': {
+        if (player.hp > 0) {
+          setError('Cannot play ghost on players alive');
+          return;
+        }
+
+        moves.equipOtherPlayer(player.id, sourceCardIndex);
+        return;
+      }
       default: {
         return;
       }
@@ -189,7 +211,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
     }
   }, [clientPlayer.character.realName, ctx.activePlayers, playerID, setNotification]);
 
-  if (player.hp <= 0) {
+  if (player.hp <= 0 && isGhost) {
     return <PlayerDead player={player} />;
   }
 
@@ -241,7 +263,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           </div>
         )}
       </Droppable>
-      <PlayerHp hp={player.hp} maxHp={player.maxHp} />
+      <PlayerHp isGhost={isGhost} hp={player.hp} maxHp={player.maxHp} />
     </>
   );
 };

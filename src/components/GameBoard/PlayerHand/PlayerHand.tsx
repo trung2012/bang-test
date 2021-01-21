@@ -81,6 +81,11 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
   }, [hand.length]);
 
   const onPlayerHandDroppableCardClick = (index: number) => {
+    const currentPlayer = G.players[playerID!];
+    const currentPlayerStage = (ctx.activePlayers
+      ? ctx.activePlayers[currentPlayer.id]
+      : 'none') as stageNames;
+
     if (hasActiveDynamite(clientPlayer)) {
       setError('Please draw for dynamite');
       return;
@@ -91,18 +96,17 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
       return;
     }
 
-    const currentPlayer = G.players[playerID!];
     if (currentPlayer.character.name === 'jesse jones' && currentPlayer.cardDrawnAtStartLeft >= 2) {
       moves.drawFromPlayerHand(playerID, playerId, index);
       return;
     }
 
-    if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer] === stageNames.ragtime) {
+    if (currentPlayerStage === stageNames.ragtime) {
       moves.panic(playerId, index, cardLocation);
       return;
     }
 
-    if (G.activeStage === stageNames.takeCardFromHand) {
+    if (currentPlayerStage === stageNames.takeCardFromHand) {
       if (currentPlayer.character.name === 'el gringo' && playerId === ctx.currentPlayer) {
         moves.drawFromPlayerHand(playerID, playerId, index);
       }

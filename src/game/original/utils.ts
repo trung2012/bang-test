@@ -1,6 +1,11 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
-import { cardsThatDrawsOneWhenPlayed, cards_DodgeCity, characters_DodgeCity } from '../expansions';
+import {
+  cardsThatDrawsOneWhenPlayed,
+  cards_DodgeCity,
+  cards_VOS,
+  characters_DodgeCity,
+} from '../expansions';
 import { ExpansionName } from './config';
 import { gunRange, stageNames } from './constants';
 import {
@@ -13,17 +18,25 @@ import {
   ICharacter,
 } from './types';
 
-export const hasDynamite = (player: IGamePlayer) => {
-  return player.equipments.find(card => card.name === 'dynamite');
-};
+export const hasEquipment = (equipmentName: CardName) => (player: IGamePlayer) =>
+  player.equipments.find(card => card.name === equipmentName);
+
+export const hasDynamite = hasEquipment('dynamite');
+
+export const isJailed = hasEquipment('jail');
+
+export const hasShotgun = hasEquipment('shotgun');
+
+export const isPlayerGhost = hasEquipment('ghost');
+
+export const hasBounty = hasEquipment('bounty');
+
+export const hasSnake = hasEquipment('rattlesnake');
 
 export const hasActiveDynamite = (player: IGamePlayer) => {
   const dynamiteCard = hasDynamite(player);
   return dynamiteCard && dynamiteCard.timer === 0;
 };
-
-export const isJailed = (player: IGamePlayer) =>
-  player.equipments.find(card => card.name === 'jail');
 
 export const isCharacterInGame = (G: IGameState, characterName: CharacterName) => {
   let matchingPlayerIds: string[] | undefined = undefined;
@@ -127,7 +140,7 @@ export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGame
 export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) => {
   const newCards = [...cards];
   if (expansions.includes('valley of shadows')) {
-    // newCards.push(...cards_VOS);
+    newCards.push(...cards_VOS);
   }
 
   if (expansions.includes('dodge city')) {
@@ -138,17 +151,13 @@ export const addExpansionCards = (cards: ICard[], expansions: ExpansionName[]) =
 };
 
 export const addExpansionCharacters = (characters: ICharacter[], expansions: ExpansionName[]) => {
+  const newCharacters = [...characters, ...characters_DodgeCity];
+
   if (expansions.includes('valley of shadows')) {
     // newCharacters.push(...characters_VOS);
   }
 
-  // if (expansions.includes('dodge city')) {
-  //   //
-  // }
-  const newCharacters = [...characters];
-  newCharacters.push(...characters_DodgeCity);
-
-  return [...newCharacters];
+  return newCharacters;
 };
 
 export const checkIfCanDrawOneAfterReacting = (
@@ -174,23 +183,20 @@ export const resetCardTimer = (card: ICard) => {
 export const canPlayCardToReact = (
   reactionRequired: {
     sourcePlayerId: string | null;
-    cardNeeded: CardName[];
     quantity: number;
     moveToPlayAfterDiscard?: CardName | null;
     targetPlayerId?: string;
   },
   reactingPlayer: IGamePlayer,
-  cardClicked: ICard
+  cardClicked: ICard,
+  cardsNeeded: CardName[]
 ) => {
   return (
-    reactionRequired.cardNeeded.includes(cardClicked.name) ||
+    cardsNeeded.includes(cardClicked.name) ||
     (reactingPlayer.character.name === 'calamity janet' &&
       ['bang', 'missed'].includes(cardClicked.name) &&
-      reactionRequired.cardNeeded.some((cardName: CardName) =>
-        ['bang', 'missed'].includes(cardName)
-      )) ||
-    (reactionRequired.cardNeeded.includes('missed') &&
-      reactingPlayer.character.name === 'elena fuente')
+      cardsNeeded.some((cardName: CardName) => ['bang', 'missed'].includes(cardName))) ||
+    (cardsNeeded.includes('missed') && reactingPlayer.character.name === 'elena fuente')
   );
 };
 

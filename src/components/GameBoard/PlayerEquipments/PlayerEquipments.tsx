@@ -22,10 +22,11 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
     const sourcePlayer = players[playerID];
     const targetPlayer = players[playerId];
 
+    //Process clicking on other people's equipments
     if (
+      playerID !== playerId &&
       sourcePlayer.character.name === 'pat brennan' &&
-      G.activeStage !== stageNames.reactToGatling &&
-      G.activeStage !== stageNames.reactToBang
+      sourcePlayer.cardDrawnAtStartLeft >= 2
     ) {
       if (hasActiveDynamite(sourcePlayer)) {
         setError('Please draw for dynamite');
@@ -37,10 +38,8 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
         return;
       }
 
-      if (sourcePlayer.cardDrawnAtStartLeft >= 2) {
-        moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
-        return;
-      }
+      moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
+      return;
     }
 
     if (ctx.activePlayers && ctx.activePlayers[ctx.currentPlayer] === stageNames.ragtime) {
@@ -48,13 +47,14 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
       return;
     }
 
-    if (playerID !== playerId) {
-      return;
-    }
+    // Process clicking on own equipments
+    if (playerID !== playerId) return;
 
     if (
       equipmentCard.name === 'barrel' &&
-      (G.activeStage === stageNames.reactToGatling || G.activeStage === stageNames.reactToBang) &&
+      ctx.activePlayers &&
+      (ctx.activePlayers[playerID] === stageNames.reactToGatling ||
+        ctx.activePlayers[playerID] === stageNames.reactToBang) &&
       targetPlayer.barrelUseLeft > 0
     ) {
       moves.drawToReact(playerID);

@@ -1,8 +1,18 @@
 import React from 'react';
 import './PlayerHp.scss';
 
-export const PlayerHp: React.FC<{ hp: number; maxHp: number }> = ({ hp, maxHp }) => {
+interface IPlayerHpProps {
+  isGhost?: boolean;
+  hp: number;
+  maxHp: number;
+}
+
+export const PlayerHp: React.FC<IPlayerHpProps> = ({ isGhost, hp, maxHp }) => {
   const stepsOverlay = Array(maxHp).fill(null);
+
+  if (isGhost) {
+    return null;
+  }
 
   return (
     <div className='player-hp-container'>

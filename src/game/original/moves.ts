@@ -1,6 +1,6 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { Ctx, MoveMap } from 'boardgame.io';
-import { cardsThatWorkAgainstBang, gunRange, stageNames } from './constants';
+import { gunRange, stageNames, stageNameToRequiredCardsMap } from './constants';
 import { CardName, ICard, IGameState, RobbingType } from './types';
 import {
   isCharacterInGame,
@@ -20,6 +20,8 @@ import {
   getNextPlayerToPassEquipments,
   processGregDiggerPower,
   processHerbHunterPower,
+  hasBounty,
+  hasShotgun,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -27,8 +29,41 @@ import { cardsActivatingMollyStarkPower } from '../expansions';
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
-  targetPlayer.hp -= 1;
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const cardCausingDamage = targetPlayer.cardsInPlay[0];
+  const targetPlayerStage = (ctx.activePlayers
+    ? ctx.activePlayers[targetPlayerId]
+    : 'none') as stageNames;
+
   ctx.effects.takeDamage();
+  targetPlayer.hp -= 1;
+
+  if (targetPlayer.cardsInPlay.some(card => card.name === 'aim')) {
+    targetPlayer.hp -= 1;
+  }
+
+  if (
+    targetPlayerId !== ctx.currentPlayer &&
+    targetPlayerStage === stageNames.reactToBang &&
+    cardCausingDamage &&
+    cardCausingDamage.name === 'bang'
+  ) {
+    if (hasBounty(targetPlayer)) {
+      drawOneFromDeck(G, ctx); // Only current player can draw
+    }
+
+    if (hasShotgun(currentPlayer)) {
+      if (ctx.events?.setActivePlayers) {
+        ctx.events.setActivePlayers({
+          value: {
+            ...(ctx.activePlayers || {}),
+            [targetPlayerId]: stageNames.discardToPlayCard,
+          },
+          moveLimit: 1,
+        });
+      }
+    }
+  }
 
   targetPlayer.barrelUseLeft = 1;
   if (targetPlayer.character.name === 'jourdonnais') {
@@ -89,7 +124,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       const sourcePlayer = G.reactionRequired.sourcePlayerId
         ? G.players[G.reactionRequired.sourcePlayerId]
         : null;
-      if (G.activeStage === stageNames.duel && sourcePlayer) {
+
+      if (targetPlayerStage === stageNames.duel && sourcePlayer) {
         if (
           targetPlayer.character.name === 'molly stark' &&
           targetPlayer.mollyStarkCardsPlayed > 0
@@ -136,7 +172,6 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
           moveLimit: 1,
         });
       }
-      G.activeStage = stageNames.takeCardFromHand;
     }
   }
 
@@ -313,7 +348,7 @@ export const playCardToReact = (
   reactingPlayerId: string
 ) => {
   const reactingPlayer = G.players[reactingPlayerId];
-  const previousActiveStage = G.activeStage;
+  const previousActiveStage = ctx.activePlayers ? ctx.activePlayers[reactingPlayerId] : null;
   const previousSourcePlayerId = G.reactionRequired.sourcePlayerId;
   const handCardIndexes = selectedCards.hand;
   const greenCardIndexes = selectedCards.green;
@@ -323,12 +358,21 @@ export const playCardToReact = (
       : null;
   const onlyHandCardToPlay =
     onlyHandCardToPlayIndex !== null ? reactingPlayer.hand[onlyHandCardToPlayIndex] : null;
+  const stageName = ctx.activePlayers ? (ctx.activePlayers[reactingPlayerId] as stageNames) : null;
+  const cardsNeeded = stageName ? stageNameToRequiredCardsMap[stageName]! : [];
+
+  let hasBackfire = false;
 
   handCardIndexes.sort((a, b) => a - b);
   greenCardIndexes.sort((a, b) => a - b);
 
   for (let i = handCardIndexes.length - 1; i >= 0; i--) {
     const cardToPlay = reactingPlayer.hand.splice(handCardIndexes[i], 1)[0];
+
+    if (cardToPlay.name === 'backfire') {
+      hasBackfire = true;
+    }
+
     if (
       reactingPlayer.character.name === 'molly stark' &&
       cardsActivatingMollyStarkPower.includes(cardToPlay.name)
@@ -342,18 +386,33 @@ export const playCardToReact = (
   for (let i = greenCardIndexes.length - 1; i >= 0; i--) {
     const cardToPlay = reactingPlayer.equipmentsGreen.splice(greenCardIndexes[i], 1)[0];
 
+    if (cardToPlay.name === 'backfire') {
+      hasBackfire = true;
+    }
+
     reactingPlayer.cardsInPlay.push(cardToPlay);
     checkIfCanDrawOneAfterReacting(G, reactingPlayer, cardToPlay);
   }
 
   clearCardsInPlay(G, ctx, reactingPlayerId);
 
-  if (G.reactionRequired.cardNeeded.includes('missed')) {
+  if (cardsNeeded.includes('missed')) {
     ctx.effects.missed();
   }
 
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
     resetGameStage(G, ctx);
+  }
+
+  if (hasBackfire) {
+    if (ctx.events?.setActivePlayers) {
+      ctx.events?.setActivePlayers({
+        value: {
+          ...(ctx.activePlayers ?? {}),
+          [ctx.currentPlayer]: stageNames.reactToBang,
+        },
+      });
+    }
   }
 
   if (ctx.events?.endStage) {
@@ -520,8 +579,6 @@ const kitCarlsonDraw = (G: IGameState, ctx: Ctx) => {
       },
       moveLimit: 1,
     });
-
-    G.activeStage = stageNames.kitCarlsonDiscard;
   }
 };
 
@@ -624,6 +681,8 @@ export const barrelResult = (
 ) => {
   const reactingPlayer = G.players[targetPlayerId];
   const isSuccessful = reactingPlayer.cardsInPlay.some(card => card.suit === 'hearts');
+  const stageName = ctx.activePlayers ? (ctx.activePlayers[targetPlayerId] as stageNames) : null;
+  const cardsNeeded = stageName ? stageNameToRequiredCardsMap[stageName]! : [];
 
   clearCardsInPlay(G, ctx, targetPlayerId);
   if (isInnatePower) {
@@ -633,11 +692,7 @@ export const barrelResult = (
   }
 
   if (isSuccessful) {
-    if (
-      G.activeStage &&
-      G.reactionRequired.cardNeeded.includes('missed') &&
-      G.reactionRequired.quantity === 1
-    ) {
+    if (stageName && cardsNeeded.includes('missed') && G.reactionRequired.quantity === 1) {
       if (ctx.events?.endStage) {
         ctx.events.endStage();
         reactingPlayer.barrelUseLeft = 1;
@@ -659,9 +714,7 @@ export const barrelResult = (
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const bangCard = G.players[targetPlayerId].cardsInPlay[0];
-  G.activeStage = stageNames.reactToBang;
   G.reactionRequired = {
-    cardNeeded: cardsThatWorkAgainstBang,
     quantity: 1,
     sourcePlayerId: currentPlayer.id,
   };
@@ -699,7 +752,7 @@ const beer = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const beerCard = currentPlayer.cardsInPlay[0];
 
-  if (ctx.phase !== 'suddenDeath') {
+  if (ctx.phase !== 'suddenDeath' && beerCard.name === 'beer') {
     if (beerCard) {
       ctx.effects.beer(beerCard.id);
     }
@@ -742,8 +795,6 @@ const gatling = (G: IGameState, ctx: Ctx) => {
       value: activePlayers,
     });
   }
-  G.reactionRequired.cardNeeded = cardsThatWorkAgainstBang;
-  G.activeStage = stageNames.reactToGatling;
 };
 
 const indians = (G: IGameState, ctx: Ctx) => {
@@ -760,8 +811,6 @@ const indians = (G: IGameState, ctx: Ctx) => {
       value: activePlayers,
     });
   }
-  G.reactionRequired.cardNeeded = ['bang'];
-  G.activeStage = stageNames.reactToIndians;
 };
 
 const panic = (
@@ -838,7 +887,6 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
       value: activePlayers,
     });
   }
-  G.activeStage = stageNames.pickFromGeneralStore;
 
   // Order to pick from general store starting from the current player
   G.generalStoreOrder = [
@@ -870,9 +918,7 @@ const pickCardFromGeneralStore = (
 };
 
 const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: string) => {
-  G.reactionRequired.cardNeeded = ['bang'];
   G.reactionRequired.sourcePlayerId = sourcePlayerId;
-  G.activeStage = stageNames.duel;
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
@@ -889,9 +935,7 @@ const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: s
 };
 
 const resetGameStage = (G: IGameState, ctx: Ctx) => {
-  G.activeStage = null;
   G.reactionRequired = {
-    cardNeeded: [],
     quantity: 1,
     sourcePlayerId: null,
   };
@@ -1020,20 +1064,6 @@ export const reselectCharacter = (G: IGameState, ctx: Ctx) => {
 
     initialCardDeal(G, ctx);
   }
-};
-
-export const equipOtherPlayer = (
-  G: IGameState,
-  ctx: Ctx,
-  targetPlayerId: string,
-  equipmentIndex: number
-) => {
-  const currentPlayer = G.players[ctx.currentPlayer];
-  const targetPlayer = G.players[targetPlayerId];
-  const equipmentCard = currentPlayer.hand.splice(equipmentIndex, 1)[0];
-  targetPlayer.equipments.push(equipmentCard);
-
-  //TODO: equipment effects
 };
 
 export const equipGreenCard = (G: IGameState, ctx: Ctx, cardIndex: number) => {
@@ -1219,6 +1249,46 @@ export const josedelgadodraw = (G: IGameState, ctx: Ctx) => {
   drawTwoFromDeck(G, ctx);
 };
 
+// Valley of shadows
+export const equipOtherPlayer = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  equipmentIndex: number
+) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  const targetPlayer = G.players[targetPlayerId];
+  const equipmentCard = currentPlayer.hand.splice(equipmentIndex, 1)[0];
+  targetPlayer.equipments.push(equipmentCard);
+
+  //TODO: equipment effects
+};
+
+export const lastcall = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+  currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
+};
+
+export const tomahawk = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  bang(G, ctx, targetPlayerId);
+};
+
+export const snakeResult = (G: IGameState, ctx: Ctx) => {
+  const currentPlayer = G.players[ctx.currentPlayer];
+
+  const isFailure = currentPlayer.cardsInPlay.every(card => card.suit === 'spades');
+
+  if (isFailure) {
+    takeDamage(G, ctx, currentPlayer.id);
+  }
+};
+
+export const moves_VOS: MoveMap<IGameState> = {
+  lastcall,
+  tomahawk,
+  snakeResult,
+};
+
 export const moves_DodgeCity: MoveMap<IGameState> = {
   equipGreenCard,
   ragtime,
@@ -1241,8 +1311,6 @@ export const moves_DodgeCity: MoveMap<IGameState> = {
   josedelgadodraw,
   copyCharacter,
 };
-
-export const moves_VOS: MoveMap<IGameState> = {};
 
 export const moves: MoveMap<IGameState> = {
   takeDamage,

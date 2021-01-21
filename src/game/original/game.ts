@@ -12,6 +12,7 @@ import {
   hasActiveDynamite,
   isCharacterInGame,
   isJailed,
+  isPlayerGhost,
   resetCardTimer,
   setVeraCusterStage,
 } from './utils';
@@ -76,7 +77,10 @@ const game: Game<IGameState> = {
         let nextPlayerPos = ctx.playOrderPos % ctx.playOrder.length;
         do {
           nextPlayerPos = (nextPlayerPos + 1) % ctx.playOrder.length;
-        } while (G.players[nextPlayerPos.toString()].hp <= 0);
+        } while (
+          G.players[nextPlayerPos.toString()].hp <= 0 &&
+          !isPlayerGhost(G.players[nextPlayerPos.toString()])
+        );
         return nextPlayerPos;
       },
     },
@@ -96,8 +100,12 @@ const game: Game<IGameState> = {
       let suzyPlayerIds = isCharacterInGame(G, 'suzy lafayette');
       if (suzyPlayerIds !== undefined) {
         for (const suzyPlayerId of suzyPlayerIds) {
+          const suzyPlayerStage = (ctx.activePlayers
+            ? ctx.activePlayers[suzyPlayerId]
+            : 'none') as stageNames;
           const suzyPlayer = G.players[suzyPlayerId];
-          if (suzyPlayer.hand.length === 0 && G.activeStage !== stageNames.duel) {
+
+          if (suzyPlayer.hand.length === 0 && suzyPlayerStage !== stageNames.duel) {
             const newCard = G.deck.pop();
             if (newCard) {
               suzyPlayer.hand.push(newCard);
