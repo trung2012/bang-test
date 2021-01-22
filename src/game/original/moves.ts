@@ -27,6 +27,7 @@ import { cardsActivatingMollyStarkPower } from '../expansions';
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
+  const currentPlayer = G.players[ctx.currentPlayer];
   targetPlayer.hp -= 1;
   ctx.effects.takeDamage();
 
@@ -118,6 +119,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (
       targetPlayer.character.name === 'el gringo' &&
       targetPlayer.hp > 0 &&
+      currentPlayer.hand.length > 0 &&
       ctx.events?.setActivePlayers
     ) {
       if (ctx.activePlayers) {
