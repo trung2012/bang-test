@@ -16,6 +16,11 @@ export interface IGameState {
     moveArgs?: any[];
   };
   expansions: ExpansionName[];
+  savedState?: {
+    savedPlayerId: string;
+    savingPlayerId?: string;
+    previousStages: { [key: string]: string } | null;
+  };
 }
 
 export interface IGamePlayerMap {

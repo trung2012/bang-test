@@ -132,6 +132,17 @@ const stages: StageMap<IGameState> = {
       pickCardForPoker: moves.pickCardForPoker,
     },
   },
+  lemat: {
+    moves: {
+      bang: moves.bang,
+      playCard: moves.playCard,
+    },
+  },
+  saved: {
+    moves: {
+      saveAnotherPlayer: moves.saveAnotherPlayer,
+    },
+  },
 };
 
 export default stages;

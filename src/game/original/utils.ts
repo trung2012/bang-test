@@ -28,6 +28,8 @@ export const isJailed = hasEquipment('jail');
 
 export const hasShotgun = hasEquipment('shotgun');
 
+export const hasLemat = hasEquipment('lemat');
+
 export const isPlayerGhost = hasEquipment('ghost');
 
 export const hasBounty = hasEquipment('bounty');
@@ -332,4 +334,20 @@ export const isAnyPlayerWithinOneRange = (G: IGameState, ctx: Ctx, playerId: str
   }
 
   return false;
+};
+
+export const getPlayerIdsNotTarget = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  return ctx.playOrder.filter(id => id !== targetPlayerId);
+};
+
+export const getPlayersNotTargetPlayer = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  return ctx.playOrder
+    .map(id => G.players[id])
+    .filter(player => player.hp > 0 && player.id !== targetPlayerId);
+};
+
+export const getPlayerWithSaved = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const playersNotTarget = getPlayersNotTargetPlayer(G, ctx, targetPlayerId);
+
+  return playersNotTarget.find(card => card.name === 'saved');
 };

@@ -26,6 +26,8 @@ import {
   isPlayerGhost,
   hasSnake,
   hasActiveSnake,
+  hasLemat,
+  getPlayerIdsNotTarget,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -81,6 +83,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
         }
       }
     }
+  } else {
+    endStage(G, ctx);
   }
 
   targetPlayer.barrelUseLeft = 1;
@@ -804,7 +808,7 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       }
     }
 
-    if (bangCard.name === 'bang' || bangCard.name === 'fanning') {
+    if (bangCard.name === 'bang' || bangCard.name === 'fanning' || hasLemat(currentPlayer)) {
       currentPlayer.numBangsLeft -= 1;
     }
 
@@ -1508,6 +1512,34 @@ export const pickCardForPoker = (
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
+export const lemat = (G: IGameState, ctx: Ctx) => {
+  if (ctx.events?.setActivePlayers) {
+    ctx.events?.setActivePlayers({
+      currentPlayer: stageNames.lemat,
+    });
+  }
+};
+
+export const putPlayersInSavedState = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const playerIdsNotTarget = getPlayerIdsNotTarget(G, ctx, targetPlayerId);
+  let playerStages: { [id: string]: string } = {};
+
+  for (const id of playerIdsNotTarget) {
+    playerStages[id] = stageNames.saved;
+  }
+
+  G.savedState = {
+    previousStages: { ...(ctx.activePlayers || {}) },
+    savedPlayerId: targetPlayerId,
+  };
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events?.setActivePlayers({
+      value: playerStages,
+    });
+  }
+};
+
 export const moves_VOS: MoveMap<IGameState> = {
   lastcall,
   snakeResult,
@@ -1518,6 +1550,8 @@ export const moves_VOS: MoveMap<IGameState> = {
   poker,
   discardForPoker,
   pickCardForPoker,
+  lemat,
+  putPlayersInSavedState,
 };
 
 export const moves_DodgeCity: MoveMap<IGameState> = {

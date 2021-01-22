@@ -136,6 +136,16 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
       return;
     }
 
+    if (
+      clientPlayerStage === stageNames.lemat &&
+      sourcePlayer.numBangsLeft > 0 &&
+      sourcePlayer.gunRange >= distanceBetweenPlayers
+    ) {
+      moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+      moves.bang(player.id);
+      return;
+    }
+
     switch (sourceCard.name) {
       case 'missed': {
         if (sourcePlayer.character.name !== 'calamity janet') {
@@ -215,6 +225,14 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
         return;
       }
       case 'aim': {
+        if (sourcePlayer.gunRange < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        if (sourcePlayer.numBangsLeft <= 0) {
+          setError('You cannot play any more bangs');
+          return;
+        }
         const bangCardIndex = sourcePlayer.hand.findIndex(card => card.name === 'bang');
         if (bangCardIndex === -1) {
           setError('You need a BANG! card to play this');

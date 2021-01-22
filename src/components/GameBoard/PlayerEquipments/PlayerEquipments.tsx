@@ -61,6 +61,11 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
     // Process clicking on own equipments
     if (playerID !== playerId) return;
 
+    if (equipmentCard.name === 'lemat' && playerID === ctx.currentPlayer) {
+      moves.lemat();
+      return;
+    }
+
     if (
       equipmentCard.name === 'barrel' &&
       ctx.activePlayers &&
