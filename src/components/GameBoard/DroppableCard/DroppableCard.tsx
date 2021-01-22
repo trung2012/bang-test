@@ -45,12 +45,11 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
   cardLocation,
   onClick,
 }) => {
-  const { G, playersInfo, moves, playerID } = useGameContext();
+  const { G, ctx, moves, playerID } = useGameContext();
   const { setError, setNotification } = useErrorContext();
   const { players } = G;
 
   const onDrop = (data: IDraggableCardData) => {
-    if (!playersInfo?.length) throw Error('Something went wrong');
     const { sourceCard, sourceCardIndex, sourcePlayerId, sourceCardLocation } = data;
     const sourcePlayer = players[sourcePlayerId];
 
@@ -78,7 +77,7 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
 
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
-      playersInfo,
+      ctx.playOrder,
       sourcePlayerId,
       playerId
     );

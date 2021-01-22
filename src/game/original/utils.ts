@@ -1,5 +1,6 @@
 import { Ctx } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
+import { calculateDistanceFromTarget } from '../../utils';
 import {
   cardsThatDrawsOneWhenPlayed,
   cards_DodgeCity,
@@ -313,4 +314,17 @@ export const getNextPlayerToPassEquipments = (G: IGameState, ctx: Ctx) => {
     nextPlayerPos = (nextPlayerPos + 1) % ctx.playOrder.length;
   } while (G.players[nextPlayerPos.toString()].hp <= 0);
   return nextPlayerPos;
+};
+
+export const isAnyPlayerWithinOneRange = (G: IGameState, ctx: Ctx, playerId: string) => {
+  for (const id of ctx.playOrder) {
+    const player = G.players[id];
+    if (playerId !== id && !isPlayerGhost(player) && player.hp > 0 && id !== ctx.currentPlayer) {
+      const distance = calculateDistanceFromTarget(G.players, ctx.playOrder, playerId, id);
+
+      if (distance <= 1) return true;
+    }
+  }
+
+  return false;
 };

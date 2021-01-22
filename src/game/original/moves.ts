@@ -22,6 +22,7 @@ import {
   processHerbHunterPower,
   hasBounty,
   hasShotgun,
+  isAnyPlayerWithinOneRange,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -463,6 +464,10 @@ const discardFromHand = (
     targetPlayer.hp = Math.min(targetPlayer.hp + 1, targetPlayer.maxHp);
     targetPlayer.cardDiscardedThisTurn = 0;
   }
+
+  if (targetPlayer.cardsInPlay.length) {
+    clearCardsInPlay(G, ctx, targetPlayerId);
+  }
 };
 
 const equip = (G: IGameState, ctx: Ctx, cardIndex: number) => {
@@ -713,39 +718,50 @@ export const barrelResult = (
 
 const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   const currentPlayer = G.players[ctx.currentPlayer];
-  const bangCard = G.players[targetPlayerId].cardsInPlay[0];
-  G.reactionRequired = {
-    quantity: 1,
-    sourcePlayerId: currentPlayer.id,
-  };
-  if (currentPlayer.character.name === 'slab the killer' && bangCard.name === 'bang') {
-    G.reactionRequired.quantity = 2;
-  }
-
-  switch (bangCard.name) {
-    case 'punch': {
-      ctx.effects.punch(bangCard.id);
-      break;
-    }
-    default: {
-      ctx.effects.gunshot(bangCard.id);
-      break;
-    }
-  }
+  const bangCard =
+    G.players[targetPlayerId].cardsInPlay.find(card => card.name === 'bang') ||
+    G.players[targetPlayerId].cardsInPlay[0];
 
   if (ctx.events?.setActivePlayers) {
     ctx.events?.setActivePlayers({
       value: {
+        ...(ctx.activePlayers || {}),
         [targetPlayerId]: stageNames.reactToBang,
       },
     });
   }
 
-  if (bangCard.name === 'bang') {
-    currentPlayer.numBangsLeft -= 1;
+  G.reactionRequired = {
+    quantity: 1,
+    sourcePlayerId: currentPlayer.id,
+  };
+
+  if (bangCard) {
+    if (currentPlayer.character.name === 'slab the killer' && bangCard.name === 'bang') {
+      G.reactionRequired.quantity = 2;
+    }
+
+    switch (bangCard.name) {
+      case 'punch': {
+        ctx.effects.punch(bangCard.id);
+        break;
+      }
+      default: {
+        ctx.effects.gunshot(bangCard.id);
+        break;
+      }
+    }
+
+    if (bangCard.name === 'bang' || bangCard.name === 'fanning') {
+      currentPlayer.numBangsLeft -= 1;
+    }
+
+    checkIfCanDrawOneAfterReacting(G, currentPlayer, bangCard);
   }
 
-  checkIfCanDrawOneAfterReacting(G, currentPlayer, bangCard);
+  if (ctx.events?.endStage) {
+    ctx.events.endStage();
+  }
 };
 
 const beer = (G: IGameState, ctx: Ctx) => {
@@ -1269,10 +1285,6 @@ export const lastcall = (G: IGameState, ctx: Ctx) => {
   currentPlayer.hp = Math.min(currentPlayer.maxHp, currentPlayer.hp + 1);
 };
 
-export const tomahawk = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
-  bang(G, ctx, targetPlayerId);
-};
-
 export const snakeResult = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
 
@@ -1283,10 +1295,42 @@ export const snakeResult = (G: IGameState, ctx: Ctx) => {
   }
 };
 
+export const bandidos = (G: IGameState, ctx: Ctx) => {
+  const otherPlayersStages = getOtherPlayersAliveStages(G, ctx, stageNames.bandidos);
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      value: {
+        [ctx.currentPlayer]: stageNames.bandidos,
+        ...otherPlayersStages,
+      },
+      moveLimit: 2,
+    });
+  }
+};
+
+export const fanning = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  if (isAnyPlayerWithinOneRange(G, ctx, targetPlayerId)) {
+    if (ctx.events?.setActivePlayers) {
+      ctx.events.setActivePlayers({
+        value: {
+          [ctx.currentPlayer]: stageNames.fanning,
+          [targetPlayerId]: stageNames.reactToBang,
+        },
+      });
+    }
+  }
+  const bangCard =
+    G.players[targetPlayerId].cardsInPlay.find(card => card.name === 'bang') ||
+    G.players[targetPlayerId].cardsInPlay[0];
+  ctx.effects.gunshot(bangCard.id);
+};
+
 export const moves_VOS: MoveMap<IGameState> = {
   lastcall,
-  tomahawk,
   snakeResult,
+  bandidos,
+  fanning,
 };
 
 export const moves_DodgeCity: MoveMap<IGameState> = {

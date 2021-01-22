@@ -36,17 +36,48 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
   const isPlayerJailed = isJailed(player);
   const clientPlayer = G.players[playerID!];
   const isGhost = !!isPlayerGhost(player);
+  const clientPlayerStage = ctx.activePlayers && ctx.activePlayers[playerID!];
 
   const onPlayerClick = () => {
     if (!isActive || isActivePlayer || !playerID) return;
 
-    if (
-      clientPlayer.character.realName === 'vera custer' &&
-      ctx.activePlayers &&
-      ctx.activePlayers[playerID] === stageNames.copyCharacter
-    ) {
-      moves.copyCharacter(player.id);
-      return;
+    if (clientPlayerStage) {
+      if (
+        clientPlayer.character.realName === 'vera custer' &&
+        clientPlayerStage === stageNames.copyCharacter
+      ) {
+        moves.copyCharacter(player.id);
+        return;
+      }
+
+      if (clientPlayerStage === stageNames.fanning) {
+        const firstTargetId = ctx.playOrder.find(
+          id => !!ctx.activePlayers && ctx.activePlayers[id] === stageNames.reactToBang
+        );
+
+        if (firstTargetId === undefined) {
+          moves.endStage();
+          return;
+        }
+
+        const distanceFromFirstTarget = calculateDistanceFromTarget(
+          players,
+          ctx.playOrder,
+          firstTargetId,
+          player.id
+        );
+
+        if (distanceFromFirstTarget > 1) {
+          setError('Target is not within 1 distance. Please choose a different target');
+          return;
+        }
+
+        if (player.id === playerID) {
+          setError(`Cannot bang yourself`);
+          return;
+        }
+        moves.bang(player.id);
+      }
     }
   };
 
@@ -75,7 +106,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
 
     const distanceBetweenPlayers = calculateDistanceFromTarget(
       players,
-      playersInfo,
+      ctx.playOrder,
       sourcePlayerId,
       player.id
     );
@@ -159,6 +190,16 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
         moves.bang(player.id);
         return;
       }
+      case 'tomahawk': {
+        const reach = Math.max(sourcePlayer.actionRange, 2);
+        if (reach < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+        moves.bang(player.id);
+        return;
+      }
       case 'buffalo rifle': {
         moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
         moves.bang(player.id);
@@ -170,9 +211,28 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           setError('You need a BANG! card to play this');
           return;
         }
-        moves.playCard(bangCardIndex, player.id, sourceCardLocation);
-        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+        if (bangCardIndex > sourceCardIndex) {
+          moves.playCard(bangCardIndex, player.id, sourceCardLocation);
+          moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+        } else {
+          moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+          moves.playCard(bangCardIndex, player.id, sourceCardLocation);
+        }
+
         moves.bang(player.id);
+        return;
+      }
+      case 'fanning': {
+        if (sourcePlayer.gunRange < distanceBetweenPlayers) {
+          setError('Target is out of range');
+          return;
+        }
+        if (sourcePlayer.numBangsLeft <= 0) {
+          setError('You cannot play any more bangs (or fanning)');
+          return;
+        }
+        moves.playCard(sourceCardIndex, player.id, sourceCardLocation);
+        moves.fanning(player.id);
         return;
       }
       case 'ghost': {

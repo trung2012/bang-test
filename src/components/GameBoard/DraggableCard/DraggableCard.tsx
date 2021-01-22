@@ -16,6 +16,8 @@ import { MoreOptions } from '../../shared';
 import { Card } from '../Card';
 import './DraggableCard.scss';
 import { DraggableCardContainer, DragComponentContainer } from './DraggableCard.styles';
+import { getCardInstructions } from './DraggableCard.utils';
+import Tippy from '@tippyjs/react';
 
 interface IDraggableCardProps {
   card: ICard;
@@ -48,7 +50,10 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     (cardLocation === 'green' && selectedCards.green.includes(index));
   const selectedCardsTotalLength = selectedCards.hand.length + selectedCards.green.length;
   const stageName = ctx.activePlayers ? (ctx.activePlayers[playerID!] as stageNames) : null;
-  const cardsNeeded = stageName ? stageNameToRequiredCardsMap[stageName]! : [];
+  const cardsNeeded =
+    stageName && stageNameToRequiredCardsMap[stageName]
+      ? stageNameToRequiredCardsMap[stageName]
+      : null;
 
   const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -72,9 +77,6 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     const targetPlayer = players[playerId];
     const clientPlayer = players[playerID];
     const isTargetPlayerTurn = playerId === playerID;
-    const targetPlayerStage = (ctx.activePlayers
-      ? ctx.activePlayers[playerID]
-      : 'none') as stageNames;
 
     // Process moves when source player is different from target player
 
@@ -107,7 +109,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     // Process moves when source player is target player (current turn)
     if (!isTargetPlayerTurn) return;
 
-    if (targetPlayerStage && cardsNeeded.length && selectedCards && setSelectedCards) {
+    if (stageName && cardsNeeded && selectedCards && setSelectedCards) {
       if (
         !isSelected &&
         selectedCardsTotalLength === reactionRequired.quantity - 1 &&
@@ -181,19 +183,8 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
       }
     }
 
-    if (hasActiveDynamite(targetPlayer)) {
-      setError('Please draw for dynamite');
-      return;
-    }
-
-    if (isJailed(targetPlayer)) {
-      setError('Please draw for jail');
-      return;
-    }
-
     if (
-      ctx.activePlayers &&
-      ctx.activePlayers[playerID] === stageNames.joseDelgadoDiscard &&
+      stageName === stageNames.joseDelgadoDiscard &&
       targetPlayer.character.name === 'jose delgado'
     ) {
       if (card.type !== 'equipment') {
@@ -204,8 +195,9 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (
       ctx.activePlayers &&
-      (ctx.activePlayers[playerID] === stageNames.discardToPlayCard ||
-        ctx.activePlayers[playerID] === stageNames.joseDelgadoDiscard)
+      (stageName === stageNames.discardToPlayCard ||
+        stageName === stageNames.joseDelgadoDiscard ||
+        stageName === stageNames.bandidos)
     ) {
       if (cardLocation !== 'hand') {
         setError('You can only discard from your hand');
@@ -243,6 +235,16 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (card.isTargeted) return;
 
+    if (hasActiveDynamite(targetPlayer)) {
+      setError('Please draw for dynamite');
+      return;
+    }
+
+    if (isJailed(targetPlayer)) {
+      setError('Please draw for jail');
+      return;
+    }
+
     // Equip
     if (card.type === 'equipment') {
       if (targetPlayer.equipments.find(equipment => equipment.name === card.name)) {
@@ -255,6 +257,8 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     // Play card
+    if (card.name === 'escape') return;
+
     if (card.needsDiscard && targetPlayer.hand.length < 2) {
       setError(`You do not have enough cards to play this right now`);
       return;
@@ -282,7 +286,9 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     moves[moveName]();
 
     setTimeout(() => {
-      moves.clearCardsInPlay(playerID);
+      if (moveName !== 'bandidos') {
+        moves.clearCardsInPlay(playerID);
+      }
     }, delayBetweenActions);
   };
 
@@ -309,33 +315,35 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         }}
       >
         {draggableDragState => (
-          <DraggableCardContainer
-            className={classnames({
-              'draggable-card': !isSelected,
-              'draggable-card-selected': isSelected && playerID === playerId,
-            })}
-            {...draggableDragState.events}
-            draggableDragState={draggableDragState}
-            cardId={card.id}
-            index={index}
-            isClientPlayer={isClientPlayer}
-            cardLocation={cardLocation}
-          >
-            <Card
-              card={card}
-              isFacedUp={isFacedUp}
-              onContextMenu={onContextMenu}
-              onClick={onCardClick}
-              disabled={isCardDisabled}
-            />
-            {showCardOptions && (
-              <MoreOptions dismiss={() => setShowCardOptions(false)}>
-                <div className='more-options-item' onClick={e => onDiscardClick(e)}>
-                  Discard
-                </div>
-              </MoreOptions>
-            )}
-          </DraggableCardContainer>
+          <Tippy delay={[500, 0]} content={`${getCardInstructions(card)}. Right click to discard`}>
+            <DraggableCardContainer
+              className={classnames({
+                'draggable-card': !isSelected,
+                'draggable-card-selected': isSelected && playerID === playerId,
+              })}
+              {...draggableDragState.events}
+              draggableDragState={draggableDragState}
+              cardId={card.id}
+              index={index}
+              isClientPlayer={isClientPlayer}
+              cardLocation={cardLocation}
+            >
+              <Card
+                card={card}
+                isFacedUp={isFacedUp}
+                onContextMenu={onContextMenu}
+                onClick={onCardClick}
+                disabled={isCardDisabled}
+              />
+              {showCardOptions && (
+                <MoreOptions dismiss={() => setShowCardOptions(false)}>
+                  <div className='more-options-item' onClick={e => onDiscardClick(e)}>
+                    Discard
+                  </div>
+                </MoreOptions>
+              )}
+            </DraggableCardContainer>
+          </Tippy>
         )}
       </Draggable>
       <DragComponent for={`${card.id}`}>

@@ -190,6 +190,8 @@ export enum stageNames {
   ragtime = 'ragtime',
   copyCharacter = 'copyCharacter',
   joseDelgadoDiscard = 'joseDelgadoDiscard',
+  bandidos = 'bandidos',
+  fanning = 'fanning',
 }
 
 export const stagesReactingToBullets = [
@@ -197,6 +199,7 @@ export const stagesReactingToBullets = [
   stageNames.reactToBang,
   stageNames.reactToGatling,
   stageNames.reactToIndians,
+  stageNames.bandidos,
 ];
 
 export const gunRange: { [gunName: string]: number } = {
@@ -237,10 +240,10 @@ export const cardsThatWorkAgainstBang: CardName[] = [
 export const stageNameToRequiredCardsMap: {
   [key in stageNames]?: CardName[];
 } = {
-  reactToGatling: cardsThatWorkAgainstBang,
-  reactToIndians: ['bang'],
+  reactToGatling: [...cardsThatWorkAgainstBang, 'escape'],
+  reactToIndians: ['bang', 'escape'],
   reactToBang: cardsThatWorkAgainstBang,
-  duel: ['bang'],
+  duel: ['bang', 'escape'],
 };
 
 export const teamLookUp = {

@@ -1,19 +1,14 @@
-import { FilteredMetadata } from 'boardgame.io';
 import { IGamePlayerMap } from '../game';
 
 export const calculateDistanceFromTarget = (
   players: IGamePlayerMap,
-  playersInfo: FilteredMetadata,
+  playOrder: string[],
   sourcePlayerId: string,
   targetPlayerId: string
 ) => {
-  const playersAlive = playersInfo.filter(player => players[player.id].hp > 0);
-  const currentPlayerIndex = playersAlive.findIndex(
-    player => sourcePlayerId === player.id.toString()
-  );
-  const targetPlayerIndex = playersAlive.findIndex(
-    player => targetPlayerId === player.id.toString()
-  );
+  const playersAlive = playOrder.filter(id => players[id].hp > 0);
+  const currentPlayerIndex = playersAlive.findIndex(id => sourcePlayerId === id);
+  const targetPlayerIndex = playersAlive.findIndex(id => targetPlayerId === id);
   let distance = Math.abs(currentPlayerIndex - targetPlayerIndex);
   const sourcePlayer = players[sourcePlayerId];
   const targetPlayer = players[targetPlayerId];

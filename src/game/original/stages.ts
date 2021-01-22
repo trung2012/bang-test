@@ -86,6 +86,19 @@ const stages: StageMap<IGameState> = {
       copyCharacter: moves.copyCharacter,
     },
   },
+  bandidos: {
+    moves: {
+      takeDamage: moves.takeDamage,
+      discardFromHand: moves.discardFromHand,
+      clearCardsInPlay: moves.clearCardsInPlay,
+    },
+  },
+  fanning: {
+    moves: {
+      bang: moves.bang,
+      endStage: moves.endStage,
+    },
+  },
 };
 
 export default stages;
