@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from 'boardgame.io/core';
-import { Ctx, MoveMap } from 'boardgame.io';
+import { ActivePlayersArg, Ctx, MoveMap } from 'boardgame.io';
 import { gunRange, stageNames, stageNameToRequiredCardsMap } from './constants';
 import { CardName, ICard, IGameState, RobbingType } from './types';
 import {
@@ -23,6 +23,9 @@ import {
   hasBounty,
   hasShotgun,
   isAnyPlayerWithinOneRange,
+  isPlayerGhost,
+  hasSnake,
+  hasActiveSnake,
 } from './utils';
 import { SelectedCards } from '../../context';
 import { cardsActivatingMollyStarkPower } from '../expansions';
@@ -30,7 +33,14 @@ import { cardsActivatingMollyStarkPower } from '../expansions';
 const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
+
+  if (isPlayerGhost(targetPlayer)) {
+    endStage(G, ctx);
+    return G;
+  }
+
   const currentPlayer = G.players[ctx.currentPlayer];
+  const doesCurrentPlayerHasShotgun = hasShotgun(currentPlayer);
   const cardCausingDamage = targetPlayer.cardsInPlay[0];
   const targetPlayerStage = (ctx.activePlayers
     ? ctx.activePlayers[targetPlayerId]
@@ -53,15 +63,22 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       drawOneFromDeck(G, ctx); // Only current player can draw
     }
 
-    if (hasShotgun(currentPlayer)) {
-      if (ctx.events?.setActivePlayers) {
-        ctx.events.setActivePlayers({
-          value: {
-            ...(ctx.activePlayers || {}),
-            [targetPlayerId]: stageNames.discardToPlayCard,
-          },
-          moveLimit: 1,
-        });
+    if (doesCurrentPlayerHasShotgun) {
+      if (targetPlayer.hand.length === 1) {
+        const discardedCard = targetPlayer.hand.pop();
+        if (discardedCard) {
+          moveToDiscard(G, ctx, discardedCard);
+        }
+      } else {
+        if (ctx.events?.setActivePlayers) {
+          ctx.events.setActivePlayers({
+            value: {
+              ...(ctx.activePlayers || {}),
+              [targetPlayerId]: stageNames.discardToPlayCard,
+            },
+            moveLimit: 1,
+          });
+        }
       }
     }
   }
@@ -76,9 +93,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   }
 
   if (targetPlayer.hp <= 0) {
-    if (ctx.events?.endStage) {
-      ctx.events.endStage();
-    }
+    endStage(G, ctx);
 
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
       resetGameStage(G, ctx);
@@ -117,8 +132,8 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       }
     }
   } else {
-    if (ctx.events?.endStage) {
-      ctx.events.endStage();
+    if (!doesCurrentPlayerHasShotgun || targetPlayer.hand.length === 0) {
+      endStage(G, ctx);
     }
 
     if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
@@ -155,28 +170,44 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (
       targetPlayer.character.name === 'el gringo' &&
       targetPlayer.hp > 0 &&
-      ctx.events?.setActivePlayers
+      currentPlayer.hand.length > 0
     ) {
-      if (ctx.activePlayers) {
-        ctx.events.setActivePlayers({
-          value: {
-            ...ctx.activePlayers,
-            [targetPlayerId]: stageNames.takeCardFromHand,
-          },
-          moveLimit: 1,
-        });
-      } else {
-        ctx.events.setActivePlayers({
-          value: {
-            [targetPlayerId]: stageNames.takeCardFromHand,
-          },
-          moveLimit: 1,
-        });
+      if (ctx.random?.Shuffle) {
+        ctx.random?.Shuffle(targetPlayer.hand);
+      }
+      const cardToDrawFromHand = currentPlayer.hand.pop();
+      if (cardToDrawFromHand) {
+        targetPlayer.hand.push(cardToDrawFromHand);
       }
     }
   }
 
   clearCardsInPlay(G, ctx, targetPlayerId);
+};
+
+export const setActivePlayersStage = (
+  G: IGameState,
+  ctx: Ctx,
+  activePlayersValue: { [key: string]: string },
+  moveLimit?: number
+) => {
+  const activePlayersObject: ActivePlayersArg = {
+    value: activePlayersValue,
+  };
+
+  if (moveLimit !== undefined) {
+    activePlayersObject.moveLimit = moveLimit;
+  }
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      ...activePlayersObject,
+      value: {
+        ...(ctx.activePlayers || {}),
+        ...activePlayersObject.value,
+      },
+    });
+  }
 };
 
 export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
@@ -225,7 +256,11 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
       targetPlayer.hand.push(...newCards);
     }
 
-    if (targetPlayer.character.realName && !isJailed(targetPlayer)) {
+    if (
+      targetPlayer.character.realName &&
+      !isJailed(targetPlayer) &&
+      !hasActiveSnake(targetPlayer)
+    ) {
       setVeraCusterStage(ctx);
     }
   }
@@ -315,7 +350,11 @@ export const dynamiteResult = (G: IGameState, ctx: Ctx) => {
 
     clearCardsInPlay(G, ctx, ctx.currentPlayer);
 
-    if (currentPlayer.character.realName && !isJailed(currentPlayer)) {
+    if (
+      currentPlayer.character.realName &&
+      !isJailed(currentPlayer) &&
+      !hasActiveSnake(currentPlayer)
+    ) {
       setVeraCusterStage(ctx);
     }
   }
@@ -410,7 +449,7 @@ export const playCardToReact = (
       ctx.events?.setActivePlayers({
         value: {
           ...(ctx.activePlayers ?? {}),
-          [ctx.currentPlayer]: stageNames.reactToBang,
+          [ctx.currentPlayer]: stageNames.reactToBangWithoutBang,
         },
       });
     }
@@ -456,9 +495,7 @@ const discardFromHand = (
   if (!discardedCard) return INVALID_MOVE;
 
   moveToDiscard(G, ctx, discardedCard);
-  if (!G.reactionRequired.moveToPlayAfterDiscard) {
-    targetPlayer.cardDiscardedThisTurn += 1;
-  }
+  targetPlayer.cardDiscardedThisTurn += 1;
 
   if (targetPlayer.cardDiscardedThisTurn === 2 && targetPlayer.character.name === 'sid ketchum') {
     targetPlayer.hp = Math.min(targetPlayer.hp + 1, targetPlayer.maxHp);
@@ -640,9 +677,7 @@ const drawFromPlayerHand = (
     resetGameStage(G, ctx);
   }
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
+  endStage(G, ctx);
 };
 
 const blackJackDraw = (G: IGameState, ctx: Ctx) => {
@@ -722,13 +757,25 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     G.players[targetPlayerId].cardsInPlay.find(card => card.name === 'bang') ||
     G.players[targetPlayerId].cardsInPlay[0];
 
-  if (ctx.events?.setActivePlayers) {
-    ctx.events?.setActivePlayers({
-      value: {
-        ...(ctx.activePlayers || {}),
-        [targetPlayerId]: stageNames.reactToBang,
-      },
-    });
+  if (bangCard) {
+    let activePlayersValue = {
+      ...(ctx.activePlayers || {}),
+    };
+
+    if (
+      bangCard.name === 'bang' ||
+      (bangCard.name === 'missed' && currentPlayer.character.name === 'calamity janet')
+    ) {
+      activePlayersValue[targetPlayerId] = stageNames.reactToBang;
+    } else {
+      activePlayersValue[targetPlayerId] = stageNames.reactToBangWithoutBang;
+    }
+
+    if (ctx.events?.setActivePlayers) {
+      ctx.events?.setActivePlayers({
+        value: activePlayersValue,
+      });
+    }
   }
 
   G.reactionRequired = {
@@ -746,6 +793,11 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
         ctx.effects.punch(bangCard.id);
         break;
       }
+      case 'derringer':
+      case 'tomahawk': {
+        ctx.effects.knifeFlying();
+        break;
+      }
       default: {
         ctx.effects.gunshot(bangCard.id);
         break;
@@ -759,9 +811,7 @@ const bang = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     checkIfCanDrawOneAfterReacting(G, currentPlayer, bangCard);
   }
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
+  endStage(G, ctx);
 };
 
 const beer = (G: IGameState, ctx: Ctx) => {
@@ -845,9 +895,7 @@ const panic = (
   currentPlayer.hand.push(cardToTake);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
+  endStage(G, ctx);
 };
 
 const saloon = (G: IGameState, ctx: Ctx) => {
@@ -905,7 +953,7 @@ const generalstore = (G: IGameState, ctx: Ctx) => {
   }
 
   // Order to pick from general store starting from the current player
-  G.generalStoreOrder = [
+  G.reactingOrder = [
     ...ctx.playOrder.slice(ctx.playOrderPos),
     ...ctx.playOrder.slice(0, ctx.playOrderPos),
   ].filter(playerId => G.players[playerId].hp > 0);
@@ -925,7 +973,7 @@ const pickCardFromGeneralStore = (
 
   if (ctx.events?.endStage) {
     ctx.events.endStage();
-    G.generalStoreOrder.shift();
+    G.reactingOrder.shift();
   }
 
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
@@ -936,9 +984,7 @@ const pickCardFromGeneralStore = (
 const duel = (G: IGameState, ctx: Ctx, targetPlayerId: string, sourcePlayerId: string) => {
   G.reactionRequired.sourcePlayerId = sourcePlayerId;
 
-  if (ctx.events?.endStage) {
-    ctx.events.endStage();
-  }
+  endStage(G, ctx);
 
   if (ctx.events?.setActivePlayers) {
     ctx.events.setActivePlayers({
@@ -987,6 +1033,11 @@ export const endTurn = (G: IGameState, ctx: Ctx) => {
   const dynamiteCard = hasDynamite(currentPlayer);
   if (dynamiteCard) {
     dynamiteCard.timer = 0;
+  }
+
+  const snakeCard = hasSnake(currentPlayer);
+  if (snakeCard) {
+    snakeCard.timer = 0;
   }
 
   if (ctx.phase === 'reselectCharacter' && currentPlayer.hand.length === 0) {
@@ -1287,11 +1338,20 @@ export const lastcall = (G: IGameState, ctx: Ctx) => {
 
 export const snakeResult = (G: IGameState, ctx: Ctx) => {
   const currentPlayer = G.players[ctx.currentPlayer];
+  const snakeCard = hasSnake(currentPlayer);
+
+  if (snakeCard) {
+    snakeCard.timer = 1;
+  }
 
   const isFailure = currentPlayer.cardsInPlay.every(card => card.suit === 'spades');
 
   if (isFailure) {
     takeDamage(G, ctx, currentPlayer.id);
+  }
+
+  if (currentPlayer.character.realName && !isJailed(currentPlayer)) {
+    setVeraCusterStage(ctx);
   }
 };
 
@@ -1310,20 +1370,142 @@ export const bandidos = (G: IGameState, ctx: Ctx) => {
 };
 
 export const fanning = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  let playerStages = {
+    [targetPlayerId]: stageNames.reactToBangWithoutBang,
+  };
+
   if (isAnyPlayerWithinOneRange(G, ctx, targetPlayerId)) {
-    if (ctx.events?.setActivePlayers) {
-      ctx.events.setActivePlayers({
-        value: {
-          [ctx.currentPlayer]: stageNames.fanning,
-          [targetPlayerId]: stageNames.reactToBang,
-        },
-      });
-    }
+    playerStages[ctx.currentPlayer] = stageNames.fanning;
   }
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events.setActivePlayers({
+      value: playerStages,
+    });
+  }
+
   const bangCard =
     G.players[targetPlayerId].cardsInPlay.find(card => card.name === 'bang') ||
     G.players[targetPlayerId].cardsInPlay[0];
   ctx.effects.gunshot(bangCard.id);
+};
+
+export const tornado = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  const activePlayers = getOtherPlayersAliveStages(G, ctx, stageNames.tornado);
+
+  for (const id in activePlayers) {
+    const player = G.players[id];
+
+    if (player.hand.length === 0) {
+      activePlayers[id] = undefined;
+
+      const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+      G.deck = G.deck.slice(0, G.deck.length - 2);
+      player.hand.push(...newCards);
+      player.hand = shuffle(ctx, player.hand);
+    }
+  }
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events?.setActivePlayers({
+      currentPlayer: stageNames.tornado,
+      value: activePlayers,
+      moveLimit: 1,
+    });
+  }
+};
+
+export const discardToReact = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number
+) => {
+  const targetPlayer = G.players[targetPlayerId];
+  const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+  if (!discardedCard) return INVALID_MOVE;
+
+  if (discardedCard.name === 'escape') {
+    endStage(G, ctx);
+  }
+
+  moveToDiscard(G, ctx, discardedCard);
+
+  if (targetPlayer.cardsInPlay.length) {
+    clearCardsInPlay(G, ctx, targetPlayerId);
+  }
+};
+
+export const discardForTornado = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number
+) => {
+  discardToReact(G, ctx, targetPlayerId, targetCardIndex);
+
+  const targetPlayer = G.players[targetPlayerId];
+  const newCards: ICard[] = G.deck.slice(G.deck.length - 2, G.deck.length);
+  G.deck = G.deck.slice(0, G.deck.length - 2);
+  targetPlayer.hand.push(...newCards);
+  targetPlayer.hand = shuffle(ctx, targetPlayer.hand);
+};
+
+export const poker = (G: IGameState, ctx: Ctx) => {
+  const activePlayers = getOtherPlayersAliveStages(G, ctx, stageNames.poker);
+
+  if (ctx.events?.setActivePlayers) {
+    ctx.events?.setActivePlayers({
+      currentPlayer: stageNames.play,
+      value: activePlayers,
+      moveLimit: 1,
+    });
+  }
+};
+
+export const discardForPoker = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number
+) => {
+  const targetPlayer = G.players[targetPlayerId];
+  const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
+
+  if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
+    const wasAnyAceDiscarded = G.generalStore.some(card => card.value === 14);
+    const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
+
+    if (!wasAnyAceDiscarded) {
+      if (ctx.events?.setActivePlayers) {
+        ctx.events?.setActivePlayers({
+          currentPlayer: stageNames.pickCardForPoker,
+          moveLimit: Math.min(otherPlayersAlive.length, 2),
+        });
+
+        G.reactingOrder = [ctx.currentPlayer];
+      }
+    }
+
+    endStage(G, ctx);
+  }
+
+  if (discardedCard) {
+    G.generalStore.push(discardedCard);
+  }
+};
+
+export const pickCardForPoker = (
+  G: IGameState,
+  ctx: Ctx,
+  generalStoreCardIndex: number,
+  targetPlayerId: string
+) => {
+  const currentPlayer = G.players[targetPlayerId];
+  const selectedCard = G.generalStore.splice(generalStoreCardIndex, 1)[0];
+
+  currentPlayer.hand.push(selectedCard);
+  currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
 };
 
 export const moves_VOS: MoveMap<IGameState> = {
@@ -1331,6 +1513,11 @@ export const moves_VOS: MoveMap<IGameState> = {
   snakeResult,
   bandidos,
   fanning,
+  tornado,
+  discardForTornado,
+  poker,
+  discardForPoker,
+  pickCardForPoker,
 };
 
 export const moves_DodgeCity: MoveMap<IGameState> = {
@@ -1397,6 +1584,9 @@ export const moves: MoveMap<IGameState> = {
   endTurn,
   endStage,
   reselectCharacter,
+  discardToReact,
+  equipOtherPlayer,
+  setActivePlayersStage,
 };
 
 const allMoves = {

@@ -33,6 +33,7 @@ export const config = {
       create: (cardId: string) => cardId,
     },
     power: {},
+    knifeFlying: {},
   },
 };
 

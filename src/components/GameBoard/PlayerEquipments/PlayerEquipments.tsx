@@ -1,6 +1,12 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions, hasActiveDynamite, isJailed, stageNames } from '../../../game';
+import {
+  delayBetweenActions,
+  hasActiveDynamite,
+  hasActiveSnake,
+  isJailed,
+  stageNames,
+} from '../../../game';
 import { ICard } from '../../../game';
 import { DroppableCard } from '../DroppableCard';
 import './PlayerEquipments.scss';
@@ -30,6 +36,11 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
     ) {
       if (hasActiveDynamite(sourcePlayer)) {
         setError('Please draw for dynamite');
+        return;
+      }
+
+      if (hasActiveSnake(sourcePlayer)) {
+        setError('Please draw for rattlesnake');
         return;
       }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
 import { PlayerButton } from './PlayerButton';
 import { ReactComponent as PassIcon } from '../../../assets/pass.svg';
@@ -9,6 +9,7 @@ import './PlayerButtons.scss';
 import {
   delayBetweenActions,
   hasActiveDynamite,
+  hasActiveSnake,
   IGamePlayer,
   isJailed,
   stageNames,
@@ -20,7 +21,7 @@ const power = require('../../../assets/sounds/power.mp3');
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
   const [playPower] = useSound(power, { volume: 0.2 });
   const { ctx, moves, playerID, isActive } = useGameContext();
-  const { setError } = useErrorContext();
+  const { setError, setNotification } = useErrorContext();
   const isClientPlayer = playerID === player.id;
   const isCurrentPlayer = isClientPlayer && player.id === ctx.currentPlayer;
   const playerCurrentStage = (ctx.activePlayers
@@ -31,6 +32,17 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     !!ctx.activePlayers[playerID!] &&
     stagesReactingToBullets.includes(playerCurrentStage);
   const isPowerDisabled = player.character.activePowerUsesLeft === 0;
+
+  useEffect(() => {
+    if (playerCurrentStage) {
+      switch (playerCurrentStage) {
+        case stageNames.discardToPlayCard: {
+          setNotification('Please click a card to discard and continue');
+          break;
+        }
+      }
+    }
+  }, [playerCurrentStage, setNotification]);
 
   const onEndTurnClick = () => {
     if (!isClientPlayer || !isActive) {
@@ -54,6 +66,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
 
     if (hasActiveDynamite(player)) {
       setError('Please draw for dynamite');
+      return;
+    }
+
+    if (hasActiveSnake(player)) {
+      setError('Please draw for rattlesnake');
       return;
     }
 

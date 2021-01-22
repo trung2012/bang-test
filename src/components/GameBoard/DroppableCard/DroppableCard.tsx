@@ -4,6 +4,7 @@ import {
   cardsWhichTargetCards,
   cardsWithNoRangeLimit,
   hasActiveDynamite,
+  hasActiveSnake,
   ICard,
   isJailed,
   RobbingType,
@@ -57,6 +58,11 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
 
     if (hasActiveDynamite(sourcePlayer)) {
       setError('Please draw for dynamite');
+      return;
+    }
+
+    if (hasActiveSnake(sourcePlayer)) {
+      setError('Please draw for rattlesnake');
       return;
     }
 

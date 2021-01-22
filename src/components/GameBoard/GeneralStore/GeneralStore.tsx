@@ -1,14 +1,20 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
+import { stageNames } from '../../../game';
 import { Card } from '../Card';
 
 export const GeneralStore = () => {
-  const { G, moves, playerID } = useGameContext();
+  const { G, ctx, moves, playerID } = useGameContext();
   const { setError } = useErrorContext();
   const { generalStore } = G;
 
   const pickFromGeneralStore = (index: number) => {
-    if (playerID !== G.generalStoreOrder[0]) {
+    if (ctx.activePlayers && ctx.activePlayers[playerID!] === stageNames.pickCardForPoker) {
+      moves.pickCardForPoker(index, playerID);
+      return;
+    }
+
+    if (playerID !== G.reactingOrder[0]) {
       setError('It is not your turn yet');
       return;
     }

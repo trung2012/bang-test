@@ -10,6 +10,7 @@ import { IGameResult, IGameState } from './types';
 import { config } from './effects';
 import {
   hasActiveDynamite,
+  hasActiveSnake,
   isCharacterInGame,
   isJailed,
   isPlayerGhost,
@@ -121,7 +122,11 @@ const game: Game<IGameState> = {
           currentPlayer.character = currentPlayer.originalCharacter;
         }
 
-        if (!hasActiveDynamite(currentPlayer) && !isJailed(currentPlayer)) {
+        if (
+          !hasActiveDynamite(currentPlayer) &&
+          !isJailed(currentPlayer) &&
+          !hasActiveSnake(currentPlayer)
+        ) {
           setVeraCusterStage(ctx);
         }
       }

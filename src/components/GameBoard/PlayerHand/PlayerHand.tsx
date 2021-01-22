@@ -2,7 +2,7 @@ import { keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
-import { stageNames } from '../../../game';
+import { hasActiveSnake, stageNames } from '../../../game';
 import { ICard } from '../../../game';
 import { hasActiveDynamite, isJailed } from '../../../game';
 import { DraggableCard } from '../DraggableCard';
@@ -88,6 +88,11 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
 
     if (hasActiveDynamite(clientPlayer)) {
       setError('Please draw for dynamite');
+      return;
+    }
+
+    if (hasActiveSnake(clientPlayer)) {
+      setError('Please draw for rattlesnake');
       return;
     }
 

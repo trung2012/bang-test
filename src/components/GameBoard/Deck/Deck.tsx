@@ -1,6 +1,6 @@
 import React from 'react';
 import { useErrorContext, useGameContext } from '../../../context';
-import { delayBetweenActions } from '../../../game';
+import { delayBetweenActions, hasActiveSnake } from '../../../game';
 import { hasActiveDynamite, isJailed } from '../../../game';
 import { CardPile } from './CardPile';
 import classnames from 'classnames';
@@ -25,11 +25,11 @@ export const Deck = () => {
       return;
     }
 
-    if (playerID === ctx.currentPlayer && isJailed(clientPlayer)) {
+    if (playerID === ctx.currentPlayer && hasActiveSnake(clientPlayer)) {
       moves.drawToReact(playerID);
 
       setTimeout(() => {
-        moves.jailResult();
+        moves.snakeResult();
       }, delayBetweenActions);
       return;
     }
@@ -38,7 +38,7 @@ export const Deck = () => {
       moves.drawToReact(playerID);
 
       setTimeout(() => {
-        moves.snakeResult();
+        moves.jailResult();
       }, delayBetweenActions);
       return;
     }

@@ -232,6 +232,7 @@ const cardsToGenerate_VOS: ICardsToGenerate = {
       values: {
         hearts: [7],
       },
+      timer: 0,
     },
     {
       name: 'shotgun',

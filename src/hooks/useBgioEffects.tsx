@@ -19,6 +19,7 @@ const panic = require('../assets/sounds/panic.mp3');
 const missed = require('../assets/sounds/miss.mp3');
 const fanfare = require('../assets/sounds/tada.mp3');
 const punch = require('../assets/sounds/punch.mp3');
+const knifeFlying = require('../assets/sounds/knife_throw.mp3');
 
 export const useBgioEffects = () => {
   const [playGunShot] = useSound(gunShot, { volume: 0.3 });
@@ -36,6 +37,15 @@ export const useBgioEffects = () => {
   const [playMissed] = useSound(missed, { volume: 0.55 });
   const [playFanfare] = useSound(fanfare, { volume: 0.5 });
   const [playPunch] = useSound(punch, { volume: 0.5 });
+  const [playKnifeFlying] = useSound(knifeFlying, { volume: 0.5 });
+
+  useEffectListener<BangEffectsConfig>(
+    'knifeFlying',
+    () => {
+      playKnifeFlying();
+    },
+    [playKnifeFlying]
+  );
 
   useEffectListener<BangEffectsConfig>(
     'gunshot',

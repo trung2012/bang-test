@@ -50,6 +50,7 @@ export const cards_VOS: ICard[] = [
     suit: 'hearts',
     type: 'equipment',
     isTargeted: true,
+    timer: 0,
   },
   {
     id: 'AdWE57t82ZVRF7oi34xvY',

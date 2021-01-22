@@ -34,6 +34,11 @@ export const hasBounty = hasEquipment('bounty');
 
 export const hasSnake = hasEquipment('rattlesnake');
 
+export const hasActiveSnake = (player: IGamePlayer) => {
+  const snakeCard = hasSnake(player);
+  return snakeCard && snakeCard.timer === 0;
+};
+
 export const hasActiveDynamite = (player: IGamePlayer) => {
   const dynamiteCard = hasDynamite(player);
   return dynamiteCard && dynamiteCard.timer === 0;

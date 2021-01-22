@@ -41,14 +41,14 @@ export const characters: ICharacter[] = [
   //   imageUrl:
   //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/calamityjanet_tfl8jr.png',
   // },
-  // {
-  //   name: 'el gringo',
-  //   hp: 3,
-  //   description:
-  //     'Each time he loses a life point due to a card played by another player, he draws a random card from the hands of that player (one card for each life point). If that player has no more cards, too bad!, he does not draw. Note that Dynamite damages are not caused by any player.',
-  //   imageUrl:
-  //     'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/elgringo_qql1r7.png',
-  // },
+  {
+    name: 'el gringo',
+    hp: 3,
+    description:
+      'Each time he loses a life point due to a card played by another player, he draws a random card from the hands of that player (one card for each life point). If that player has no more cards, too bad!, he does not draw. Note that Dynamite damages are not caused by any player.',
+    imageUrl:
+      'https://res.cloudinary.com/trungpham/image/upload/v1602888949/bang/original/elgringo_qql1r7.png',
+  },
   // {
   //   name: 'jesse jones',
   //   hp: 4,
@@ -192,6 +192,10 @@ export enum stageNames {
   joseDelgadoDiscard = 'joseDelgadoDiscard',
   bandidos = 'bandidos',
   fanning = 'fanning',
+  tornado = 'tornado',
+  reactToBangWithoutBang = 'reactToBangWithoutBang',
+  poker = 'poker',
+  pickCardForPoker = 'pickCardForPoker',
 }
 
 export const stagesReactingToBullets = [
@@ -200,6 +204,7 @@ export const stagesReactingToBullets = [
   stageNames.reactToGatling,
   stageNames.reactToIndians,
   stageNames.bandidos,
+  stageNames.reactToBangWithoutBang,
 ];
 
 export const gunRange: { [gunName: string]: number } = {
@@ -244,6 +249,7 @@ export const stageNameToRequiredCardsMap: {
   reactToIndians: ['bang', 'escape'],
   reactToBang: cardsThatWorkAgainstBang,
   duel: ['bang', 'escape'],
+  reactToBangWithoutBang: [...cardsThatWorkAgainstBang, 'escape'],
 };
 
 export const teamLookUp = {

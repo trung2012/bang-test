@@ -40,7 +40,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     : gameCharacters;
   const discarded: ICard[] = [];
   const generalStore: ICard[] = [];
-  const generalStoreOrder: string[] = [];
+  const reactingOrder: string[] = [];
   const players: IGamePlayerMap = {};
   const playOrder: string[] = [];
   const reactionRequired = {
@@ -88,7 +88,7 @@ const setup = (ctx: Ctx, setupData: ISetupData) => {
     discarded,
     players,
     generalStore,
-    generalStoreOrder,
+    reactingOrder,
     reactionRequired,
     playOrder,
     expansions,

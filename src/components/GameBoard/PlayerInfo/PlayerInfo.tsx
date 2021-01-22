@@ -5,6 +5,7 @@ import {
   cardsThatCanTargetsSelf,
   cardsWhichTargetCards,
   hasActiveDynamite,
+  hasActiveSnake,
   IGamePlayer,
   isJailed,
   isPlayerGhost,
@@ -67,15 +68,18 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           player.id
         );
 
-        if (distanceFromFirstTarget > 1) {
-          setError('Target is not within 1 distance. Please choose a different target');
-          return;
-        }
+        if (player.hp <= 0) return;
 
         if (player.id === playerID) {
           setError(`Cannot bang yourself`);
           return;
         }
+
+        if (distanceFromFirstTarget > 1) {
+          setError('Target is not within 1 distance. Please choose a different target');
+          return;
+        }
+
         moves.bang(player.id);
       }
     }
@@ -91,6 +95,11 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
 
     if (hasActiveDynamite(sourcePlayer)) {
       setError('Please draw for dynamite');
+      return;
+    }
+
+    if (hasActiveSnake(sourcePlayer)) {
+      setError('Please draw for rattlesnake');
       return;
     }
 
@@ -241,6 +250,11 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
           return;
         }
 
+        moves.equipOtherPlayer(player.id, sourceCardIndex);
+        return;
+      }
+      case 'bounty':
+      case 'rattlesnake': {
         moves.equipOtherPlayer(player.id, sourceCardIndex);
         return;
       }

@@ -6,6 +6,7 @@ import {
   canPlayCardToReact,
   delayBetweenActions,
   hasActiveDynamite,
+  hasActiveSnake,
   isJailed,
   RobbingType,
   stageNames,
@@ -38,9 +39,9 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 }) => {
   const { moves, playerID, isActive, G, ctx } = useGameContext();
   const { selectedCards, setSelectedCards } = useCardsContext();
-  const { players, reactionRequired } = G;
-  const { setError, setNotification } = useErrorContext();
+  const { setError } = useErrorContext();
   const [showCardOptions, setShowCardOptions] = useState(false);
+  const { players, reactionRequired } = G;
   const isClientPlayer = playerID === playerId;
   const isCardDisabled =
     G.players[ctx.currentPlayer].character.name === 'belle star' ||
@@ -54,6 +55,9 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     stageName && stageNameToRequiredCardsMap[stageName]
       ? stageNameToRequiredCardsMap[stageName]
       : null;
+  const targetPlayer = players[playerId];
+  const clientPlayer = players[playerID!];
+  const isTargetPlayerTurn = playerId === playerID;
 
   const onDiscardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -71,37 +75,11 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     moves.discardFromHand(playerId, index);
   };
 
-  const onCardClick = () => {
+  const onCardClickToReact = () => {
     if (!isActive || playerID === null) return;
 
-    const targetPlayer = players[playerId];
-    const clientPlayer = players[playerID];
-    const isTargetPlayerTurn = playerId === playerID;
-
     // Process moves when source player is different from target player
-
-    if (
-      playerID !== playerId &&
-      cardLocation === 'green' &&
-      clientPlayer.character.name === 'pat brennan' &&
-      clientPlayer.cardDrawnAtStartLeft >= 2 &&
-      (!ctx.activePlayers || !ctx.activePlayers[playerID])
-    ) {
-      if (hasActiveDynamite(clientPlayer)) {
-        setError('Please draw for dynamite');
-        return;
-      }
-
-      if (isJailed(clientPlayer)) {
-        setError('Please draw for jail');
-        return;
-      }
-
-      moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
-      return;
-    }
-
-    if (ctx.activePlayers && ctx.activePlayers[playerID] === stageNames.ragtime) {
+    if (stageName === stageNames.ragtime) {
       moves.panic(playerId, index, cardLocation);
       return;
     }
@@ -109,7 +87,15 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     // Process moves when source player is target player (current turn)
     if (!isTargetPlayerTurn) return;
 
-    if (stageName && cardsNeeded && selectedCards && setSelectedCards) {
+    if (card.name === 'escape' && stageName !== stageNames.reactToBang) {
+      moves.discardToReact(playerId, index);
+      setTimeout(() => {
+        moves.endStage();
+      }, delayBetweenActions);
+      return;
+    }
+
+    if (cardsNeeded && selectedCards && setSelectedCards) {
       if (
         !isSelected &&
         selectedCardsTotalLength === reactionRequired.quantity - 1 &&
@@ -194,17 +180,31 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
     }
 
     if (
-      ctx.activePlayers &&
-      (stageName === stageNames.discardToPlayCard ||
-        stageName === stageNames.joseDelgadoDiscard ||
-        stageName === stageNames.bandidos)
+      stageName === stageNames.discardToPlayCard ||
+      stageName === stageNames.joseDelgadoDiscard ||
+      stageName === stageNames.bandidos ||
+      stageName === stageNames.tornado ||
+      stageName === stageNames.poker
     ) {
       if (cardLocation !== 'hand') {
         setError('You can only discard from your hand');
         return;
       }
 
-      moves.discardFromHand(playerID, index);
+      switch (stageName) {
+        case stageNames.tornado: {
+          moves.discardForTornado(playerID, index);
+          break;
+        }
+        case stageNames.poker: {
+          moves.discardForPoker(playerID, index);
+          break;
+        }
+        default: {
+          moves.discardToReact(playerID, index);
+          break;
+        }
+      }
 
       if (G.reactionRequired.moveToPlayAfterDiscard) {
         const moveName = G.reactionRequired.moveToPlayAfterDiscard.replace(' ', '').toLowerCase();
@@ -222,6 +222,33 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
         return;
       }
     }
+  };
+
+  const onCardClickToPlay = () => {
+    if (
+      playerID !== playerId &&
+      cardLocation === 'green' &&
+      clientPlayer.character.name === 'pat brennan' &&
+      clientPlayer.cardDrawnAtStartLeft >= 2
+    ) {
+      if (hasActiveDynamite(clientPlayer)) {
+        setError('Please draw for dynamite');
+        return;
+      }
+
+      if (hasActiveSnake(clientPlayer)) {
+        setError('Please draw for rattlesnake');
+        return;
+      }
+
+      if (isJailed(clientPlayer)) {
+        setError('Please draw for jail');
+        return;
+      }
+
+      moves.patBrennanEquipmentDraw(playerId, index, cardLocation);
+      return;
+    }
 
     if (card.type === 'green' && cardLocation === 'hand') {
       if (targetPlayer.equipmentsGreen.find(equipment => equipment.name === card.name)) {
@@ -237,6 +264,11 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (hasActiveDynamite(targetPlayer)) {
       setError('Please draw for dynamite');
+      return;
+    }
+
+    if (hasActiveSnake(targetPlayer)) {
+      setError('Please draw for rattlesnake');
       return;
     }
 
@@ -273,7 +305,6 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (card.needsDiscard) {
       moves.makePlayerDiscardToPlay(card.name, playerID);
-      setNotification('Please click on a card to discard and continue');
       return;
     }
 
@@ -332,7 +363,7 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
                 card={card}
                 isFacedUp={isFacedUp}
                 onContextMenu={onContextMenu}
-                onClick={onCardClick}
+                onClick={stageName ? onCardClickToReact : onCardClickToPlay}
                 disabled={isCardDisabled}
               />
               {showCardOptions && (
