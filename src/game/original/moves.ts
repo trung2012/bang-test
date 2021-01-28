@@ -28,6 +28,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
   if (!targetPlayerId) return INVALID_MOVE;
   const targetPlayer = G.players[targetPlayerId];
   const currentPlayer = G.players[ctx.currentPlayer];
+  const targetPlayerStage = G.activeStage;
   targetPlayer.hp -= 1;
   ctx.effects.takeDamage();
 
@@ -90,7 +91,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       const sourcePlayer = G.reactionRequired.sourcePlayerId
         ? G.players[G.reactionRequired.sourcePlayerId]
         : null;
-      if (G.activeStage === stageNames.duel && sourcePlayer) {
+      if (targetPlayerStage === stageNames.duel && sourcePlayer) {
         if (
           targetPlayer.character.name === 'molly stark' &&
           targetPlayer.mollyStarkCardsPlayed > 0
@@ -120,7 +121,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       targetPlayer.character.name === 'el gringo' &&
       targetPlayer.hp > 0 &&
       currentPlayer.hand.length > 0 &&
-      ctx.events?.setActivePlayers
+      ctx.events?.setActivePlayers &&
+      (targetPlayerStage !== stageNames.duel ||
+        (targetPlayerStage === stageNames.duel && currentPlayer.id !== targetPlayerId))
     ) {
       if (ctx.activePlayers) {
         ctx.events.setActivePlayers({
