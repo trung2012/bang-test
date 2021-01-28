@@ -174,7 +174,9 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     if (
       targetPlayer.character.name === 'el gringo' &&
       targetPlayer.hp > 0 &&
-      currentPlayer.hand.length > 0
+      currentPlayer.hand.length > 0 &&
+      (targetPlayerStage !== stageNames.duel ||
+        (targetPlayerStage === stageNames.duel && currentPlayer.id !== targetPlayerId))
     ) {
       if (ctx.random?.Shuffle) {
         ctx.random?.Shuffle(targetPlayer.hand);
