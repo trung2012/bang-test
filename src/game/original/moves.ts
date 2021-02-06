@@ -163,7 +163,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
 
   clearCardsInPlay(G, ctx, targetPlayerId);
 
-  if (targetPlayer.hp <= 0) {
+  if (targetPlayer.hp <= 0 && ctx.phase !== 'suddenDeath') {
     checkIfBeersCanSave(G, ctx, targetPlayer);
   }
 

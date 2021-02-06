@@ -92,33 +92,37 @@ export const processCardRemoval = (
 };
 
 export const checkIfBeersCanSave = (G: IGameState, ctx: Ctx, targetPlayer: IGamePlayer) => {
-  if (ctx.phase === 'suddenDeath') return;
+  if (ctx.phase !== 'suddenDeath') {
+    const beerCardIndexes = targetPlayer.hand
+      .map((card, index) => (card.name === 'beer' ? index : -1))
+      .filter(index => index !== -1);
 
-  const beerCardIndexes = targetPlayer.hand
-    .map((card, index) => (card.name === 'beer' ? index : -1))
-    .filter(index => index !== -1);
+    let hpAfterBeers = targetPlayer.hp;
 
-  const hpAfterBeers =
-    targetPlayer.character.name === 'tequila joe'
-      ? targetPlayer.hp + beerCardIndexes.length * 2
-      : targetPlayer.hp + beerCardIndexes.length;
+    for (const beerIndex of beerCardIndexes) {
+      const beerCard = targetPlayer.hand.splice(beerIndex, 1)[0];
 
-  if (hpAfterBeers > 0) {
-    for (const beerCardIndex of beerCardIndexes) {
-      if (beerCardIndex !== -1) {
-        const cardToPlay = targetPlayer.hand.splice(beerCardIndex, 1)[0];
-        G.discarded.push(cardToPlay);
-        targetPlayer.hp = hpAfterBeers;
+      hpAfterBeers = targetPlayer.hp + (targetPlayer.character.name === 'tequila joe' ? 2 : 1);
+
+      if (beerCard) {
+        G.discarded.push(beerCard);
       }
+
+      if (hpAfterBeers > 0) break;
     }
-    if (targetPlayer.character.name === 'molly stark') {
-      const mollyStarkCardsToDraw = G.deck.slice(
-        G.deck.length - beerCardIndexes.length,
-        G.deck.length
-      );
-      if (mollyStarkCardsToDraw.length > 0) {
-        G.deck = G.deck.slice(0, G.deck.length - beerCardIndexes.length);
-        targetPlayer.hand.push(...mollyStarkCardsToDraw);
+
+    if (hpAfterBeers > 0) {
+      targetPlayer.hp = hpAfterBeers;
+
+      if (targetPlayer.character.name === 'molly stark') {
+        const mollyStarkCardsToDraw = G.deck.slice(
+          G.deck.length - beerCardIndexes.length,
+          G.deck.length
+        );
+        if (mollyStarkCardsToDraw.length > 0) {
+          G.deck = G.deck.slice(0, G.deck.length - beerCardIndexes.length);
+          targetPlayer.hand.push(...mollyStarkCardsToDraw);
+        }
       }
     }
   }
