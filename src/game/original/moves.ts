@@ -1478,6 +1478,10 @@ export const discardForPoker = (
   const targetPlayer = G.players[targetPlayerId];
   const discardedCard = targetPlayer.hand.splice(targetCardIndex, 1)[0];
 
+  if (discardedCard) {
+    G.generalStore.push(discardedCard);
+  }
+
   if (ctx.activePlayers && Object.keys(ctx.activePlayers).length === 1) {
     const wasAnyAceDiscarded = G.generalStore.some(card => card.value === 14);
     const otherPlayersAlive = getOtherPlayersAlive(G, ctx);
@@ -1491,13 +1495,17 @@ export const discardForPoker = (
 
         G.reactingOrder = [ctx.currentPlayer];
       }
+    } else {
+      while (G.generalStore.length > 0) {
+        const cardToDiscard = G.generalStore.pop();
+
+        if (cardToDiscard) {
+          G.discarded.push(cardToDiscard);
+        }
+      }
     }
 
     endStage(G, ctx);
-  }
-
-  if (discardedCard) {
-    G.generalStore.push(discardedCard);
   }
 };
 
@@ -1512,6 +1520,14 @@ export const pickCardForPoker = (
 
   currentPlayer.hand.push(selectedCard);
   currentPlayer.hand = shuffle(ctx, currentPlayer.hand);
+
+  while (G.generalStore.length > 0) {
+    const cardToDiscard = G.generalStore.pop();
+
+    if (cardToDiscard) {
+      G.discarded.push(cardToDiscard);
+    }
+  }
 };
 
 export const lemat = (G: IGameState, ctx: Ctx) => {
@@ -1542,6 +1558,26 @@ export const putPlayersInSavedState = (G: IGameState, ctx: Ctx, targetPlayerId: 
   }
 };
 
+export const putInBeingRobbedStage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
+  if (ctx.events?.setActivePlayers) {
+    ctx.events?.setActivePlayers({
+      value: {
+        [targetPlayerId]: stageNames.reactToRobbery,
+      },
+    });
+  }
+};
+
+export const giveCardToRobber = (
+  G: IGameState,
+  ctx: Ctx,
+  targetPlayerId: string,
+  targetCardIndex: number,
+  type: RobbingType
+) => {
+  panic(G, ctx, targetPlayerId, targetCardIndex, type);
+};
+
 export const moves_VOS: MoveMap<IGameState> = {
   lastcall,
   snakeResult,
@@ -1554,6 +1590,7 @@ export const moves_VOS: MoveMap<IGameState> = {
   pickCardForPoker,
   lemat,
   putPlayersInSavedState,
+  putInBeingRobbedStage,
 };
 
 export const moves_DodgeCity: MoveMap<IGameState> = {

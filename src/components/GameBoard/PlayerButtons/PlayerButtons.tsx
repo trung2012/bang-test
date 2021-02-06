@@ -12,6 +12,7 @@ import {
   hasActiveSnake,
   IGamePlayer,
   isJailed,
+  isPlayerGhost,
   stageNames,
   stagesReactingToBullets,
 } from '../../../game';
@@ -20,7 +21,7 @@ const power = require('../../../assets/sounds/power.mp3');
 
 export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => {
   const [playPower] = useSound(power, { volume: 0.2 });
-  const { ctx, moves, playerID, isActive } = useGameContext();
+  const { G, ctx, moves, playerID, isActive } = useGameContext();
   const { setError, setNotification } = useErrorContext();
   const isClientPlayer = playerID === player.id;
   const isCurrentPlayer = isClientPlayer && player.id === ctx.currentPlayer;
@@ -130,7 +131,18 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
     moves.takeDamage(player.id);
   };
 
-  if (player.hp <= 0) {
+  const onPassClick = () => {
+    if (!isClientPlayer) return;
+
+    if (playerCurrentStage === stageNames.reactToRobbery) {
+      if (G.reactionRequired.moveToPlayAfterDiscard === 'cat balou') {
+      } else {
+        moves.giveCardToRobber(ctx.currentPlayer);
+      }
+    }
+  };
+
+  if (player.hp <= 0 && !isPlayerGhost(player)) {
     return null;
   }
 
@@ -159,6 +171,11 @@ export const PlayerButtons: React.FC<{ player: IGamePlayer }> = ({ player }) => 
           )}
           {playerCurrentStage === stageNames.discard && isActive && (
             <PlayerButton tooltipTitle='Cancel' onClick={() => moves.endStage()}>
+              <CancelIcon className='player-button-icon damage-icon' />
+            </PlayerButton>
+          )}
+          {playerCurrentStage === stageNames.reactToRobbery && isActive && (
+            <PlayerButton tooltipTitle='Cancel' onClick={onPassClick}>
               <CancelIcon className='player-button-icon damage-icon' />
             </PlayerButton>
           )}

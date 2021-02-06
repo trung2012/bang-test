@@ -35,7 +35,9 @@ const game: Game<IGameState> = {
   endIf: (G, ctx): IGameResult | undefined => {
     const sheriffId = ctx.playOrder.find(playerId => G.players[playerId].role === 'sheriff');
     const sheriffPlayer = G.players[sheriffId!];
-    const playersAlive = ctx.playOrder.map(id => G.players[id]).filter(player => player.hp > 0);
+    const playersAlive = ctx.playOrder
+      .map(id => G.players[id])
+      .filter(player => player.hp > 0 || isPlayerGhost(player));
 
     if (sheriffPlayer.hp <= 0) {
       if (playersAlive.length === 1 && playersAlive[0].role === 'renegade') {

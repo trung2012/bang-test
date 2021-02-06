@@ -89,9 +89,6 @@ const DraggableCardComponent: React.FC<IDraggableCardProps> = ({
 
     if (card.name === 'escape' && stageName !== stageNames.reactToBang) {
       moves.discardToReact(playerId, index);
-      setTimeout(() => {
-        moves.endStage();
-      }, delayBetweenActions);
       return;
     }
 

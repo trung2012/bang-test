@@ -198,6 +198,7 @@ export enum stageNames {
   pickCardForPoker = 'pickCardForPoker',
   lemat = 'lemat',
   saved = 'saved',
+  reactToRobbery = 'reactToRobbery',
 }
 
 export const stagesReactingToBullets = [
@@ -243,6 +244,8 @@ export const cardsThatWorkAgainstBang: CardName[] = [
   'ten gallon hat',
   'backfire',
 ];
+
+export const cardsThatWorkAgainstRobbery: CardName[] = ['escape'];
 
 export const stageNameToRequiredCardsMap: {
   [key in stageNames]?: CardName[];

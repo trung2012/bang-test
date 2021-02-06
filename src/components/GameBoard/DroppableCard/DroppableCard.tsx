@@ -103,14 +103,19 @@ export const DroppableCardComponent: React.FC<IDroppableCardProps> = ({
     ) {
       moves.playCard(sourceCardIndex, playerId, sourceCardLocation);
 
-      setTimeout(() => {
-        const moveName = sourceCard.name.replace(' ', '').toLowerCase();
-        const robbingType: RobbingType = cardLocation;
-        moves.clearCardsInPlay(playerId);
-        if (moves[moveName]) {
-          moves[moveName](playerId, index, robbingType);
-        }
-      }, delayBetweenActions);
+      if (!G.expansions.includes('valley of shadows')) {
+        setTimeout(() => {
+          const moveName = sourceCard.name.replace(' ', '').toLowerCase();
+          const robbingType: RobbingType = cardLocation;
+          moves.clearCardsInPlay(playerId);
+          if (moves[moveName]) {
+            moves[moveName](playerId, index, robbingType);
+          }
+        }, delayBetweenActions);
+        return;
+      } else {
+        moves.putInBeingRobbedStage(playerId);
+      }
     } else {
       setError('Target player is out of range');
       return;
