@@ -1,4 +1,12 @@
 .player-hand {
   display: flex;
   position: relative;
+
+  & > .draggable-card {
+    &:hover {
+      & ~ .draggable-card {
+        transform: translateX(25%);
+      }
+    }
+  }
 }
