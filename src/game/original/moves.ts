@@ -117,6 +117,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
     } else {
       discardHand(G, ctx, targetPlayerId);
       discardEquipments(G, ctx, targetPlayerId);
+      discardGreenEquipments(G, ctx, targetPlayerId);
     }
 
     // if taking damage on own turn, it must be Duel. So take sourcePlayerId from the duel stage info
@@ -133,6 +134,7 @@ const takeDamage = (G: IGameState, ctx: Ctx, targetPlayerId: string) => {
       if (targetPlayer.role === 'deputy' && playerCausingDeath.role === 'sheriff') {
         discardHand(G, ctx, playerCausingDeathId);
         discardEquipments(G, ctx, playerCausingDeathId);
+        discardGreenEquipments(G, ctx, targetPlayerId);
       }
     }
   } else {
@@ -250,6 +252,7 @@ export const dynamiteExplodes = (G: IGameState, ctx: Ctx, targetPlayerId: string
     } else {
       discardHand(G, ctx, targetPlayerId);
       discardEquipments(G, ctx, targetPlayerId);
+      discardGreenEquipments(G, ctx, targetPlayerId);
     }
 
     if (ctx.events?.endTurn) {
