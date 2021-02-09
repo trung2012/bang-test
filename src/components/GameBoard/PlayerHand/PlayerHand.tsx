@@ -114,7 +114,18 @@ export const PlayerHandComponent: React.FC<IPlayerCardsProps> = ({ hand, playerI
     if (currentPlayerStage === stageNames.takeCardFromHand) {
       if (currentPlayer.character.name === 'el gringo' && playerId === ctx.currentPlayer) {
         moves.drawFromPlayerHand(playerID, playerId, index);
+        return;
       }
+    }
+
+    if (currentPlayerStage === stageNames.pickCardsForBrawl) {
+      if (!G.brawlPlayersToDiscard[playerId]) {
+        setError(`You cannot discard from this player's hand right now`);
+        return;
+      }
+
+      moves.pickCardsForBrawl(playerId, index);
+      return;
     }
   };
 

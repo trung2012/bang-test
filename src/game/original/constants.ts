@@ -199,6 +199,7 @@ export enum stageNames {
   lemat = 'lemat',
   saved = 'saved',
   reactToRobbery = 'reactToRobbery',
+  pickCardsForBrawl = 'pickCardsForBrawl',
 }
 
 export const stagesReactingToBullets = [

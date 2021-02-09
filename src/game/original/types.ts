@@ -21,6 +21,9 @@ export interface IGameState {
     savingPlayerId?: string;
     previousStages: { [key: string]: string } | null;
   };
+  brawlPlayersToDiscard: {
+    [playerId: string]: boolean;
+  };
 }
 
 export interface IGamePlayerMap {

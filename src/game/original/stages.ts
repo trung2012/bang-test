@@ -152,6 +152,11 @@ const stages: StageMap<IGameState> = {
       discardToReact: moves.discardToReact,
     },
   },
+  [stageNames.pickCardsForBrawl]: {
+    moves: {
+      pickCardsForBrawl: moves.pickCardsForBrawl,
+    },
+  },
 };
 
 export default stages;

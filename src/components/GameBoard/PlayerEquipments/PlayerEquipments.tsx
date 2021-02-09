@@ -70,7 +70,8 @@ export const PlayerEquipments: React.FC<IPlayerEquipments> = ({ playerId, equipm
       equipmentCard.name === 'barrel' &&
       ctx.activePlayers &&
       (ctx.activePlayers[playerID] === stageNames.reactToGatling ||
-        ctx.activePlayers[playerID] === stageNames.reactToBang) &&
+        ctx.activePlayers[playerID] === stageNames.reactToBang ||
+        ctx.activePlayers[playerID] === stageNames.reactToBangWithoutBang) &&
       targetPlayer.barrelUseLeft > 0
     ) {
       moves.drawToReact(playerID);
