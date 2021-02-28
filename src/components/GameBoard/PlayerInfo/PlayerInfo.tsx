@@ -303,7 +303,7 @@ export const PlayerInfo: React.FC<IPlayerInfoProps> = ({ player }) => {
     }
   }, [clientPlayer.character.realName, ctx.activePlayers, playerID, setNotification]);
 
-  if (player.hp <= 0 && isGhost) {
+  if (player.hp <= 0 && !isGhost) {
     return <PlayerDead player={player} />;
   }
 
